@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EDC BJB</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_admin">Admin Settings</string>
+    <string name="seq_holder"></string>
+    <string name="lbl_holder"></string>
+</resources>
