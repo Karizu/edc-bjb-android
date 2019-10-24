@@ -291,6 +291,7 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
 
                             // get the Refferences of views
                             final EditText editTextUserName = (EditText) dialog.findViewById(R.id.editTextUserNameToLogin);
+                            editTextUserName.setVisibility(GONE);
                             final EditText editTextPassword = (EditText) dialog.findViewById(R.id.editTextPasswordToLogin);
 //                            editTextPassword.setVisibility(GONE);
                             final String realAct = act;
@@ -307,10 +308,23 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                                     String password = editTextPassword.getText().toString();
 
                                     // fetch the Password form database for respective user name
-
+                                    String mid = preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID).substring(11);
 
                                     // check if the Stored password matches with  Password entered by user
-                                    if (password.equals(CommonConfig.PASS_ADMIN) && userName.equals(CommonConfig.USERNAME_ADMIN)) {
+//                                    if (password.equals(CommonConfig.PASS_ADMIN) && userName.equals(CommonConfig.USERNAME_ADMIN)) {
+//                                        Toast.makeText(context, "Login Successfull", Toast.LENGTH_LONG).show();
+//                                        dialog.dismiss();
+//                                        Intent intent = new Intent(context, ActivityList.class);
+//                                        Bundle bundle = new Bundle();
+//                                        bundle.putString("comp_act", realAct);
+//                                        intent.putExtras(bundle);
+//                                        context.startActivity(intent);
+//                                    } else {
+//
+//                                        Toast.makeText(context, "User Name Does Not Matches", Toast.LENGTH_LONG).show();
+//                                    }
+
+                                    if (password.equals(mid)) {
                                         Toast.makeText(context, "Login Successfull", Toast.LENGTH_LONG).show();
                                         dialog.dismiss();
                                         Intent intent = new Intent(context, ActivityList.class);
@@ -319,8 +333,7 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                                         intent.putExtras(bundle);
                                         context.startActivity(intent);
                                     } else {
-
-                                        Toast.makeText(context, "User Name Does Not Matches", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(context, "Incorrect Password", Toast.LENGTH_LONG).show();
                                     }
 
                                 }
@@ -363,6 +376,9 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                             public void onClick(View v) {
                                 // TODO Auto-generated method stub
 
+                                //MID
+                                String mid = preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID).substring(11);
+
                                 // get The User name and Password
                                 String password = editTextPassword.getText().toString();
                                 String stored = preferences.getString("pass_settlement", CommonConfig.DEFAULT_SETTLEMENT_PASS);
@@ -371,7 +387,7 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
 
 
                                 // check if the Stored password matches with  Password entered by user
-                                if (password.equals(stored)) {
+                                if (password.equals(mid)) {
                                     dialog.dismiss();
                                     Intent intent = new Intent(context, ActivityList.class);
                                     Bundle bundle = new Bundle();
@@ -454,7 +470,7 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                 }
                 int icons = CommonConfig.getIcon(lbl);
 //                Drawable drawable = mDrawableBuilder.build(String.valueOf(lbl.charAt(0)), mColorGenerator.getColor(lbl));
-                Drawable drawable = mDrawableBuilder.build(String.valueOf(lbl.charAt(0)), Color.RED);
+                Drawable drawable = mDrawableBuilder.build(String.valueOf(lbl.charAt(0)), R.color.colorAccent);
                 if (icons != -1) {
                     drawable = getResources().getDrawable(icons);
                 }

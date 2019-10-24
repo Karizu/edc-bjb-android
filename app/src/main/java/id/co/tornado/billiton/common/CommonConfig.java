@@ -30,9 +30,12 @@ public class CommonConfig {
 //    public static final String HTTP_POST = "http://139.0.15.53:8081/ARRest/trx";
 //    public static final String HTTP_POST = "http://139.0.15.53:8081/ARRest/epi";
 
-    public static final String HTTP_REST_URL = "192.168.43.243:8080/ARRest";
-    public static final String WEBSOCKET_URL = "192.168.43.243:8080/tms";
-    public static final String HTTP_POST = "http://192.168.43.243:8080/ARRest/api";
+//    public static final String HTTP_REST_URL = "192.168.43.243:8080/ARRest";
+//    public static final String WEBSOCKET_URL = "192.168.43.243:8080/tms";
+//    public static final String HTTP_POST = "http://192.168.43.243:8080/ARRest/api";
+    public static final String HTTP_REST_URL = "192.168.43.207:8080/ARRest";
+    public static final String WEBSOCKET_URL = "192.168.43.207:8080/tms";
+    public static final String HTTP_POST = "http://192.168.43.207:8080/ARRest/api";
     public static final String POST_PATH = "api";
 
     public static final String INIT_REST_ACT = "POC000";
@@ -93,21 +96,28 @@ public class CommonConfig {
     public static Map<String, Integer> ICONS() {
         Map<String, Integer> icons = new HashMap<>();
         icons.put("Mini ATM", R.drawable.info_atm);
-        icons.put("Informasi", R.drawable.ic_info);
-        icons.put("Transfer", R.drawable.ic_transfer);
-        icons.put("Antar Rekening", R.drawable.mb_transfersesama);
-        icons.put("Antar Bank", R.drawable.mb_transferbanklain);
+        icons.put("Informasi", R.drawable.cek_saldo);
+        icons.put("Transfer", R.drawable.transfer_sesama);
+        icons.put("Antar Rekening", R.drawable.transfer_sesama);
+        icons.put("Antar Bank", R.drawable.transfer_antarbank);
         icons.put("Info Kode Bank", R.drawable.info_petunjuk);
         icons.put("Pembayaran", R.drawable.mb_isi_ulang_brizzi);
         icons.put("Pembayaran eSamsat Banten", R.drawable.icon_esamsat);
         icons.put("Samsat Nasional", R.drawable.mb_info_dplk);
         icons.put("Pembayaran eSamsat via Transfer", R.drawable.mb_info_dplk);
-        icons.put("Logon", R.drawable.ic_network);
+        icons.put("Logon", R.drawable.logon);
         icons.put("Settings", R.drawable.mb_info_mutasi);
-        icons.put("Info Saldo", R.drawable.mb_info_saldo);
+        icons.put("Info Saldo", R.drawable.cek_saldo);
         icons.put("View Log",R.drawable.mb_info_poin);
-        icons.put("Cetak Ulang Transaksi Terakhir",R.drawable.ic_reprint);
+        icons.put("Cetak Ulang Transaksi Terakhir",R.drawable.reprint);
         icons.put("Pembayaran eSamsat Debit", R.drawable.mb_isi_ulang_brizzi);
+        icons.put("Reprint", R.drawable.print);
+        icons.put("Mutasi Rekening", R.drawable.cek_mutasi);
+        icons.put("Mutasi", R.drawable.cek_mutasi);
+        icons.put("Tarik Tunai", R.drawable.tarik_tunai);
+        icons.put("Void", R.drawable.void_tarik);
+        icons.put("Sale", R.drawable.sale);
+        icons.put("Settlement", R.drawable.settelment);
         return icons;
     }
 

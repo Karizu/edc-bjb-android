@@ -193,6 +193,7 @@
         <item name="cbd_boxSize">20dp</item>
         <item name="cbd_cornerRadius">2dp</item>
         <item name="cbd_strokeSize">2dp</item>
+        <item name="android:color">#FFF2AF3A</item>
         <item name="cbd_animDuration">@android:integer/config_mediumAnimTime</item>
     </style>
 

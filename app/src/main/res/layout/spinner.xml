@@ -7,5 +7,7 @@
     android:layout_height="wrap_content"
     android:minWidth="128dp"
     android:padding="8dp"
+    app:spn_labelTextColor="@color/biruMuda"
     app:spn_labelEnable="false"
+    android:background="@drawable/background_transparant_edittext"
     app:v_styleId="@array/spinner"/>

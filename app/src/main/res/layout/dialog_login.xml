@@ -3,13 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background_home"
     android:padding="10dp">
 
     <EditText
         android:id="@+id/editTextUserNameToLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:padding="16dp"
+        android:background="@drawable/background_transparant_edittext"
         android:hint="User Name"
+        android:textColor="@color/blueOcean"
         android:ems="10" >
 
         <requestFocus />
@@ -19,7 +24,11 @@
         android:id="@+id/editTextPasswordToLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:padding="16dp"
+        android:background="@drawable/background_transparant_edittext"
         android:ems="10"
+        android:textColor="@color/blueOcean"
         android:inputType="textPassword"
         android:hint="Password" />
 
@@ -27,6 +36,7 @@
         android:id="@+id/buttonSignIn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_button"
         android:text="Sign In" />
 
 </LinearLayout>

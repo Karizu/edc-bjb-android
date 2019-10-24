@@ -137,7 +137,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private int pinDialogCloseCounter = 0;
     private boolean pinDialogCanceled = false;
     private String dummyTrack;
-    private LinearLayout baseLayout;
+    private LinearLayout baseLayout, baseLayoutButton;
     private JSONObject comp;
     private JSONObject result;
     private LayoutInflater li;
@@ -217,6 +217,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         li = LayoutInflater.from(context);
         ScrollView ll = (ScrollView) li.inflate(R.layout.form_menu, this);
         baseLayout = (LinearLayout) ll.findViewById(R.id.base_layout);
+        baseLayoutButton = (LinearLayout) ll.findViewById(R.id.base_layout_button);
         LayoutParams params = new LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT
@@ -1337,8 +1338,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             fallback = true;
         }
         if (comp.has("title")) {
-            AutofitTextView tv = (AutofitTextView) context.findViewById(R.id.title_list);
-            tv.setText(comp.getString("title"));
+//            AutofitTextView tv = (AutofitTextView) context.findViewById(R.id.title_list);
+//            tv.setText(comp.getString("title"));
 //            Log.d("TITH", tv.getHeight()+"");
 //            Log.d("TITCH", comp.getString("title").length()+"");
         }

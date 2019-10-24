@@ -17,4 +17,8 @@
     <style name="Theme.AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Widget.Design.TextInputLayout" parent="android:Widget">
+        <item name="android:textColor">@color/biruMuda</item>
+        <item name="android:textColorHint">@color/blueOcean</item>
+    </style>
 </resources>

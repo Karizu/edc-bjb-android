@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<id.co.tornado.billiton.module.EditText
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<id.co.tornado.billiton.module.EditText xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/textfield_et_char_counter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="4dp"
+    android:background="@drawable/background_transparant_edittext"
     android:hint="Input with char counter"
     android:inputType="text"
-    app:v_styleId="@array/edittext"/>
+    android:paddingBottom="14dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="14dp"
+    app:et_labelTextColor="@color/biruMuda"
+    app:et_supportTextColor="@color/biruMuda"
+    style="@style/Widget.Design.TextInputLayout"/>

@@ -23,6 +23,7 @@ android {
     }
 }
 
+
 dependencies {
     compile files('libs/allutils.jar')
 }

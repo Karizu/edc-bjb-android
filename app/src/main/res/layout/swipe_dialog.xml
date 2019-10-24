@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
+    android:background="@drawable/background_home"
     style="@style/AlertDialog.AppCompat.Light">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:padding="32dp"
+        android:orientation="vertical"
+        android:background="@drawable/background_transparant">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:src="@drawable/gesek_kartu"/>
 
         <TextView
             android:id="@+id/pinPass"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:text="Silahkan gesek kartu anda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="SILAHKAN GESEK \nKARTU ANDA"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:editable="false"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:gravity="center" />
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:gravity="center"/>
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

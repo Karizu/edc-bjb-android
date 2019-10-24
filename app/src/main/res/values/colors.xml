@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
-    <color name="colorAccent">#9E9E9E</color>
-    <color name="colorControlNormal">#D32F2F</color>
+    <color name="colorPrimary">#185F7F</color>
+    <color name="colorPrimaryDark">#1B517E</color>
+    <color name="colorAccent">#53B3E0</color>
+    <color name="colorControlNormal">#FBC706</color>
     <color name="colorControlActivated">#F44336</color>
     <color name="colorSwitchThumbNormal">#D32F2F</color>
 
@@ -14,6 +14,8 @@
     <color name="colorControlActivatedHalf">#90F44336</color>
     <color name="colorAccentQuarter">#339E9E9E</color>
     <color name="colorAccentHalf">#909E9E9E</color>
+    <color name="biruMuda">#F9FCFD</color>
+    <color name="blueOcean">#88AEBF</color>
 
     <array name="progress_colors_light">
         <item>#FF03A9F4</item>

@@ -40,7 +40,7 @@ public class ActivityList extends Activity {
 
     private LinearLayout linearLayout;
     private String id = "";
-    private AutofitTextView tv;
+//    private AutofitTextView tv;
     public static final int RESULT_CLOSE_ALL = 0;
     private SharedPreferences preferences;
     private String compAct;
@@ -116,7 +116,7 @@ public class ActivityList extends Activity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_list);
-        tv = (AutofitTextView) findViewById(R.id.title_list);
+//        tv = (AutofitTextView) findViewById(R.id.title_list);
         preferences = this.getSharedPreferences(CommonConfig.SETTINGS_FILE, this.getApplicationContext().MODE_PRIVATE);
         screenLog = (TextView) findViewById(R.id.screen_log);
         android.widget.TextView txTid = (android.widget.TextView) findViewById(R.id.textViewTID);
@@ -145,7 +145,7 @@ public class ActivityList extends Activity {
         try {
             type = obj.getInt("type");
             id = obj.get("id").toString();
-            tv.setText(obj.getString("title"));
+//            tv.setText(obj.getString("title"));
         } catch (Exception e) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Informasi");
