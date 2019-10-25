@@ -445,6 +445,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
                 String supportedAppId = "A0000006021010";
                 nsiccsData.setAid(supportedAppId);
                 val = selectAppById(supportedAppId);
+                recordValues.put("4F", supportedAppId);
             } else {
                 data.put("RC", "07");
                 data.put("msg", "Fallback");
@@ -1258,8 +1259,19 @@ public class InsertICC extends com.rey.material.widget.EditText {
 //            writeFromBackground(k + " : " + recordValues.get(k));
 //        }
         try {
-            String[] cHelper = {"82", "95", "5F2A", "5F34", "9A", "9C", "9F02",
-                    "9F03", "9F10", "9F1A", "9F26", "9F36", "9F37"};
+//            String[] cHelper = {"82", "95", "5F2A", "5F34", "9A", "9C", "9F02",
+//                    "9F03", "9F10", "9F1A", "9F26", "9F36", "9F37"};
+            String[] cHelper = {"82", "9F36", "9F26", "9F27",
+//                    "9F34",
+                    "9F10",
+//                    "9F33", "9F35",
+                    "95", "9F37", "9F02", "9F03",
+//                    "5A",
+                    "5F34", "9F1A", "5F2A", "9A", "9C",
+//                    "9F09", "9F1E", "4F",
+                    "84"
+//                    "9F41", "9F69", "9F6A"
+            };
             for (int i = 0; i < cHelper.length; i++) {
                 tag = cHelper[i];
 //                writeFromBackground(tag + "[" + recordValues.get(tag).length() + "]");
@@ -1270,22 +1282,22 @@ public class InsertICC extends com.rey.material.widget.EditText {
                 result += vlen;
                 result += val;
             }
-            if (recordValues.containsKey("9F27")) {
-                tag = "9F27";
-                result += tag;
-                String val = recordValues.get(tag);
-                String vlen = String.format("%02X",val.length()/2);
-                result += vlen;
-                result += val;
-            }
-            if (recordValues.containsKey("84")) {
-                tag = "84";
-                result += tag;
-                String val = recordValues.get(tag);
-                String vlen = String.format("%02X",val.length()/2);
-                result += vlen;
-                result += val;
-            }
+//            if (recordValues.containsKey("9F27")) {
+//                tag = "9F27";
+//                result += tag;
+//                String val = recordValues.get(tag);
+//                String vlen = String.format("%02X",val.length()/2);
+//                result += vlen;
+//                result += val;
+//            }
+//            if (recordValues.containsKey("84")) {
+//                tag = "84";
+//                result += tag;
+//                String val = recordValues.get(tag);
+//                String vlen = String.format("%02X",val.length()/2);
+//                result += vlen;
+//                result += val;
+//            }
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter ps = new PrintWriter(sw);

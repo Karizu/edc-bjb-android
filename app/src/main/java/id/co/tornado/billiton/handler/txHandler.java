@@ -1543,24 +1543,24 @@ public class txHandler {
             } else {
                 if (isLogon) {
                     //save key here
-                    try {
-                        PINPadInterface.open();
-                        String wk = (String) replyJSON.getString("work_key");
-                        //override wk
-//                        wk = "376EB729FB11373BC0F097ECE49F6A25";
-                        if (wk.length()==16) {
-                            wk = wk+wk;
-                        }
-                        writeDebugLog("LOGON", wk);
-                        byte[] newKey = ISO8583Parser.hexStringToByteArray(wk);
-                        int ret = PINPadInterface.updateUserKey(0,0, newKey, newKey.length);
-                        writeDebugLog("LOGON", "Status : "+String.valueOf(ret));
-                    } catch (Exception e) {
-                        //teu bisa update
-                        Log.e("LOGON", e.getMessage());
-                    } finally {
-                        PINPadInterface.close();
-                    }
+//                    try {
+//                        PINPadInterface.open();
+//                        String wk = (String) replyJSON.getString("work_key");
+//                        //override wk
+////                        wk = "376EB729FB11373BC0F097ECE49F6A25";
+//                        if (wk.length()==16) {
+//                            wk = wk+wk;
+//                        }
+//                        writeDebugLog("LOGON", wk);
+//                        byte[] newKey = ISO8583Parser.hexStringToByteArray(wk);
+//                        int ret = PINPadInterface.updateUserKey(0,0, newKey, newKey.length);
+//                        writeDebugLog("LOGON", "Status : "+String.valueOf(ret));
+//                    } catch (Exception e) {
+//                        //teu bisa update
+//                        Log.e("LOGON", e.getMessage());
+//                    } finally {
+//                        PINPadInterface.close();
+//                    }
                     return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Logon Succesfull\",\n" +
                             "\"value\":\"Logon Succesfull\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"F0003\",\"seq\":0}]},\"id\":\"F000002\",\n" +
                             "\"type\":\"2\",\"title\":\"Sukses\"}}");

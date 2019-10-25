@@ -413,7 +413,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     String hint = (String) ((EditText) v).getHint();
                     if (hint.contains("Nominal")) {
                         amt = String.valueOf(((EditText) v).getText());
-                        amt = "000000000000" + amt + "00";
+                        amt = "000000000000" + amt; // + "00";
                         amt = amt.substring(amt.length()-12);
                         amts[0] = amt;
                     }
@@ -3591,7 +3591,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             JSONObject cvals = cmp.getJSONObject("comp_values");
                             JSONArray cval = cvals.getJSONArray("comp_value");
                             JSONObject fval = cval.getJSONObject(0);
-                            amt = "000000000000" + fval.getString("value") + "00";
+                            amt = "000000000000" + fval.getString("value"); // + "00";
                             if (amt.length()>12) {
                                 amt = amt.substring(amt.length() - 12);
                             }
@@ -3600,7 +3600,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             JSONObject cvals = cmp.getJSONObject("comp_values");
                             JSONArray cval = cvals.getJSONArray("comp_value");
                             JSONObject fval = cval.getJSONObject(0);
-                            aamt = "000000000000" + fval.getString("value") + "00";
+                            aamt = "000000000000" + fval.getString("value"); // + "00";
                             if (aamt.length()>12) {
                                 aamt = aamt.substring(aamt.length() - 12);
                             }
