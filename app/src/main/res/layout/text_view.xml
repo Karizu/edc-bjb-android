@@ -14,7 +14,8 @@
         android:gravity="left"
         android:text=""
         android:textColor="@color/biruMuda"
-        app:v_styleId="@array/text_body" />
+        />
+        <!--app:v_styleId="@array/text_body" />-->
     <com.rey.material.widget.TextView
         android:id="@+id/lbl_values"
         android:layout_width="match_parent"
@@ -23,7 +24,8 @@
         android:text=""
         android:textColor="@color/biruMuda"
         android:textAlignment="gravity"
-        app:v_styleId="@array/text_body" />
+        />
+        <!--app:v_styleId="@array/text_body" />-->
     <!--<View-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="1dp"-->

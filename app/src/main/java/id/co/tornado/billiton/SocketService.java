@@ -72,7 +72,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
         public void run() {
             if (!isConnect) {
                 SharedPreferences preferences = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-                client = new WebSocketClient(URI.create("ws://" + preferences.getString("sockethost", CommonConfig.WEBSOCKET_URL) + "/devlog"), SocketService.this, extraHeaders);
+                client = new WebSocketClient(URI.create("wss://" + preferences.getString("sockethost", CommonConfig.WEBSOCKET_URL) + "/devlog"), SocketService.this, extraHeaders);
                 client.connect();
                 recoHandler.postDelayed(this, recoInterval);
                 recoJob = true;
@@ -111,7 +111,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
         SharedPreferences preferences = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         DEBUG_MODE = preferences.getBoolean("debug_mode",DEBUG_MODE);
         if(!DEBUG_MODE){
-            client = new WebSocketClient(URI.create("ws://" + preferences.getString("sockethost",CommonConfig.WEBSOCKET_URL) + "/devlog"), this, extraHeaders);
+            client = new WebSocketClient(URI.create("wss://" + preferences.getString("sockethost",CommonConfig.WEBSOCKET_URL) + "/devlog"), this, extraHeaders);
             if (Looper.myLooper() == null) {
                 Looper.prepare();
             }

@@ -172,6 +172,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
 //            writeLog("Closing Driver");
         } catch (Exception e) {
             val=-1;
+            e.printStackTrace();
         }
         return val >= 0;
     }
@@ -1519,6 +1520,10 @@ public class InsertICC extends com.rey.material.widget.EditText {
                         SingleTagParser stp = new SingleTagParser(xTag, CommonConfig.KNOWN_TAG_MAP().get(xTag), rawData);
                         if (xTag.equals("91")) {
                             arpc = stp.getHval();
+                            if (arpc.length()==20) {
+                                arc = arpc.substring(16);
+                                arpc = arpc.substring(0,16);
+                            }
                         }
                         if (xTag.equals("8A")) {
                             recordValues.put(xTag, stp.getHval());
