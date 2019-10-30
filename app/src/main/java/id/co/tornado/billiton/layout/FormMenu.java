@@ -468,6 +468,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             if (parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_FINISHED) {
                 // get arpc here
                 String[] amts = getIccDataFromComp(comp);
+                Log.i("AMT1", amts[1]);
+                Log.i("AMT2", amts[2]);
                 parent.cardData.setArpc(amts[2]);
                 parent.cardData.setArc(amts[2]);
                 insertICC.init(parent.modulStage, parent.cardData);
@@ -1196,11 +1198,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     dataOutput = TextUtils.join("|", data);
                 }
                 // reprint
-//                if (actionUrl.startsWith("P")) {
-//                    JSONObject jsonResp = handleReprint(actionUrl);
-//                    processResponse(jsonResp, "reprint");
-//                    return;
-//                }
+                if (actionUrl.startsWith("P")) {
+                    JSONObject jsonResp = handleReprint(actionUrl);
+                    processResponse(jsonResp, "reprint");
+                    return;
+                }
                 // void
                 if (actionUrl.startsWith("V")) {
                     JSONObject jsonResp = handleVoid(dataOutput);
@@ -1246,7 +1248,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                     String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
                     String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-                    String httpPost = "http://" + hostname + "/" + postpath;
+                    String httpPost = "https://" + hostname + "/" + postpath;
                     StringRequest jor = new StringRequest(Request.Method.POST,
                             httpPost,
                             new Response.Listener<String>() {
@@ -1696,7 +1698,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     WindowManager.LayoutParams icclp = refreshICCProcessDialog("Melakukan verifikasi transaksi", true);
                     alert.show();
                     alert.getWindow().setAttributes(icclp);
+                    Log.i("ICCC", "Continue");
                     String[] suppliedData = getIccDataFromComp(comp);
+//                    parent.cardData.setArc(suppliedData[2]);
                     parent.cardData.setArpc(suppliedData[2]);
                     insertICC.cont(parent.modulStage, parent.cardData);
                 }
@@ -2465,7 +2469,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             msgRoot.put("msg", msg);
             String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
             String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-            String httpPost = "http://" + hostname + "/" + postpath;
+            String httpPost = "https://" + hostname + "/" + postpath;
             StringRequest jor = new StringRequest(Request.Method.POST,
                     httpPost,
                     new Response.Listener<String>() {
@@ -3583,9 +3587,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         String amt = null;
         String aamt = null;
         String iccDe = null;
+        Log.i("GET", "Data from comp ");
         try {
             if (parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_GEN) {
                 // STAGE 2 get amount
+                Log.i("GET", "Data amount");
                 try {
                     JSONObject comps = screen.getJSONObject("comps");
                     JSONArray comp = comps.getJSONArray("comp");
@@ -3623,6 +3629,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             } else if (parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_FINISHED) {
                 // STAGE 3 get iccDe
+                Log.i("GET", "Data iccde");
                 try {
                     JSONObject comps = screen.getJSONObject("comps");
                     JSONArray comp = comps.getJSONArray("comp");
@@ -3634,6 +3641,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             JSONArray cval = cvals.getJSONArray("comp_value");
                             JSONObject fval = cval.getJSONObject(0);
                             iccDe = fval.getString("value");
+                            Log.i("GET", "Result : " + iccDe);
                         }
                     }
                     if (iccDe != null) {
