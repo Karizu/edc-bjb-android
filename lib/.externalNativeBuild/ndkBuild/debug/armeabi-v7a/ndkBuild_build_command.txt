@@ -1,4 +1,4 @@
-Executable : C:\Users\PRO\Downloads\android-ndk-r13b-windows-x86_64\android-ndk-r13b\ndk-build.cmd
+Executable : C:\Users\PRO\Downloads\Downloads\android-ndk-r13b-windows-x86_64\android-ndk-r13b\ndk-build.cmd
 arguments : 
 NDK_PROJECT_PATH=null
 APP_BUILD_SCRIPT=E:\ProjectAndroid\BJB\edc-bjb-android\edc-bjb\lib\jni\Android.mk

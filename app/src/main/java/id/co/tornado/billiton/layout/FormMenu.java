@@ -1722,6 +1722,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         if (!txVerification) {
             preparePrint();
         }
+
+        if (formId.equals("MB82510")){
+            showIccDialog(null);
+        }
     }
 
     private void preparePrint() {
@@ -2382,6 +2386,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 context.onBackPressed();
             }
         } else {
+            //tandaaan
             if (parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_INIT
                     || parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_TX) {
                 panHolder = panFromTrack2(result);
