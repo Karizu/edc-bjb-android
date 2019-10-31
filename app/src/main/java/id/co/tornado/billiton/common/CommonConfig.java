@@ -33,12 +33,12 @@ public class CommonConfig {
 //    public static final String HTTP_REST_URL = "192.168.43.243:8080/ARRest";
 //    public static final String WEBSOCKET_URL = "192.168.43.243:8080/tms";
 //    public static final String HTTP_POST = "http://192.168.43.243:8080/ARRest/api";
-    public static final String HTTP_REST_URL = "192.168.43.207:8080/ARRest";
-    public static final String WEBSOCKET_URL = "192.168.43.207:8080/tms";
-    public static final String HTTP_POST = "http://192.168.43.207:8080/ARRest/api";
+    public static final String HTTP_REST_URL = "edc.bankbjb.co.id/ARRest"; //192.168.43.207:8080
+    public static final String WEBSOCKET_URL = "edc.bankbjb.co.id/tms"; //192.168.43.207:8080
+    public static final String HTTP_POST = "http://edc.bankbjb.co.id/ARRest/api";
     public static final String POST_PATH = "api";
 
-    public static final String INIT_REST_ACT = "POC000";
+    public static final String INIT_REST_ACT = "MBJB000";
     public static final String[] LIST_MENU_KEY = {"type", "title", "id", "ver", "comps"};
     public static final String[] LIST_MENU_COMP_KEY = {"visible", "comp_type", "comp_id", "comp_lbl", "comp_act", "seq"};
     public static final String[] FORM_MENU_KEY = {"type", "title", "id", "print", "print_text", "ver", "comps"};
@@ -57,10 +57,10 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_RATE = "0";
     public static final String EXPD = "2111";
     public static final String DEV_TERMINAL_ID = "00000000";//"00000023";
-    public static final String DEV_MERCHANT_ID = "000001370076089";//"000001210000020";
-    public static final String INIT_MERCHANT_NAME = "IT KANTOR PUSAT 1";//"GTA DEVICE";
-    public static final String INIT_MERCHANT_ADDRESS1 = "POC BANK BJB";
-    public static final String INIT_MERCHANT_ADDRESS2 = "DIVISI IT";
+    public static final String DEV_MERCHANT_ID = "000000000000000";//"000001210000020"; //000001370076089
+    public static final String INIT_MERCHANT_NAME = "FESTIVAL WEST JAVA";//"GTA DEVICE";
+    public static final String INIT_MERCHANT_ADDRESS1 = "GEDUNG SATE";
+    public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
     public static final String CVA = "12600000";
     public static final String DEFAULT_SETTLEMENT_PASS = "1234";
     public static final String DEFAULT_MIN_BALANCE_BRIZZI = "2500";

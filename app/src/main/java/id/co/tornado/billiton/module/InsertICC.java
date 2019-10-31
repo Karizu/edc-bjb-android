@@ -64,6 +64,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
     private int nAPDULength;
     private byte byteArrayResponse[];
     private int procStage;
+    public boolean isByPass = false;
 
     private FileControlInfo fci;
     private NsiccsData nsiccsData;
@@ -128,7 +129,12 @@ public class InsertICC extends com.rey.material.widget.EditText {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ICC_INSERT:
-                    if (isOpen) {
+                    if(isByPass){
+                        closeDriver();
+                        InputListener inputListener = inputListeners.get(0);
+                        inputListener.onInputCompleted(InsertICC.this, "", "", nsiccsData);
+                    }
+                    else if (isOpen) {
                         isQuit = false;
                         Thread t1 = new Thread(new GetData());
                         t1.start();
@@ -235,6 +241,10 @@ public class InsertICC extends com.rey.material.widget.EditText {
                         break;
                     }
                     com.wizarpos.jni.SmartCardEvent event = new com.wizarpos.jni.SmartCardEvent();
+                    if (isByPass){
+                        event.nEventID = -1;
+                        event.nSlotIndex = -1;
+                    }
                     ContactICCardReaderInterface.pollEvent(2000, event);
 //                writeFromBackground("Pool result : " + event.nEventID + " loop " + counter);
 //                    for (InputListener il : inputListeners) {
@@ -243,6 +253,13 @@ public class InsertICC extends com.rey.material.widget.EditText {
 //                    }
                     Message msg = new Message();
                     msg.what = event.nEventID;
+
+                    if (cardPresent && iccReady == false && msg.what == 1){
+
+                        event.nEventID = 0;
+                        msg.what = event.nEventID;
+                    }
+
                     switch (event.nEventID) {
                         case ICC_INSERT:
                             listening = false;

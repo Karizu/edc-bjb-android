@@ -1723,11 +1723,14 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 parent.cardData.setTxst(1);
             }
         }
+
         if (!txVerification) {
             preparePrint();
         }
 
         if (formId.equals("MB82510")){
+
+        insertICC.isByPass = true;
             showIccDialog(null);
         }
     }
@@ -2313,143 +2316,153 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     @Override
     public void onInputCompleted(View v, String result, String additional, NsiccsData cardData) {
         boolean usingPopup = false;
-        if (additional == null) {
-            try {
-                if (insertICC != null) {
-                    if (insertICC.isOpen()) {
-                        insertICC.closeDriver();
-                    }
-                }
-                if (comp.has("print")) {
-                    if (!comp.get("print").equals(null)) {
-                        preparePrint();
-                    }
-                }
-            } catch (Exception e) {
-                //failed to close, maybe already closed or not open yet
-            }
-        } else {
-            if (additional.startsWith("reversal")) {
-                usingPopup = true;
+
+
+        if (insertICC != null && insertICC.isByPass){
+
+            insertICC.isByPass = false;
+            alert.dismiss();
+        }
+        else{
+            if (additional == null) {
                 try {
                     if (insertICC != null) {
                         if (insertICC.isOpen()) {
                             insertICC.closeDriver();
                         }
                     }
+                    if (comp.has("print")) {
+                        if (!comp.get("print").equals(null)) {
+                            preparePrint();
+                        }
+                    }
                 } catch (Exception e) {
                     //failed to close, maybe already closed or not open yet
                 }
-                // try sending reversal
+            } else {
+                if (additional.startsWith("reversal")) {
+                    usingPopup = true;
+                    try {
+                        if (insertICC != null) {
+                            if (insertICC.isOpen()) {
+                                insertICC.closeDriver();
+                            }
+                        }
+                    } catch (Exception e) {
+                        //failed to close, maybe already closed or not open yet
+                    }
+                    // try sending reversal
+                    if (alert.isShowing()) {
+                        alert.dismiss();
+                    }
+                    updReversedSukses(lastan, lastan);
+                    sendSaleReversalAdvice();
+                    return;
+                } else if (additional.startsWith("fallback")) {
+                    try {
+                        if (insertICC != null) {
+                            if (insertICC.isOpen()) {
+                                insertICC.closeDriver();
+                            }
+                        }
+                    } catch (Exception e) {
+                        //failed to close, maybe already closed or not open yet
+                    }
+                    refreshICCProcessDialog("Chip tidak terdeteksi, menyiapkan fallback", true);
+                    alert.show();
+                    iccPreProcessed = false;
+                    insertICC = null;
+                    prepareSaleFallback();
+                    return;
+                } else if (additional.startsWith("blocked")) {
+                    try {
+                        if (insertICC != null) {
+                            if (insertICC.isOpen()) {
+                                insertICC.closeDriver();
+                            }
+                        }
+                    } catch (Exception e) {
+                        //failed to close, maybe already closed or not open yet
+                    }
+                    refreshICCProcessDialog("Aplikasi chip tidak terdeteksi atau kartu telah diblok", true);
+                    alert.show();
+                    iccPreProcessed = false;
+                    insertICC = null;
+                    preparePopupGagal("Aplikasi chip tidak terdeteksi atau kartu telah diblok");
+                    return;
+                }
+            }
+            if (result==null||result.equals("")) {
+//          Log.d("SWIPE", "BACK PRESSED");
                 if (alert.isShowing()) {
                     alert.dismiss();
                 }
-                updReversedSukses(lastan, lastan);
-                sendSaleReversalAdvice();
-                return;
-            } else if (additional.startsWith("fallback")) {
-                try {
-                    if (insertICC != null) {
-                        if (insertICC.isOpen()) {
-                            insertICC.closeDriver();
-                        }
-                    }
-                } catch (Exception e) {
-                    //failed to close, maybe already closed or not open yet
+                if (!usingPopup) {
+                    context.onBackPressed();
                 }
-                refreshICCProcessDialog("Chip tidak terdeteksi, menyiapkan fallback", true);
-                alert.show();
-                iccPreProcessed = false;
-                insertICC = null;
-                prepareSaleFallback();
-                return;
-            } else if (additional.startsWith("blocked")) {
-                try {
-                    if (insertICC != null) {
-                        if (insertICC.isOpen()) {
-                            insertICC.closeDriver();
-                        }
-                    }
-                } catch (Exception e) {
-                    //failed to close, maybe already closed or not open yet
-                }
-                refreshICCProcessDialog("Aplikasi chip tidak terdeteksi atau kartu telah diblok", true);
-                alert.show();
-                iccPreProcessed = false;
-                insertICC = null;
-                preparePopupGagal("Aplikasi chip tidak terdeteksi atau kartu telah diblok");
-                return;
-            }
-        }
-        if (result==null||result.equals("")) {
-//          Log.d("SWIPE", "BACK PRESSED");
-            if (alert.isShowing()) {
-                alert.dismiss();
-            }
-            if (!usingPopup) {
-                context.onBackPressed();
-            }
-        } else {
-            //tandaaan
-            if (parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_INIT
-                    || parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_TX) {
-                panHolder = panFromTrack2(result);
-                Track2BINChecker tbc = new Track2BINChecker(this.context, panHolder);
-                this.externalCard = tbc.isExternalCard();
-                //generate Invoice
-                SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
-                String invoRef = sdf.format(new Date()) + String.format("%04d", getSeqNum());
+            } else {
+                //tandaaan
+                if (parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_INIT
+                        || parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_TX) {
+                    panHolder = panFromTrack2(result);
+                    Track2BINChecker tbc = new Track2BINChecker(this.context, panHolder);
+                    this.externalCard = tbc.isExternalCard();
+                    //generate Invoice
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+                    String invoRef = sdf.format(new Date()) + String.format("%04d", getSeqNum());
 
-                //add service_code
-                int pos = result.indexOf('|');
-                List<String> ajBinList = new ArrayList<>();
-                ajBinList.add("532595");
-                ajBinList.add("603605");
-                ajBinList.add("502287");
-                ajBinList.add("459870");
-                ajBinList.add("470585");
-                if (panHolder.startsWith("628173")) { //internal bin
-                    if (pos>0) {
-                        result = result.substring(0,pos) + "|01001" + result.substring(pos);
-                        result += "|" + invoRef; //inject invoice
+                    //add service_code
+                    int pos = result.indexOf('|');
+                    List<String> ajBinList = new ArrayList<>();
+                    ajBinList.add("532595");
+                    ajBinList.add("603605");
+                    ajBinList.add("502287");
+                    ajBinList.add("459870");
+                    ajBinList.add("470585");
+                    if (panHolder.startsWith("628173")) { //internal bin
+                        if (pos>0) {
+                            result = result.substring(0,pos) + "|01001" + result.substring(pos);
+                            result += "|" + invoRef; //inject invoice
+                        } else {
+                            result += "|01001";
+                        }
+                    } else if (ajBinList.contains(panHolder.substring(0,6))) {
+                        // Artajasa
+                        if (pos>0) {
+                            result = result.substring(0,pos) + "|01002" + result.substring(pos);
+                            result += "|" + invoRef; //inject invoice
+                        } else {
+                            result += "|01002";
+                        }
                     } else {
-                        result += "|01001";
+                        // Rintis
+                        if (pos>0) {
+                            result = result.substring(0,pos) + "|01003" + result.substring(pos);
+                            result += "|" + invoRef; //inject invoice
+                        } else {
+                            result += "|01003";
+                        }
                     }
-                } else if (ajBinList.contains(panHolder.substring(0,6))) {
-                    // Artajasa
-                    if (pos>0) {
-                        result = result.substring(0,pos) + "|01002" + result.substring(pos);
-                        result += "|" + invoRef; //inject invoice
-                    } else {
-                        result += "|01002";
-                    }
-                } else {
-                    // Rintis
-                    if (pos>0) {
-                        result = result.substring(0,pos) + "|01003" + result.substring(pos);
-                        result += "|" + invoRef; //inject invoice
-                    } else {
-                        result += "|01003";
+                    if (additional.startsWith("TCAID")) {
+                        tcaid = additional.substring(5);
                     }
                 }
-                if (additional.startsWith("TCAID")) {
-                    tcaid = additional.substring(5);
-                }
-            }
 //            if (result.length()>255) {
 //                result = result.substring(0,250) + "|" + result.substring(250);
 //            }
-            insertICC.setText(result);
-            parent.cardData = cardData;
-            if (alert.isShowing()) {
-                alert.dismiss();
-            }
-            iccPreProcessed = false;
-            if (iccIsTriggerd) {
-                insideClick(formTrigger);
-            }
+                insertICC.setText(result);
+                parent.cardData = cardData;
+                if (alert.isShowing()) {
+                    alert.dismiss();
+                }
+                iccPreProcessed = false;
+                if (iccIsTriggerd) {
+                    insideClick(formTrigger);
+                }
 //            focusHandler.postDelayed(delayFocus, 400);
+            }
         }
+
     }
 
     public void sendSaleReversalAdvice() {
