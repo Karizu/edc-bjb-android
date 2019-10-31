@@ -57,7 +57,7 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_RATE = "0";
     public static final String EXPD = "2111";
     public static final String DEV_TERMINAL_ID = "00000000";//"00000023";
-    public static final String DEV_MERCHANT_ID = "000000000000000";//"000001210000020"; //000001370076089
+    public static final String DEV_MERCHANT_ID = "000063708571";//"000001210000020"; //000001370076089
     public static final String INIT_MERCHANT_NAME = "FESTIVAL WEST JAVA";//"GTA DEVICE";
     public static final String INIT_MERCHANT_ADDRESS1 = "GEDUNG SATE";
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
