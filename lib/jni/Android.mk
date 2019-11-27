@@ -1,7 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := $(TARGET_ARCH_ABI)\libEMVKernal.so
+LOCAL_MODULE := $(TARGET_ARCH_ABI)/libEMVKernal.so
 LOCAL_SRC_FILES := $(LOCAL_MODULE)
 LOCAL_LDLIBS    := -lm -llog
 include $(PREBUILT_SHARED_LIBRARY)
