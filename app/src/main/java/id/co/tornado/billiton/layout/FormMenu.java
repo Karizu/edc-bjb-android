@@ -1248,7 +1248,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                     String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
                     String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-                    String httpPost = "https://" + hostname + "/" + postpath;
+//                    String httpPost = "https://" + hostname + "/" + postpath;
+                    String httpPost = "http://" + hostname + "/" + postpath;
                     StringRequest jor = new StringRequest(Request.Method.POST,
                             httpPost,
                             new Response.Listener<String>() {
@@ -2482,7 +2483,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             msgRoot.put("msg", msg);
             String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
             String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-            String httpPost = "https://" + hostname + "/" + postpath;
+//            String httpPost = "https://" + hostname + "/" + postpath;
+            String httpPost = "http://" + hostname + "/" + postpath;
             StringRequest jor = new StringRequest(Request.Method.POST,
                     httpPost,
                     new Response.Listener<String>() {
