@@ -308,7 +308,11 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                                     String password = editTextPassword.getText().toString();
 
                                     // fetch the Password form database for respective user name
-                                    String mid = preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID).substring(11);
+                                    String pmid = "1234";
+                                    String mid = preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID);
+                                    if (mid.length() > 4) {
+                                        pmid = mid.substring(mid.length() - 4);
+                                    }
 
                                     // check if the Stored password matches with  Password entered by user
 //                                    if (password.equals(CommonConfig.PASS_ADMIN) && userName.equals(CommonConfig.USERNAME_ADMIN)) {
@@ -324,7 +328,7 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
 //                                        Toast.makeText(context, "User Name Does Not Matches", Toast.LENGTH_LONG).show();
 //                                    }
 
-                                    if (password.equals(mid)) {
+                                    if (password.equals(pmid)) {
                                         Toast.makeText(context, "Login Successfull", Toast.LENGTH_LONG).show();
                                         dialog.dismiss();
                                         Intent intent = new Intent(context, ActivityList.class);
@@ -377,7 +381,11 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                                 // TODO Auto-generated method stub
 
                                 //MID
-                                String mid = preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID).substring(11);
+                                String pmid = "1234";
+                                String mid = preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID);
+                                if (mid.length() > 4) {
+                                    pmid = mid.substring(mid.length() - 4);
+                                }
 
                                 // get The User name and Password
                                 String password = editTextPassword.getText().toString();
@@ -387,7 +395,7 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
 
 
                                 // check if the Stored password matches with  Password entered by user
-                                if (password.equals(mid)) {
+                                if (password.equals(pmid)) {
                                     dialog.dismiss();
                                     Intent intent = new Intent(context, ActivityList.class);
                                     Bundle bundle = new Bundle();

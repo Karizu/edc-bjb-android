@@ -3364,7 +3364,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     + "("+String.valueOf(logid)
                     +",'"+serviceId+"'"
                     +",'"+msgId
-                    + "', current_timestamp, 0)";
+                    + "', datetime('now','local'), 0)";
             logText += ", exec " + newLog;
             clientDB.execSQL(newLog);
             logText += ", data saved";
