@@ -767,6 +767,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
     public void actionUrl(Button button, final String actionUrl) throws JSONException {
         Log.d("DO_ACTION", actionUrl);
+        String newActionUrl = "";
 //        Toast.makeText(context, "pinblock " + pinblockHolder, Toast.LENGTH_SHORT).show();
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         SharedPreferences preferences  = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
@@ -1069,17 +1070,60 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                                         }
                                     }
+                                    // HANDLING MAPPING MPN G2; S000C15=CASH;S000015=DEBIT
+                                    if (formId.equals("S000015") && editText.comp.getString("comp_id").equals("M1001")){
+                                        // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
+                                        String kodeBilling = editText.getText().toString();
+                                        if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")){
+                                            // DJP
+                                            newActionUrl = "M0006A";
+                                        }
+                                        else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")){
+                                            // DJBC
+                                            newActionUrl = "M0006C";
+                                        }
+                                        else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")){
+                                            // DJA
+                                            newActionUrl = "M0006E";
+                                        }
+                                    }
+                                    else if (formId.equals("S000C15") && editText.comp.getString("comp_id").equals("M1001")){
+                                        // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
+                                        String kodeBilling = editText.getText().toString();
+                                        if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")){
+                                            // DJP
+                                            newActionUrl = "M0006G";
+                                        }
+                                        else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")){
+                                            // DJBC
+                                            newActionUrl = "M0006I";
+                                        }
+                                        else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")){
+                                            // DJA
+                                            newActionUrl = "M0006K";
+                                        }
+                                    }
                                     Log.d("EDIT READ", editText.getText().toString());
                                     data.add(editText.getText().toString());
                                 }
                                 if (v instanceof ComboBox) {
                                     ComboBox comboBox = (ComboBox) v;
-                                    String cdata = comboBox.getSelectedItem().toString();
-                                    Log.d("EDIT READ", cdata);
-                                    if (actionUrl.equals("A54321")) {
-                                        cdata = cdata.replace("Rp ","").replace(".","").replace(",00","");
+                                    if (comboBox.compValues != null && comboBox.compValues.length() > 0){
+                                        String cdata = comboBox.compValuesHashMap.get(comboBox.getSelectedItemPosition());
+                                        Log.d("EDIT READ", cdata);
+                                        if (actionUrl.equals("A54321")) {
+                                            cdata = cdata.replace("Rp ","").replace(".","").replace(",00","");
+                                        }
+                                        data.add(cdata);
                                     }
-                                    data.add(cdata);
+                                    else{
+                                        String cdata = comboBox.getSelectedItem().toString();
+                                        Log.d("EDIT READ", cdata);
+                                        if (actionUrl.equals("A54321")) {
+                                            cdata = cdata.replace("Rp ","").replace(".","").replace(",00","");
+                                        }
+                                        data.add(cdata);
+                                    }
                                 }
                                 if (v instanceof RadioButton) {
                                     RadioButton radioButton = (RadioButton) v;
@@ -1198,7 +1242,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     dataOutput = TextUtils.join("|", data);
                 }
                 // reprint
-                if (actionUrl.startsWith("P")) {
+                if (actionUrl.startsWith("P") && !actionUrl.equals("P00030") && !actionUrl.equals("P00031") && !actionUrl.equals("P00032") && !actionUrl.equals("P00033")) {
                     JSONObject jsonResp = handleReprint(actionUrl);
                     processResponse(jsonResp, "reprint");
                     return;
@@ -1213,7 +1257,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
                     msg.put("msg_id", msgId);
                     msg.put("msg_ui", telephonyManager.getDeviceId());
-                    msg.put("msg_si", actionUrl);
+                    // HANDLING NEW ASSIGNED NEW ACTION URL IN THIS METHOD; EG FOR MPN G2 BJB
+                    if (!newActionUrl.equals("")){
+                        msg.put("msg_si", newActionUrl);
+                    }
+                    else{
+                        msg.put("msg_si", actionUrl);
+                    }
                     //ovride
                     if (newAct!=null) {
                         msg.put("msg_si", newAct);
@@ -1241,7 +1291,15 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    new PostData().execute(msgRoot.toString());
 
                     JsonCompHandler.saveJsonMessage(context, msgId, "rq", msgRoot);
-                    saveEdcLog(actionUrl, msgId);
+                    // HANDLING NEW ASSIGNED NEW ACTION URL IN THIS METHOD; EG FOR MPN G2 BJB
+                    if (!newActionUrl.equals("")){
+
+                        saveEdcLog(newActionUrl, msgId);
+                    }
+                    else{
+
+                        saveEdcLog(actionUrl, msgId);
+                    }
                     if (panHolder!=null) {
                         updEdcLogPan(msgId, panHolder, tcaid);
                     }
@@ -1729,9 +1787,28 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             preparePrint();
         }
 
-        if (formId.equals("MB82510")){
+        boolean hasChip = false;
+        if (comp != null){
+            JSONObject comps = comp.has("comps") ? comp.getJSONObject("comps") : null;
+            if (comps != null){
+                JSONArray comp = comps.has("comp") ? comps.getJSONArray("comp") : null;
+                if (comp != null && comp.length() > 0){
+                    for (int i = 0; i < comp.length(); i++){
+                        JSONObject cmp = comp.getJSONObject(i);
+                        if (cmp != null & cmp.has("comp_id")){
+                            String compId = cmp.getString("comp_id");
+                            if (compId.equalsIgnoreCase("I0209")){
+                                hasChip = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-        insertICC.isByPass = true;
+        if (hasChip){
+            insertICC.isByPass = true;
             showIccDialog(null);
         }
     }
@@ -2039,6 +2116,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         String lbl = dataArr.getString("comp_lbl");
                         String value = val.getString("print");
                         value = value.replaceFirst("\\s++$","");
+                        // tambahin ntpn: value diganti strip, valuenya "null", compid nya M1012
+                        if (dataArr.getString("comp_id").equals("M1012") && lbl.contains("NTPN") && (value == null || value.equals("null"))){
+                            value = "-";
+                        }
                         if (!lbl.startsWith("--S")) {
                             if (lbl.startsWith("--B")) {
                                 lbl = lbl.substring(3);
@@ -2747,7 +2828,20 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         public List<PrintSize> addStandardFooter(List<PrintSize> data) {
             data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
-            data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI BERHASIL\n"));
+            boolean foundNullNtpn = false;
+            for (int i = 0;  i < data.size() ; i++  ){
+                PrintSize dataPrint = data.get(i);
+                if (dataPrint.getMessage().contains("NTPN")){
+                    foundNullNtpn = true;
+                    break;
+                }
+            }
+            if (foundNullNtpn){
+                data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI SEDANG DALAM PROSES\n"));
+            }
+            else{
+                data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI BERHASIL\n"));
+            }
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Informasi lebih lanjut, silahkan hubungi\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Bank BJB\n"));
@@ -3118,6 +3212,24 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             } else {
                 alertDialog.setMessage("Error belum terdefinisi");
             }
+
+            String rc = "none";
+            if (responObj.has("print")) {
+                if (responObj.getString("print")!=null) {
+                    rc = responObj.getString("print");
+                }
+            }
+            Log.i("RC", "RC EUY: "+Html.fromHtml(val.getString("value")).toString());
+
+            if (Html.fromHtml(val.getString("value")).toString().equalsIgnoreCase("Expired Card")){
+                // Tagihan sudah terbayar
+                alertDialog.setMessage("Tagihan sudah terbayar");
+            }
+            if (Html.fromHtml(val.getString("value")).toString().equalsIgnoreCase("Invalid PIN")){
+                // Tagihan tidak ditemukan
+                alertDialog.setMessage("Tagihan tidak ditemukan");
+            }
+
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -3165,6 +3277,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         JSONObject rps = new JSONObject();
         String logText = "reprint [" + serviceId + "]";
         try {
+            Log.d("CEK ARYO", "5");
             rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                     "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                     "\"type\":\"3\",\"title\":\"Gagal\"}}");
@@ -3212,6 +3325,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 if (clientDB.isOpen()) {
                     clientDB.close();
                 }
+                Log.d("CEK ARYO", "6");
                 rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                         "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                         "\"type\":\"3\",\"title\":\"Gagal\"}}");
@@ -3232,6 +3346,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         JSONObject rps = new JSONObject();
         String logText = "void [" + stanvoid + "]";
         try {
+            Log.d("CEK ARYO", "7");
             rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                     "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                     "\"type\":\"3\",\"title\":\"Gagal\"}}");
@@ -3271,6 +3386,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 if (clientDB.isOpen()) {
                     clientDB.close();
                 }
+                Log.d("CEK ARYO", "8");
                 rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                         "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                         "\"type\":\"3\",\"title\":\"Gagal\"}}");

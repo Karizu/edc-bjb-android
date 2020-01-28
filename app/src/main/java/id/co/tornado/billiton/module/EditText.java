@@ -29,7 +29,7 @@ import id.co.tornado.billiton.module.listener.PinpadListener;
 public class EditText extends com.rey.material.widget.EditText implements
         View.OnKeyListener,
         View.OnFocusChangeListener {
-    private JSONObject comp;
+    public JSONObject comp;
     private int maxLength, minLength;
     private boolean mandatory;
     private boolean number;

@@ -64,6 +64,10 @@ public class TextView extends LinearLayout {
                 if(value.startsWith("[")){
                     value = value.substring(value.indexOf("]")+1);
                 }
+
+                if (comp.getString("comp_id").equals("M1012") && lbl.contains("NTPN") && (value == null || value.equals("null"))){
+                    value = "-";
+                }
 //                Log.d("TEXT_VIEW",val.toString());
 //                Log.d("TEXT_VIEW", value);
                 String tmp = value; //val.getString("value");

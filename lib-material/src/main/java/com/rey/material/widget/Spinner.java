@@ -795,7 +795,7 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
         int arrowWidth = getArrowDrawableWidth();
 
         if(mArrowDrawable != null) {
-            int top = getPaddingTop() + (mLabelView == null ? 0 : mLabelView.getMeasuredHeight());
+            int top = getPaddingTop() + (mLabelView == null ? 0 : ((mLabelView.getMeasuredHeight() - (mArrowSize + mArrowPadding))/2));
             int bottom = h - getDividerDrawableHeight() - getPaddingBottom();
             if(mIsRtl)
                 mArrowDrawable.setBounds(getPaddingLeft(), top, getPaddingLeft() + arrowWidth, bottom);
@@ -1339,6 +1339,7 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
 
     protected void setLabel(CharSequence text){
         getLabelView().setText(text);
+        getLabelView().setTextSize(TypedValue.COMPLEX_UNIT_PX, 100);
     }
 
 }

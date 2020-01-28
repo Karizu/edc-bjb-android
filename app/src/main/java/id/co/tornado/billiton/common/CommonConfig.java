@@ -36,12 +36,12 @@ public class CommonConfig {
 //    public static final String HTTP_REST_URL = "edc.bankbjb.co.id/ARRest"; //192.168.43.207:8080
 //    public static final String WEBSOCKET_URL = "edc.bankbjb.co.id/tms"; //192.168.43.207:8080
 //    public static final String HTTP_POST = "http://edc.bankbjb.co.id/ARRest/api";
-    public static final String HTTP_REST_URL = "192.168.1.27:8080/ARRest"; //192.168.43.207:8080
-    public static final String WEBSOCKET_URL = "192.168.1.27:8080/tms"; //192.168.43.207:8080
-    public static final String HTTP_POST = "http://192.168.1.27:8080/ARRest/api";
+    public static final String HTTP_REST_URL = "192.168.43.81:8080/ARRest"; //192.168.43.207:8080
+    public static final String WEBSOCKET_URL = "192.168.43.81:8080/tms"; //192.168.43.207:8080
+    public static final String HTTP_POST = "http://192.168.43.81:8080/ARRest/api";
     public static final String POST_PATH = "api";
 
-    public static final String INIT_REST_ACT = "MBJB000";
+    public static final String INIT_REST_ACT = "S000000";
     public static final String[] LIST_MENU_KEY = {"type", "title", "id", "ver", "comps"};
     public static final String[] LIST_MENU_COMP_KEY = {"visible", "comp_type", "comp_id", "comp_lbl", "comp_act", "seq"};
     public static final String[] FORM_MENU_KEY = {"type", "title", "id", "print", "print_text", "ver", "comps"};
@@ -59,7 +59,7 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_TYPE = "Rupiah";
     public static final String DEFAULT_DISCOUNT_RATE = "0";
     public static final String EXPD = "2111";
-    public static final String DEV_TERMINAL_ID = "00000000";//"00000023";
+    public static final String DEV_TERMINAL_ID = "13050001";//"00000023";
     public static final String DEV_MERCHANT_ID = "000063708571";//"000001210000020"; //000001370076089
     public static final String INIT_MERCHANT_NAME = "FESTIVAL WEST JAVA";//"GTA DEVICE";
     public static final String INIT_MERCHANT_ADDRESS1 = "GEDUNG SATE";

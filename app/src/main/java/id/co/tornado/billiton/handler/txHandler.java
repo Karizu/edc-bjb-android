@@ -679,6 +679,7 @@ public class txHandler {
                 if (clientDB.isOpen()) {
                     clientDB.close();
                 }
+                Log.d("CEK ARYO", "1");
                 return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                         "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                         "\"type\":\"3\",\"title\":\"Gagal\"}}");
@@ -732,6 +733,7 @@ public class txHandler {
                 if (clientDB.isOpen()) {
                     clientDB.close();
                 }
+                Log.d("CEK ARYO", "2");
                 return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                         "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                         "\"type\":\"3\",\"title\":\"Gagal\"}}");
@@ -922,6 +924,8 @@ public class txHandler {
                 if (cLog!=null) {
                     cLog.close();
                 }
+
+                Log.d("CEK ARYO", "3");
                 return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                         "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                         "\"type\":\"3\",\"title\":\"Gagal\"}}");
@@ -1148,6 +1152,7 @@ public class txHandler {
                 if (cList!=null) {
                     cList.close();
                 }
+                Log.d("CEK ARYO", "4");
                 return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
                         "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                         "\"type\":\"3\",\"title\":\"Gagal\"}}");
