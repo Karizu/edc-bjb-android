@@ -420,6 +420,39 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
             }
 
+            if (comp.has("comps")){
+                JSONObject comps = comp.getJSONObject("comps");
+                if (comps.has("comp")){
+                    JSONArray comp_array = comps.getJSONArray("comp");
+                    for (int i = 0; i < comp_array.length(); i++){
+                        JSONObject comp_obj = comp_array.getJSONObject(i);
+                        if (comp_obj != null && comp_obj.getString("comp_type").equals("1") && comp_obj.has("comp_act") && comp_obj.getString("comp_act").equals("sal_amount")){
+                            if (comp_obj.has("comp_values")){
+                                JSONObject comp_values = comp_obj.getJSONObject("comp_values");
+                                if (comp_values.has("comp_value")) {
+                                    JSONArray comp_value_array = comp_values.getJSONArray("comp_value");
+                                    if (comp_value_array.length() == 1) {
+                                        JSONObject comp_value_obj = comp_value_array.getJSONObject(0);
+                                        String value = comp_value_obj.getString("value");
+                                        value = value.replace("Rp", "");
+                                        value = value.replace(".", "");
+                                        if (value.contains(",00")) {
+                                            value = value.replace(",00", "");
+                                        }
+                                        value = value.trim();
+                                        amt = value;//comp_obj.
+                                        amt = "000000000000" + amt + "00";
+                                        amt = amt.substring(amt.length() - 12);
+                                        amts[0] = amt;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
