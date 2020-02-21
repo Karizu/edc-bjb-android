@@ -441,7 +441,12 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         }
                                         value = value.trim();
                                         amt = value;//comp_obj.
-                                        amt = "000000000000" + amt + "00";
+                                        //add 00 on tag 9F02, all screen MPN
+                                        if (formId.equals("SR30017") || formId.equals("SR50017") || formId.equals("SR10017")){
+                                            amt = "000000000000" + amt + "00";
+                                        } else {
+                                            amt = "00000000000000" + amt;
+                                        }
                                         amt = amt.substring(amt.length() - 12);
                                         amts[0] = amt;
                                     }
@@ -1120,20 +1125,20 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                             newActionUrl = "M0006E";
                                         }
                                     }
-                                    else if (formId.equals("S000C15") && editText.comp.getString("comp_id").equals("M1001")){
+                                    else if (formId.equals("S000017") && editText.comp.getString("comp_id").equals("M1001")){
                                         // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
                                         String kodeBilling = editText.getText().toString();
                                         if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")){
                                             // DJP
-                                            newActionUrl = "M0006G";
+                                            newActionUrl = "M0007A";
                                         }
                                         else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")){
                                             // DJBC
-                                            newActionUrl = "M0006I";
+                                            newActionUrl = "M0007C";
                                         }
                                         else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")){
                                             // DJA
-                                            newActionUrl = "M0006K";
+                                            newActionUrl = "M0007E";
                                         }
                                     }
                                     Log.d("EDIT READ", editText.getText().toString());
