@@ -1134,7 +1134,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                                         }
                                     }
-                                    // HANDLING MAPPING MPN G2; S000C15=CASH;S000015=DEBIT
+                                    // HANDLING MAPPING MPN G2; S000C15=CASH;S000017=DEBIT
                                     if (formId.equals("S000015") && editText.comp.getString("comp_id").equals("M1001")) {
                                         // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
                                         String kodeBilling = editText.getText().toString();
@@ -1149,17 +1149,32 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                             newActionUrl = "M0006E";
                                         }
                                     } else if (formId.equals("S000017") && editText.comp.getString("comp_id").equals("M1001")) {
+                                            // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
+                                            String kodeBilling = editText.getText().toString();
+                                            if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
+                                                // DJP
+                                                newActionUrl = "M0007A";
+                                            } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
+                                                // DJBC
+                                                newActionUrl = "M0007C";
+                                            } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
+                                                // DJA
+                                                newActionUrl = "M0007E";
+                                            }
+                                    }
+                                        // MAPPING SERVICE FOR CETAK ULANG MPN
+                                    else if (formId.equals("S000019") && editText.comp.getString("comp_id").equals("M1001")) {
                                         // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
                                         String kodeBilling = editText.getText().toString();
                                         if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
-                                            // DJP
-                                            newActionUrl = "M0007A";
+                                            // Cetak Ulang DJP
+                                            newActionUrl = "M0007H";
                                         } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
-                                            // DJBC
-                                            newActionUrl = "M0007C";
+                                            // Cetak Ulang DJBC
+                                            newActionUrl = "M0007G";
                                         } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
-                                            // DJA
-                                            newActionUrl = "M0007E";
+                                            // Cetak Ulang DJA
+                                            newActionUrl = "M0007I";
                                         }
                                     }
                                     //Add Filter No Pajak & PEMDA ID PBB
@@ -1176,9 +1191,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         //Add Filter No Pajak & PEMDA ID PBB
                                         try {
                                             String nops = cdata.substring(5);
-                                            if (!nop.startsWith(nops)){
+                                            if (!nop.startsWith(nops)) {
                                                 if (!nop.startsWith(PEMKAB_BANDUNG_NOP)) {
-                                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Nominal kurang dari minimum\",\n" +
+                                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"NOP tidak sesuai dengan Pemda yang dipilih\",\n" +
                                                             "\"value\":\"NOP tidak sesuai dengan Pemda yang dipilih\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                                                             "\"type\":\"3\",\"title\":\"Gagal\"}}");
 
@@ -2491,23 +2506,24 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
             } else {
                 if (additional.startsWith("reversal")) {
-                    usingPopup = true;
-                    try {
-                        if (insertICC != null) {
-                            if (insertICC.isOpen()) {
-                                insertICC.closeDriver();
+                        usingPopup = true;
+                        try {
+                            if (insertICC != null) {
+                                if (insertICC.isOpen()) {
+                                    insertICC.closeDriver();
+                                }
                             }
+                        } catch (Exception e) {
+                            //failed to close, maybe already closed or not open yet
                         }
-                    } catch (Exception e) {
-                        //failed to close, maybe already closed or not open yet
-                    }
-                    // try sending reversal
-                    if (alert.isShowing()) {
-                        alert.dismiss();
-                    }
-                    updReversedSukses(lastan, lastan);
-                    sendSaleReversalAdvice();
-                    return;
+                        // try sending reversal
+                        if (alert.isShowing()) {
+                            alert.dismiss();
+                        }
+                        updReversedSukses(lastan, lastan);
+                        sendSaleReversalAdvice();
+                        return;
+
                 } else if (additional.startsWith("fallback")) {
                     try {
                         if (insertICC != null) {
@@ -2522,7 +2538,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     alert.show();
                     iccPreProcessed = false;
                     insertICC = null;
-                    prepareSaleFallback();
+//                    if (formId.equals("MB82510")){
+                        prepareSaleFallback();
+//                    }
                     return;
                 } else if (additional.startsWith("blocked")) {
                     try {
@@ -2896,11 +2914,21 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
             boolean foundNullNtpn = false;
+            boolean foundNTPN = false;
             for (int i = 0; i < data.size(); i++) {
                 PrintSize dataPrint = data.get(i);
+                //Add Struk Format MPN NTPN
+                Log.d("dataPrint = ", dataPrint.getMessage());
+
                 if (dataPrint.getMessage().contains("NTPN")) {
-                    foundNullNtpn = true;
-                    break;
+                    foundNTPN = true;
+                }
+
+                if (foundNTPN){
+                    if (dataPrint.getMessage().contains("-")) {
+                        foundNullNtpn = true;
+                        break;
+                    }
                 }
             }
             if (foundNullNtpn) {
@@ -2918,6 +2946,31 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         public List<PrintSize> addICCStatement(List<PrintSize> data) {
             data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
+
+            boolean foundNullNtpn = false;
+            boolean foundNTPN = false;
+            for (int i = 0; i < data.size(); i++) {
+                PrintSize dataPrint = data.get(i);
+                //Add Struk Format MPN NTPN
+                Log.d("dataPrint = ", dataPrint.getMessage());
+
+                if (dataPrint.getMessage().contains("NTPN")) {
+                    foundNTPN = true;
+                }
+
+                if (foundNTPN){
+                    if (dataPrint.getMessage().contains("-")) {
+                        foundNullNtpn = true;
+                        break;
+                    }
+                }
+            }
+            if (foundNullNtpn) {
+                data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI SEDANG DALAM PROSES\n\n"));
+            } else {
+                data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI BERHASIL\n\n"));
+            }
+
             data.add(new PrintSize(FontSize.NORMAL, "No Signature Required/PIN Verified\n"));
             data.add(new PrintSize(FontSize.NORMAL, "I Agree to Pay Above Total Amount\n"));
             data.add(new PrintSize(FontSize.NORMAL, "According To The Card Issuer Agreement\n"));

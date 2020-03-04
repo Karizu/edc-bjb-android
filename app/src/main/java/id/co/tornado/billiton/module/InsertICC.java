@@ -129,15 +129,19 @@ public class InsertICC extends com.rey.material.widget.EditText {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ICC_INSERT:
-                    if(isByPass){
-                        closeDriver();
-                        InputListener inputListener = inputListeners.get(0);
-                        inputListener.onInputCompleted(InsertICC.this, "", "", nsiccsData);
-                    }
-                    else if (isOpen) {
-                        isQuit = false;
-                        Thread t1 = new Thread(new GetData());
-                        t1.start();
+                    try {
+                        if(isByPass){
+                            closeDriver();
+                            InputListener inputListener = inputListeners.get(0);
+                            inputListener.onInputCompleted(InsertICC.this, "", "", nsiccsData);
+                        }
+                        else if (isOpen) {
+                            isQuit = false;
+                            Thread t1 = new Thread(new GetData());
+                            t1.start();
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
                     }
                     break;
                 case ICC_REMOVE:
