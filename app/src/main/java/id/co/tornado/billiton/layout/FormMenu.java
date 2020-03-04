@@ -423,6 +423,27 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
     }
 
+    private List<String> getValueFromScreen(){
+        List<String> values = new ArrayList<>();
+        try {
+            for (int i = 0; i < baseLayout.getChildCount(); i++) {
+                View v = baseLayout.getChildAt(i);
+                if (v instanceof EditText) {
+                    values.add(String.valueOf(((EditText) v).getText()));
+                } else if (v instanceof ComboBox) {
+                    ComboBox comboBox = (ComboBox) v;
+                    if (comboBox.compValues != null && comboBox.compValues.length() > 0) {
+                        String cdata = comboBox.compValuesHashMap.get(comboBox.getSelectedItemPosition());
+                        values.add(cdata);
+                    }
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return values;
+    }
+
     private String[] getAmountFromScreen() {
         String[] amts = {"000000000000", "000000000000", ""}; // amount, addamount, de55
         String amt = null;
@@ -2538,9 +2559,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     alert.show();
                     iccPreProcessed = false;
                     insertICC = null;
-//                    if (formId.equals("MB82510")){
+                    if (formId.equals("MB82510")){
                         prepareSaleFallback();
-//                    }
+                    } else if (formId.equals("S000008")){
+                        prepareSamsatFallback();
+                    } else if (formId.equals("POC0030")){
+                        preparePbbFallback();
+                    }
                     return;
                 } else if (additional.startsWith("blocked")) {
                     try {
@@ -2739,6 +2764,88 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     "\"comp_id\":\"E8251\",\"comp_opt\":\"102012012\",\"seq\":2},{\"visible\":true," +
                     "\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":3}]}," +
                     "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"MB82512\",\"type\":\"1\",\"title\":\"Sale\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareSamsatFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        Log.d("VALUES", values.get(1) + " - " +values.get(2) + " - " + values.get(3));
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"M0001A\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":4}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                    "\",\"value\":\"" + values.get(1) +
+                    "\"}]},\"comp_lbl\":\"Nomor Kendaraan\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2001\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(2) +
+                    "\",\"value\":\"" + values.get(2) +
+                    "\"}]},\"comp_lbl\":\"Total No. Polisi\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2002\",\"comp_opt\":\"102012012\",\"seq\":2}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(3) +
+                    "\",\"value\":\"" + values.get(3) +
+                    "\"}]},\"comp_lbl\":\"Nominal Bayar\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2003\",\"comp_opt\":\"102012012\",\"seq\":3}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":5}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Payment Samsat Cash\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void preparePbbFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        Log.d("VALUES", values.get(1) + " - " +values.get(2) + " - " + values.get(3));
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"P00032\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":4}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                    "\",\"value\":\"" + values.get(1) +
+                    "\"}]},\"comp_lbl\":\"Nomor Objek Pajak\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"P0031\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(2) +
+                    "\",\"value\":\"" + values.get(2) +
+                    "\"}]},\"comp_lbl\":\"Tahun Pajak\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"P0032\",\"comp_opt\":\"102012012\",\"seq\":2}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(3) +
+                    "\",\"value\":\"" + values.get(3) +
+                    "\"}]},\"comp_lbl\":\"Kab/Kota\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"P0047\",\"comp_opt\":\"102012012\",\"seq\":3}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":5}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"POC0034\",\"type\":\"1\",\"title\":\"Inquiry PBB\"}}");
 //            processResponse(fallbackScreen, "001");
             comp = fallbackScreen.getJSONObject("screen");
             pinpadTextList = new ArrayList();
