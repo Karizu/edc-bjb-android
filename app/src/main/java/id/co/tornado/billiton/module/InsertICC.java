@@ -84,7 +84,6 @@ public class InsertICC extends com.rey.material.widget.EditText {
                     HashMap data = (HashMap) b.getSerializable("DATA");
                     writeLog("MSG RC : " + data.get("RC").toString());
                     writeLog("MSG  : " + data.get("msg").toString());
-                    writeLog("DATA  : " + data.toString());
                     if (data.get("RC").toString().equals("00")) {
                         setText(data.get("msg").toString());
                         isQuit = true;
