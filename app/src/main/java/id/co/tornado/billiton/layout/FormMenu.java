@@ -3054,6 +3054,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 data = addPulsaFooter(data);
             } else if (wf.equals("SAM")) {
                 data = addSamsatFooter(data);
+            } else if (wf.equals("SUSPECT")){
+                data = addSuspectFooter(data);
             } else if (wf.equals("STL")) {
                 this.isStl = true;
                 data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
@@ -3137,6 +3139,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Informasi lebih lanjut, silahkan hubungi\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Bank BJB\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "***Terima Kasih***\n"));
+            return data;
+        }
+
+        public List<PrintSize> addSuspectFooter(List<PrintSize> data) {
+            data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
+            data.add(new PrintSize(FontSize.EMPTY, "\n"));
+
+            data.add(new PrintSize(FontSize.NORMAL, "SILAHKAN CEK SALDO ANDA\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "ATAU HUBUNGI BANK ANDA\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "BJB CALL 14049\n\n"));
             data.add(new PrintSize(FontSize.NORMAL, "***Terima Kasih***\n"));
             return data;
         }
