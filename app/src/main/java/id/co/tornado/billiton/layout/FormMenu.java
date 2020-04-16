@@ -423,7 +423,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
     }
 
-    private List<String> getValueFromScreen(){
+    private List<String> getValueFromScreen() {
         List<String> values = new ArrayList<>();
         try {
             for (int i = 0; i < baseLayout.getChildCount(); i++) {
@@ -438,7 +438,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     }
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return values;
@@ -1170,32 +1170,32 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                             newActionUrl = "M0006E";
                                         }
                                     } else if (formId.equals("S000017") && editText.comp.getString("comp_id").equals("M1001")) {
-                                            // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
-                                            String kodeBilling = editText.getText().toString();
-                                            if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
-                                                // DJP
-                                                newActionUrl = "M0007A";
-                                            } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
-                                                // DJBC
-                                                newActionUrl = "M0007C";
-                                            } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
-                                                // DJA
-                                                newActionUrl = "M0007E";
-                                            }
+                                        // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
+                                        String kodeBilling = editText.getText().toString();
+                                        if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
+                                            // DJP
+                                            newActionUrl = "M0007A";
+                                        } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
+                                            // DJBC
+                                            newActionUrl = "M0007C";
+                                        } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
+                                            // DJA
+                                            newActionUrl = "M0007E";
+                                        }
                                     }
-                                        // MAPPING SERVICE FOR CETAK ULANG MPN
+                                    // MAPPING SERVICE FOR CETAK ULANG MPN
                                     else if (formId.equals("S000019") && editText.comp.getString("comp_id").equals("M1001")) {
                                         // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
                                         String kodeBilling = editText.getText().toString();
                                         if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
                                             // Cetak Ulang DJP
-                                            newActionUrl = "M0007H";
+                                            newActionUrl = "M0007I";
                                         } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
                                             // Cetak Ulang DJBC
                                             newActionUrl = "M0007G";
                                         } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
                                             // Cetak Ulang DJA
-                                            newActionUrl = "M0007I";
+                                            newActionUrl = "M0007H";
                                         }
                                     }
                                     //Add Filter No Pajak & PEMDA ID PBB
@@ -2527,23 +2527,23 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
             } else {
                 if (additional.startsWith("reversal")) {
-                        usingPopup = true;
-                        try {
-                            if (insertICC != null) {
-                                if (insertICC.isOpen()) {
-                                    insertICC.closeDriver();
-                                }
+                    usingPopup = true;
+                    try {
+                        if (insertICC != null) {
+                            if (insertICC.isOpen()) {
+                                insertICC.closeDriver();
                             }
-                        } catch (Exception e) {
-                            //failed to close, maybe already closed or not open yet
                         }
-                        // try sending reversal
-                        if (alert.isShowing()) {
-                            alert.dismiss();
-                        }
-                        updReversedSukses(lastan, lastan);
-                        sendSaleReversalAdvice();
-                        return;
+                    } catch (Exception e) {
+                        //failed to close, maybe already closed or not open yet
+                    }
+                    // try sending reversal
+                    if (alert.isShowing()) {
+                        alert.dismiss();
+                    }
+                    updReversedSukses(lastan, lastan);
+                    sendSaleReversalAdvice();
+                    return;
 
                 } else if (additional.startsWith("fallback")) {
                     try {
@@ -2559,12 +2559,15 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     alert.show();
                     iccPreProcessed = false;
                     insertICC = null;
-                    if (formId.equals("MB82510")){
+                    if (formId.equals("MB82510")) {
                         prepareSaleFallback();
-                    } else if (formId.equals("S000008")){
+                    } else if (formId.equals("S000008") || formId.equals("S000011")) {
                         prepareSamsatFallback();
-                    } else if (formId.equals("POC0030")){
+                    } else if (formId.equals("POC0030")) {
                         preparePbbFallback();
+                    }
+                    else if (formId.equals("S000017")) {
+                        prepareMPNFallback();
                     }
                     return;
                 } else if (additional.startsWith("blocked")) {
@@ -2779,7 +2782,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             alert.dismiss();
         }
         List<String> values = getValueFromScreen();
-        Log.d("VALUES", values.get(1) + " - " +values.get(2) + " - " + values.get(3));
+        Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
         try {
             JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
                     "{\"fallback\":1,\"action_url\":\"M0001A\",\"ver\":\"1\",\"print\":null," +
@@ -2820,7 +2823,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             alert.dismiss();
         }
         List<String> values = getValueFromScreen();
-        Log.d("VALUES", values.get(1) + " - " +values.get(2) + " - " + values.get(3));
+        Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
         try {
             JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
                     "{\"fallback\":1,\"action_url\":\"P00032\",\"ver\":\"1\",\"print\":null," +
@@ -2853,6 +2856,92 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             init();
         } catch (Exception e) {
 
+        }
+    }
+
+    public void prepareMPNFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        Log.d("VALUES", values.get(1));
+
+        //MAPPING HANDLING MPN FALLBACK
+        if (values.get(1).startsWith("0") || values.get(1).startsWith("1") || values.get(1).startsWith("2") || values.get(1).startsWith("3")) {
+            //DJP
+            try {
+                JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                        "{\"fallback\":1,\"action_url\":\"M0006A\",\"ver\":\"1\",\"print\":null," +
+                        "\"comps\":{\"comp\":[" +
+
+                        "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                        "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":2}," +
+
+                        "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                        "\",\"value\":\"" + values.get(1) +
+                        "\"}]},\"comp_lbl\":\"Masukkan Kode Billing\",\"comp_type\":\"2\"," +
+                        "\"comp_id\":\"M1001\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                        "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":3}]}," +
+                        "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10015\",\"type\":\"1\",\"title\":\"Inquiry DJP\"}}");
+//            processResponse(fallbackScreen, "001");
+                comp = fallbackScreen.getJSONObject("screen");
+                pinpadTextList = new ArrayList();
+                pinModuleCounter = 0;
+                init();
+            } catch (Exception e) {
+
+            }
+        } else if (values.get(1).startsWith("4") || values.get(1).startsWith("5") || values.get(1).startsWith("6")) {
+            //DJBC
+            try {
+                JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                        "{\"fallback\":1,\"action_url\":\"M0006C\",\"ver\":\"1\",\"print\":null," +
+                        "\"comps\":{\"comp\":[" +
+
+                        "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                        "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":2}," +
+
+                        "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                        "\",\"value\":\"" + values.get(1) +
+                        "\"}]},\"comp_lbl\":\"Masukkan Kode Billing\",\"comp_type\":\"2\"," +
+                        "\"comp_id\":\"M1001\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                        "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":3}]}," +
+                        "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"POC0034\",\"type\":\"1\",\"title\":\"Inquiry DJBC\"}}");
+//            processResponse(fallbackScreen, "001");
+                comp = fallbackScreen.getJSONObject("screen");
+                pinpadTextList = new ArrayList();
+                pinModuleCounter = 0;
+                init();
+            } catch (Exception e) {
+
+            }
+        } else if (values.get(1).startsWith("7") || values.get(1).startsWith("8") || values.get(1).startsWith("9")) {
+            //DJA
+            try {
+                JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                        "{\"fallback\":1,\"action_url\":\"M0006E\",\"ver\":\"1\",\"print\":null," +
+                        "\"comps\":{\"comp\":[" +
+
+                        "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                        "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":2}," +
+
+                        "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                        "\",\"value\":\"" + values.get(1) +
+                        "\"}]},\"comp_lbl\":\"Masukkan Kode Billing\",\"comp_type\":\"2\"," +
+                        "\"comp_id\":\"M1001\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                        "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":3}]}," +
+                        "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"POC0034\",\"type\":\"1\",\"title\":\"Inquiry DJA\"}}");
+//            processResponse(fallbackScreen, "001");
+                comp = fallbackScreen.getJSONObject("screen");
+                pinpadTextList = new ArrayList();
+                pinModuleCounter = 0;
+                init();
+            } catch (Exception e) {
+
+            }
         }
     }
 
@@ -2959,10 +3048,14 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             this.wf = wf;
             if (wf.equals("WF")) {
                 data = addStandardFooter(data);
+            } else if (wf.equals("CU")) {
+                data = addCetakUlangFooter(data);
             } else if (wf.equals("PF")) {
                 data = addPulsaFooter(data);
             } else if (wf.equals("SAM")) {
                 data = addSamsatFooter(data);
+            } else if (wf.equals("SUSPECT")){
+                data = addSuspectFooter(data);
             } else if (wf.equals("STL")) {
                 this.isStl = true;
                 data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
@@ -3031,8 +3124,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     foundNTPN = true;
                 }
 
-                if (foundNTPN){
-                    if (dataPrint.getMessage().contains("-")) {
+                if (foundNTPN) {
+                    if (dataPrint.getMessage().contains("-  ")) {
                         foundNullNtpn = true;
                         break;
                     }
@@ -3046,6 +3139,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Informasi lebih lanjut, silahkan hubungi\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Bank BJB\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "***Terima Kasih***\n"));
+            return data;
+        }
+
+        public List<PrintSize> addSuspectFooter(List<PrintSize> data) {
+            data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
+            data.add(new PrintSize(FontSize.EMPTY, "\n"));
+
+            data.add(new PrintSize(FontSize.NORMAL, "SILAHKAN CEK SALDO ANDA\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "ATAU HUBUNGI BANK ANDA\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "BJB CALL 14049\n\n"));
             data.add(new PrintSize(FontSize.NORMAL, "***Terima Kasih***\n"));
             return data;
         }
@@ -3065,8 +3169,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     foundNTPN = true;
                 }
 
-                if (foundNTPN){
-                    if (dataPrint.getMessage().contains("-")) {
+                if (foundNTPN) {
+                    if (dataPrint.getMessage().contains("-  ")) {
                         foundNullNtpn = true;
                         break;
                     }
@@ -3105,6 +3209,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI BERHASIL\n"));
             data.add(new PrintSize(FontSize.NORMAL, "INFORMASI LEBIH LANJUT, SILAHKAN\n"));
             data.add(new PrintSize(FontSize.NORMAL, "HUBUNGI BANK BJB\n"));
+            data.add(new PrintSize(FontSize.EMPTY, "\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "***TERIMA KASIH***\n"));
+            return data;
+        }
+
+        public List<PrintSize> addCetakUlangFooter(List<PrintSize> data) {
+            data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
+            data.add(new PrintSize(FontSize.EMPTY, "\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "CETAK ULANG\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "MOHON DISIMPAN RESI INI ADALAH\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "BUKTI PEMBAYARAN YANG SAH\n"));
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
             data.add(new PrintSize(FontSize.NORMAL, "***TERIMA KASIH***\n"));
             return data;
