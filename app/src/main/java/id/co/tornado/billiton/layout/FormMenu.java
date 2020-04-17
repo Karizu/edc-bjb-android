@@ -2596,7 +2596,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             } else {
                 for (int w = 0; w < pinModuleCounter; w++) {
 //                showPinDialog(v);
-                    showChangePinDialog(v);
+                    showChangePinDialog(v); 
                     Log.e("PINPAD", "Create Dialog" + String.valueOf(w));
                 }
             }
