@@ -80,11 +80,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -125,6 +129,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     public static final int SUCCESS_LOG = 2;
     public static final int FAILED_LOG = 3;
     public static final int PIN_KEY_CALLBACK = 4;
+    private static final String SAMSAT_PROFILES = "1";
+    private static final String MPN_PROFILES = "2";
+    private static final String PURCHASE_PROFILES = "3";
+    private static final String PBB_PROFILES = "4";
     public static boolean SWIPELESS = false;
     public static boolean SWIPEANY = false;
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -213,6 +221,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private static final String PEMKAB_BANDUNG_ID = "0022";
     private static String PEMKAB_BANDUNG_NOP = "3206";
     private static final String PEMKOT_CIREBON_ID = "0002";
+    private String sal_amount;
+    private String stan;
+    private String date = "null";
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -481,6 +492,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         value = value.replace(".", "");
                                         if (value.contains(",00")) {
                                             value = value.replace(",00", "");
+                                            sal_amount = value;
                                         }
                                         value = value.trim();
                                         amt = value;//comp_obj.
@@ -1202,6 +1214,23 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                     if ((formId.equals("POC0030") || formId.equals("POC0033")) && editText.comp.getString("comp_id").equals("P0031")) {
                                         nop = editText.getText().toString();
                                     }
+
+                                    if (actionUrl.equals("R0000A")) {
+                                        stan = editText.getText().toString();
+                                    }
+
+                                    if (actionUrl.equals("R001A1")) {
+                                        date = editText.getText().toString();
+                                        SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
+                                        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                        try {
+                                            date = myFormat.format(fromUser.parse(date));
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
                                     Log.d("EDIT READ", editText.getText().toString());
                                     data.add(editText.getText().toString());
                                 }
@@ -1251,11 +1280,36 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 if (v instanceof MagneticSwipe) {
                                     MagneticSwipe magneticSwipe = (MagneticSwipe) v;
                                     String pan = magneticSwipe.getText().toString();
-                                    if (actionUrl.equals("E31000")) {
-                                        pan = pan.substring(0, 16);
+
+                                    if (actionUrl.equals("M0001A") || actionUrl.equals("M0006E")
+                                            || actionUrl.equals("M0006C") || actionUrl.equals("M0006A")
+                                            || actionUrl.equals("M0005A") || actionUrl.equals("P00032")) {
+                                        if (!pan.startsWith("110226")) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
+                                                    "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                            processResponse(rps, "000000");
+                                            return;
+                                        } else {
+                                            data.add(pan);
+                                        }
+                                    } else {
+                                        if (actionUrl.equals("E31000")) {
+                                            pan = pan.substring(0, 16);
+                                            data.add(pan);
+                                        } else if (pan.startsWith("110226")) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+                                                    "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                            processResponse(rps, "000000");
+                                            return;
+                                        } else {
+                                            data.add(pan);
+                                        }
                                     }
                                     Log.d("EDIT READ", pan);
-                                    data.add(pan);
                                 }
                                 if (v instanceof ChipInsert) {
                                     ChipInsert chipInsert = (ChipInsert) v;
@@ -1264,7 +1318,53 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 if (v instanceof InsertICC) {
                                     InsertICC insertICC = (InsertICC) v;
                                     String track2 = insertICC.getText().toString();
-                                    data.add(track2);
+
+                                    if (actionUrl.equals("M0008B") || actionUrl.equals("M0010C")
+                                            || actionUrl.equals("P00035")) {
+                                        if (!track2.startsWith("110226")) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
+                                                    "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                            processResponse(rps, "000000");
+                                            return;
+                                        } else {
+                                            data.add(track2);
+                                        }
+                                    } else {
+                                        if (track2.startsWith("110226")) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+                                                    "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                            processResponse(rps, "000000");
+                                            return;
+                                        } else if (actionUrl.equals("M0008A") || actionUrl.equals("M0010A")) {
+                                            if (track2.startsWith("622011") || track2.startsWith("462040")) {
+                                                data.add(track2);
+                                            } else {
+                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+                                                        "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                                processResponse(rps, "000000");
+                                                return;
+                                            }
+                                        } else if (actionUrl.equals("M0011A") || actionUrl.equals("M0510A")) {
+                                            if (track2.startsWith("622011") || track2.startsWith("462040")) {
+                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+                                                        "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                                processResponse(rps, "000000");
+                                                return;
+                                            } else {
+                                                data.add(track2);
+                                            }
+                                        } else {
+                                            data.add(track2);
+                                        }
+                                    }
                                     Log.d("EDIT READ", track2);
                                 }
                             }
@@ -1346,12 +1446,50 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     // end test
                     dataOutput = TextUtils.join("|", data);
                 }
+
+                // new reprint
+
+                if (actionUrl.equals("R0000A")){
+                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+                    String pid = SAMSAT_PROFILES;
+
+                    JSONObject rps = null;
+                    try {
+                        rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    processResponse(rps, "reprint");
+                    return;
+                }
+
+                //Report Samsat
+                if (actionUrl.equals("R001A1") || actionUrl.equals("R001A2")){
+                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+                    String pid = SAMSAT_PROFILES;
+
+                    JSONObject rps = null;
+                    try {
+                        rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    processResponse(rps, "reprint");
+                    return;
+                }
+
                 // reprint
                 if (actionUrl.startsWith("P") && !actionUrl.equals("P00030") && !actionUrl.equals("P00031") && !actionUrl.equals("P00032") && !actionUrl.equals("P00033") && !actionUrl.equals("P00010")) {
                     JSONObject jsonResp = handleReprint(actionUrl);
                     processResponse(jsonResp, "reprint");
                     return;
                 }
+//                if (actionUrl.startsWith("R")) {
+//                    JSONObject jsonResp = handleReport(actionUrl);
+//                    processResponse(jsonResp, "report");
+//                    return;
+//                }
+                if (actionUrl.startsWith(""))
                 // void
                 if (actionUrl.startsWith("V")) {
                     JSONObject jsonResp = handleVoid(dataOutput);
@@ -1409,8 +1547,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                     String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
                     String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-//                    String httpPost = "https://" + hostname + "/" + postpath;
-                    String httpPost = "http://" + hostname + "/" + postpath;
+                    String httpPost = "https://" + hostname + "/" + postpath;
+//                    String httpPost = "http://" + hostname + "/" + postpath;
                     StringRequest jor = new StringRequest(Request.Method.POST,
                             httpPost,
                             new Response.Listener<String>() {
@@ -1443,7 +1581,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 context.finish();
                             }
                         }
-                    }) {
+                    })
+                    {
                         @Override
                         public String getBodyContentType() {
                             return "text/plain; charset=utf-8";
@@ -2563,11 +2702,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         prepareSaleFallback();
                     } else if (formId.equals("S000008") || formId.equals("S000011")) {
                         prepareSamsatFallback();
+                    } else if (formId.equals("S0000C4")) {
+                        prepareSamsatBulkCashFallback();
                     } else if (formId.equals("POC0030")) {
                         preparePbbFallback();
-                    }
-                    else if (formId.equals("S000017")) {
+                    } else if (formId.equals("S000017")) {
                         prepareMPNFallback();
+                    } else if (formId.equals("S000010") || formId.equals("S000510")) {
+                        prepareSamsatBulkFallback();
+                    } else if (formId.equals("S0000C8")) {
+                        prepareSamsatCashFallback();
                     }
                     return;
                 } else if (additional.startsWith("blocked")) {
@@ -2678,8 +2822,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             msgRoot.put("msg", msg);
             String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
             String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-//            String httpPost = "https://" + hostname + "/" + postpath;
-            String httpPost = "http://" + hostname + "/" + postpath;
+            String httpPost = "https://" + hostname + "/" + postpath;
+//            String httpPost = "http://" + hostname + "/" + postpath;
             StringRequest jor = new StringRequest(Request.Method.POST,
                     httpPost,
                     new Response.Listener<String>() {
@@ -2785,6 +2929,47 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
         try {
             JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"M0001C\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":4}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                    "\",\"value\":\"" + values.get(1) +
+                    "\"}]},\"comp_lbl\":\"Nomor Kendaraan\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2001\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(2) +
+                    "\",\"value\":\"" + values.get(2) +
+                    "\"}]},\"comp_lbl\":\"Total No. Polisi\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2002\",\"comp_opt\":\"102012012\",\"seq\":2}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(3) +
+                    "\",\"value\":\"" + values.get(3) +
+                    "\"}]},\"comp_lbl\":\"Nominal Bayar\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2003\",\"comp_opt\":\"102012012\",\"seq\":3}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":5}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Payment Samsat Cash\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareSamsatCashFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
                     "{\"fallback\":1,\"action_url\":\"M0001A\",\"ver\":\"1\",\"print\":null," +
                     "\"comps\":{\"comp\":[" +
 
@@ -2818,6 +3003,88 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
     }
 
+    public void prepareSamsatBulkFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"M0005B\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":4}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                    "\",\"value\":\"" + values.get(1) +
+                    "\"}]},\"comp_lbl\":\"Nomor Kendaraan\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2001\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(2) +
+                    "\",\"value\":\"" + values.get(2) +
+                    "\"}]},\"comp_lbl\":\"Total No. Polisi\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2002\",\"comp_opt\":\"102012012\",\"seq\":2}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(3) +
+                    "\",\"value\":\"" + values.get(3) +
+                    "\"}]},\"comp_lbl\":\"Nominal Bayar\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2003\",\"comp_opt\":\"102012012\",\"seq\":3}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":5}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Payment Samsat Bulk Cash\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareSamsatBulkCashFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"M0005A\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":4}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(1) +
+                    "\",\"value\":\"" + values.get(1) +
+                    "\"}]},\"comp_lbl\":\"Nomor Kendaraan\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2001\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(2) +
+                    "\",\"value\":\"" + values.get(2) +
+                    "\"}]},\"comp_lbl\":\"Total No. Polisi\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2002\",\"comp_opt\":\"102012012\",\"seq\":2}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + values.get(3) +
+                    "\",\"value\":\"" + values.get(3) +
+                    "\"}]},\"comp_lbl\":\"Nominal Bayar\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M2003\",\"comp_opt\":\"102012012\",\"seq\":3}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":5}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Payment Samsat Bulk Cash\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
     public void preparePbbFallback() {
         if (alert.isShowing()) {
             alert.dismiss();
@@ -2826,7 +3093,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
         try {
             JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
-                    "{\"fallback\":1,\"action_url\":\"P00032\",\"ver\":\"1\",\"print\":null," +
+                    "{\"fallback\":1,\"action_url\":\"P00034\",\"ver\":\"1\",\"print\":null," +
                     "\"comps\":{\"comp\":[" +
 
                     "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
@@ -3054,8 +3321,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 data = addPulsaFooter(data);
             } else if (wf.equals("SAM")) {
                 data = addSamsatFooter(data);
-            } else if (wf.equals("SUSPECT")){
+            } else if (wf.equals("SUSPECT")) {
                 data = addSuspectFooter(data);
+            } else if (wf.equals("MPN")) {
+                data = addFooterMPN(data);
             } else if (wf.equals("STL")) {
                 this.isStl = true;
                 data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
@@ -3125,11 +3394,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
 
                 if (foundNTPN) {
-                    if (dataPrint.getMessage().contains("-  ")) {
-                        foundNullNtpn = true;
-                        break;
+                    if (dataPrint.getMessage().contains("-")) {
+                        if (dataPrint.getMessage().contains("TC") || dataPrint.getMessage().contains("AID")) {
+                            foundNullNtpn = false;
+                        } else {
+                            foundNullNtpn = true;
+                            break;
+                        }
                     }
                 }
+
             }
             if (foundNullNtpn) {
                 data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI SEDANG DALAM PROSES\n"));
@@ -3139,6 +3413,43 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             data.add(new PrintSize(FontSize.EMPTY, "\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Informasi lebih lanjut, silahkan hubungi\n"));
             data.add(new PrintSize(FontSize.NORMAL, "Bank BJB\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "***Terima Kasih***\n"));
+            return data;
+        }
+
+        public List<PrintSize> addFooterMPN(List<PrintSize> data) {
+            data.add(new PrintSize(FontSize.NORMAL, "START_FOOTER"));
+            data.add(new PrintSize(FontSize.EMPTY, "\n"));
+            boolean foundNullNtpn = false;
+            boolean foundNTPN = false;
+            for (int i = 0; i < data.size(); i++) {
+                PrintSize dataPrint = data.get(i);
+                //Add Struk Format MPN NTPN
+                Log.d("dataPrint = ", dataPrint.getMessage());
+                if (dataPrint.getMessage().contains("NTPN")) {
+                    foundNTPN = true;
+                }
+
+                if (foundNTPN) {
+                    if (dataPrint.getMessage().contains("-")) {
+                        if (dataPrint.getMessage().contains("TC") || dataPrint.getMessage().contains("AID")) {
+                            foundNullNtpn = false;
+                        } else {
+                            foundNullNtpn = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (foundNullNtpn) {
+                data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI SEDANG DALAM PROSES\n"));
+            } else {
+                data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI BERHASIL\n"));
+            }
+            data.add(new PrintSize(FontSize.EMPTY, "\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "MOHON DISIMPAN RESI INI ADALAH\n"));
+            data.add(new PrintSize(FontSize.NORMAL, "BUKTI PEMBAYARAN YANG SAH\n\n"));
             data.add(new PrintSize(FontSize.NORMAL, "***Terima Kasih***\n"));
             return data;
         }
@@ -3170,12 +3481,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
 
                 if (foundNTPN) {
-                    if (dataPrint.getMessage().contains("-  ")) {
-                        foundNullNtpn = true;
-                        break;
+                    if (dataPrint.getMessage().contains("-")) {
+                        if (dataPrint.getMessage().contains("TC") || dataPrint.getMessage().contains("AID")) {
+                            foundNullNtpn = false;
+                        } else {
+                            foundNullNtpn = true;
+                            break;
+                        }
                     }
                 }
             }
+
             if (foundNullNtpn) {
                 data.add(new PrintSize(FontSize.NORMAL, "TRANSAKSI SEDANG DALAM PROSES\n\n"));
             } else {
@@ -3456,7 +3772,44 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             isReprint = false;
             JsonCompHandler.saveJsonMessage(context, msgId, "rp", jsonResp);
             String stan = "000000";
+            String amount = "";
             JSONObject responObj = jsonResp.getJSONObject("screen");
+
+            try {
+
+                if (responObj.has("comps")) {
+                    JSONObject comps = responObj.getJSONObject("comps");
+                    if (comps.has("comp")) {
+                        JSONArray comp_array = comps.getJSONArray("comp");
+                        for (int i = 0; i < comp_array.length(); i++) {
+                            JSONObject comp_obj = comp_array.getJSONObject(i);
+                            if (comp_obj != null && comp_obj.getString("comp_type").equals("1") && comp_obj.has("comp_act") && comp_obj.getString("comp_act").equals("sal_amount")) {
+                                if (comp_obj.has("comp_values")) {
+                                    JSONObject comp_values = comp_obj.getJSONObject("comp_values");
+                                    if (comp_values.has("comp_value")) {
+                                        JSONArray comp_value_array = comp_values.getJSONArray("comp_value");
+                                        if (comp_value_array.length() == 1) {
+                                            JSONObject comp_value_obj = comp_value_array.getJSONObject(0);
+                                            String value = comp_value_obj.getString("value");
+                                            value = value.replace("Rp", "");
+                                            value = value.replace(".", "");
+                                            if (value.contains(",00")) {
+                                                value = value.replace(",00", "");
+                                                amount = value.trim();
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             if (responObj.has("stan")) {
                 stan = responObj.getString("stan");
             }
@@ -3475,8 +3828,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     }
                 }
             }
+
+            if (!amount.equals("")){
+                rc = "00";
+            }
+
             //mun bisa updLogEdc didieu
-            updEdcLog(msgId, stan, rc);
+            updEdcLog(msgId, stan, rc, amount);
             if (responObj.has("print_text")) {
                 if (responObj.getString("print_text") != null) {
                     String screen_flag = responObj.getString("print_text");
@@ -3624,10 +3982,19 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     "\"type\":\"3\",\"title\":\"Gagal\"}}");
             helperDb.openDataBase();
             clientDB = helperDb.getActiveDatabase();
-            String qLog = "select * from edc_log  "
-                    + "where service_id like 'E" + serviceId.substring(1) + "%' "
-                    + "and rc <> '' and settled = 0 "
-                    + "order by log_id desc";
+            String qLog = "";
+            if (serviceId.startsWith("E")) {
+                qLog = "select * from edc_log  "
+                        + "where service_id like 'E" + serviceId.substring(1) + "%' "
+                        + "and rc <> '' and settled = 0 "
+                        + "order by log_id desc";
+            } else {
+                qLog = "select * from edc_log  "
+                        + "where service_id like 'M00%' "
+                        + "and rc <> '' and settled = 0 "
+                        + "order by log_id desc";
+            }
+
             Cursor cLog = clientDB.rawQuery(qLog, null);
             if (cLog.moveToFirst()) {
                 String msgId = cLog.getString(cLog.getColumnIndex("messageid"));
@@ -3676,6 +4043,198 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             logText += ", excptn";
         }
 //        Toast.makeText(context, logText, Toast.LENGTH_LONG).show();
+        return rps;
+    }
+
+    private JSONObject handleReport(String serviceId) {
+        if (helperDb == null) {
+            helperDb = new DataBaseHelper(context);
+        }
+
+        SQLiteDatabase clientDB = null;
+        JSONObject rps = new JSONObject();
+
+        Log.d("CEK ARYO", "5");
+        try {
+
+            helperDb.openDataBase();
+            clientDB = helperDb.getActiveDatabase();
+
+            String dateFilter = "";
+//            String dateFilter = "and date(a.rqtime)='" + StringLib.getYYYYMMDD() + "'\n";
+            String tgl = StringLib.getYYYYMMDD();
+            String modBase = "edc_log";
+//            String siLimit = serviceId.substring(0, 2);
+            String siLimit = "M00";
+            String nGrand = "0";
+            String jGrand = "0";
+            Log.d("EDCLOG", "read grand (744)");
+            String qGrand = ""
+                    + "select sum(a.amount) tot, count(*) jml, service_name from " + modBase + " a left outer join service b\n" +
+                    "on (a.service_id = b.service_id)\n" +
+                    "where a.rc= '00'\n" +
+                    dateFilter +
+//                    "and a.amount is not null\n" +
+//                    "and a.amount <> 0\n" +
+                    "and (lower(a.reversed) <> 't' or a.reversed is null)\n" +
+                    "and a.service_id like '" + siLimit + "%';";
+
+            Log.d("RPT", "Query Grand \n" + qGrand);
+            Cursor cGrand = clientDB.rawQuery(qGrand, null);
+            if (cGrand.moveToFirst()) {
+                nGrand = String.valueOf(cGrand.getInt(cGrand.getColumnIndex("tot")));
+                jGrand = String.valueOf(cGrand.getInt(cGrand.getColumnIndex("jml")));
+                String cTx = cGrand.getString(cGrand.getColumnIndex("service_name"));
+                if (nGrand.matches("-?\\d+(\\.\\d+)?")) {
+                    double d = Double.parseDouble(nGrand);
+                    DecimalFormatSymbols idrFormat = new DecimalFormatSymbols(Locale.getDefault());
+                    idrFormat.setDecimalSeparator(',');
+                    DecimalFormat formatter = new DecimalFormat("###,###,##0", idrFormat);
+//                    if (cTx!=null){
+//                        if (!cTx.startsWith("Pembayaran PLN") && !cTx.startsWith("Pembayaran Non-")) {
+//                            d = d/100;
+//                        }
+//                    }
+                    d = d / 10;
+                    nGrand = formatter.format(d);
+                }
+            }
+            if (cGrand != null) {
+                cGrand.close();
+            }
+
+            Log.d("EDCLOG", "read (772)");
+            String qLog = ""
+                    + "select (case when b.service_name is null then a.service_id else b.service_name end)" +
+                    " as service_name, count(*) jml, sum(a.amount) tot from edc_log a left outer join service b\n" +
+                    "on (a.service_id = b.service_id)\n" +
+                    "where a.rc= '00'\n" +
+                    dateFilter +
+//                    "and a.amount is not null\n" +
+//                    "and a.amount > 0\n" +
+                    "and (lower(a.reversed) <> 't' or a.reversed is null)\n" +
+                    "and a.service_id like '" + siLimit + "%'\n" +
+                    "group by b.service_name;";
+
+            Log.d("RPT", "Query Data \n" + qLog);
+            Cursor cLog = clientDB.rawQuery(qLog, null);
+            if (cLog.moveToFirst()) {
+                String cmp = "";
+                int sq = 0;
+                String ssq = String.valueOf(sq);
+                cmp += "{\"visible\":true,\"comp_values\":"
+                        + "{\"comp_value\":["
+                        + "{\"print\":\"----------------------------------------\",\n"
+                        + "\"value\":\"----------------------------------------\"}"
+                        + "]},\"comp_lbl\":\"\",\"comp_type\":\"1\","
+                        + "\"comp_id\":\"R00001\",\"seq\":" + ssq + "}";
+                sq++;
+                ssq = String.valueOf(sq);
+                cmp += ",";
+                cmp += "{\"visible\":true,\"comp_values\":"
+                        + "{\"comp_value\":["
+                        + "{\"print\":\"TRANSAKSI           COUNT         AMOUNT\",\n"
+                        + "\"value\":\"TRANSAKSI           COUNT         AMOUNT\"}"
+                        + "]},\"comp_lbl\":\"\",\"comp_type\":\"1\","
+                        + "\"comp_id\":\"R00001\",\"seq\":" + ssq + "}";
+                sq++;
+                ssq = String.valueOf(sq);
+                cmp += ",";
+                cmp += "{\"visible\":true,\"comp_values\":"
+                        + "{\"comp_value\":["
+                        + "{\"print\":\"----------------------------------------\",\n"
+                        + "\"value\":\"----------------------------------------\"}"
+                        + "]},\"comp_lbl\":\"\",\"comp_type\":\"1\","
+                        + "\"comp_id\":\"R00001\",\"seq\":" + ssq + "}";
+                sq++;
+                ssq = String.valueOf(sq);
+
+                do {
+                    if (!cmp.equals("")) {
+                        cmp += ",";
+                    }
+                    String cval = String.valueOf(cLog.getInt(cLog.getColumnIndex("tot")));
+                    String clab = cLog.getString(cLog.getColumnIndex("service_name"));
+                    if (cval.matches("-?\\d+(\\.\\d+)?")) {
+                        double d = Double.parseDouble(cval);
+                        DecimalFormatSymbols idrFormat = new DecimalFormatSymbols(Locale.getDefault());
+                        idrFormat.setDecimalSeparator(',');
+                        DecimalFormat formatter = new DecimalFormat("###,###,##0", idrFormat);
+//                        if (!clab.startsWith("Pembayaran PLN") && !clab.startsWith("Pembayaran Non-Taglis")) {
+//                            d = d/100;
+//                        }
+                        d = d / 10;
+                        cval = formatter.format(d);
+                        cval = StringLib.strToCurr(String.valueOf(d), "Rp");
+                    }
+
+                    if (clab.startsWith("Transaksi ")) {
+                        clab = clab.substring(10);
+                    }
+                    int ccount = cLog.getInt(cLog.getColumnIndex("jml"));
+                    ssq = String.valueOf(sq);
+                    sq++;
+                    cmp += "{\"visible\":true,\"comp_values\":"
+                            + "{\"comp_value\":["
+                            + "{\"print\":\"" + cval + "\",\n"
+                            + "\"value\":\"" + cval + "\"}"
+                            + "]},\"comp_lbl\":\"" + clab + " :" + String.valueOf(ccount) + "\",\"comp_type\":\"1\","
+                            + "\"comp_id\":\"R00001\",\"seq\":" + ssq + "}";
+                } while (cLog.moveToNext());
+                ssq = String.valueOf(sq);
+                cmp += ",";
+                cmp += "{\"visible\":true,\"comp_values\":"
+                        + "{\"comp_value\":["
+                        + "{\"print\":\"----------------------------------------\",\n"
+                        + "\"value\":\"----------------------------------------\"}"
+                        + "]},\"comp_lbl\":\"\",\"comp_type\":\"1\","
+                        + "\"comp_id\":\"R00001\",\"seq\":" + ssq + "}";
+                sq++;
+                ssq = String.valueOf(sq);
+                nGrand = StringLib.strToCurr(nGrand.replaceAll("[,.]", ""), "Rp");
+                cmp += ",";
+                cmp += "{\"visible\":true,\"comp_values\":"
+                        + "{\"comp_value\":["
+                        + "{\"print\":\"[B]" + nGrand + "\",\n"
+                        + "\"value\":\"[B]" + nGrand + "\"}"
+                        + "]},\"comp_lbl\":\"[B]GRAND TOTAL :" + jGrand + "\",\"comp_type\":\"1\","
+                        + "\"comp_id\":\"R00001\",\"seq\":" + ssq + "}";
+                sq++;
+                ssq = String.valueOf(sq);
+                cmp += ",";
+                cmp += "{\"visible\":true,\"comp_values\":"
+                        + "{\"comp_value\":["
+                        + "{\"print\":\"----------------------------------------\",\n"
+                        + "\"value\":\"----------------------------------------\"}"
+                        + "]},\"comp_lbl\":\"\",\"comp_type\":\"1\","
+                        + "\"comp_id\":\"R00001\",\"seq\":" + ssq + "}";
+                if (cLog != null) {
+                    cLog.close();
+                }
+
+                rps = new JSONObject("{\"screen\":{\"ver\":\"1.5\",\"print\":\"1\",\"print_text\":\"RPT" + tgl
+                        + "\",\"comps\":{\"comp\":["
+                        + cmp
+                        + "]},\"id\":\"RS00001\",\n" +
+                        "\"type\":\"1\",\"title\":\"Summary Report\"}}");
+            } else {
+                if (cLog != null) {
+                    cLog.close();
+                }
+                try {
+                    rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
+                            "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rps;
     }
 
@@ -3843,7 +4402,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //        Toast.makeText(context, logText, Toast.LENGTH_LONG).show();
     }
 
-    private void updEdcLog(String msgId, String stan, String rc) {
+    private void updEdcLog(String msgId, String stan, String rc, String amount) {
         //upd on resp or error
         //msgId, stan, rc
         if (helperDb == null) {
@@ -3862,9 +4421,12 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             clientDB = helperDb.getActiveDatabase();
             String newLog = "update edc_log set "
                     + "stan='" + stan + "', "
+                    + "rqtime='" + StringLib.getYYYYMMDD() + "', "
+                    + "amount='" + amount + "', "
                     + "rc='" + rc + "', "
                     + "reversed = " + reversed + " "
                     + "where messageid='" + msgId + "' ";
+            Log.d("newLog", newLog);
             logText += ", exec " + newLog;
             clientDB.execSQL(newLog);
             logText += ", updated";

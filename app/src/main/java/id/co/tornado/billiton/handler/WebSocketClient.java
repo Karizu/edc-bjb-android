@@ -88,7 +88,13 @@ public class WebSocketClient {
                     String originScheme = mURI.getScheme().equals("wss") ? "https" : "http";
                     URI origin = new URI(originScheme, "//" + mURI.getHost(), null);
 
-                    SocketFactory factory = mURI.getScheme().equals("wss") ? getSSLSocketFactory() : SocketFactory.getDefault();
+                    SocketFactory factory = SocketFactory.getDefault();
+                    Log.d("WEBSOCKET URI",mURI.getHost() );
+                    Log.d("WEBSOCKET ORIGIN",origin.toString() );
+                    Log.d("WEBSOCKET PORT",""+port );
+                    Log.d("WEBSOCKET PATH",path );
+                    Log.d("WEBSOCKET SECRET",secret );
+//                    factory.
                     mSocket = factory.createSocket(mURI.getHost(), port);
 
                     PrintWriter out = new PrintWriter(mSocket.getOutputStream());

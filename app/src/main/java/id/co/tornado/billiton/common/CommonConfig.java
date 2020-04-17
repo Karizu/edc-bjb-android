@@ -33,12 +33,12 @@ public class CommonConfig {
 //    public static final String HTTP_REST_URL = "192.168.43.243:8080/ARRest";
 //    public static final String WEBSOCKET_URL = "192.168.43.243:8080/tms";
 //    public static final String HTTP_POST = "http://192.168.43.243:8080/ARRest/api";
-//    public static final String HTTP_REST_URL = "edc.bankbjb.co.id/ARRest"; //192.168.43.207:8080
-//    public static final String WEBSOCKET_URL = "edc.bankbjb.co.id/tms"; //192.168.43.207:8080
-//    public static final String HTTP_POST = "http://edc.bankbjb.co.id/ARRest/api";
-    public static final String HTTP_REST_URL = "192.168.43.207:8000/ARRest"; //192.168.43.207:8080
-    public static final String WEBSOCKET_URL = "192.168.43.207:8000/tms"; //192.168.43.207:8080
-    public static final String HTTP_POST = "http://192.168.43.207:8000/ARRest/api";
+    public static final String HTTP_REST_URL = "edc.bankbjb.co.id/ARRest"; //192.168.43.207:8080
+    public static final String WEBSOCKET_URL = "edc.bankbjb.co.id/tms"; //192.168.43.207:8080
+    public static final String HTTP_POST = "http://edc.bankbjb.co.id/ARRest/api";
+//    public static final String HTTP_REST_URL = "192.168.43.207:8000/ARRest"; //192.168.43.207:8080
+//    public static final String WEBSOCKET_URL = "192.168.43.207:8000/tms"; //192.168.43.207:8080
+//    public static final String HTTP_POST = "http://192.168.43.207:8000/ARRest/api";
     public static final String POST_PATH = "api";
 
     public static final String INIT_REST_ACT = "S000000";
