@@ -24,24 +24,35 @@ import id.co.tornado.billiton.R;
 public class CommonConfig {
 
     public static final String KONFIRM_UPDATE_URL = "192.168.43.243:8080";
-//    public static final String KONFIRM_UPDATE_URL = "10.108.16.102:8088";
-//    public static final String HTTP_REST_URL = "139.0.15.53:8081/ARRest";
-//    public static final String WEBSOCKET_URL = "139.0.15.53:8081/tms";
-//    public static final String HTTP_POST = "http://139.0.15.53:8081/ARRest/trx";
-//    public static final String HTTP_POST = "http://139.0.15.53:8081/ARRest/epi";
 
-//    public static final String HTTP_REST_URL = "192.168.43.243:8080/ARRest";
-//    public static final String WEBSOCKET_URL = "192.168.43.243:8080/tms";
-//    public static final String HTTP_POST = "http://192.168.43.243:8080/ARRest/api";
-    public static final String HTTP_REST_URL = "edc.bankbjb.co.id/ARRest"; //192.168.43.207:8080
-    public static final String WEBSOCKET_URL = "edc.bankbjb.co.id/tms"; //192.168.43.207:8080
-    public static final String HTTP_POST = "http://edc.bankbjb.co.id/ARRest/api";
-//    public static final String HTTP_REST_URL = "192.168.43.207:8000/ARRest"; //192.168.43.207:8080
-//    public static final String WEBSOCKET_URL = "192.168.43.207:8000/tms"; //192.168.43.207:8080
-//    public static final String HTTP_POST = "http://192.168.43.207:8000/ARRest/api";
+
+    public static final String HTTP_SSL_PROTOCOL = "https";
+    public static final String HTTP_NON_SSL_PROTOCOL = "http";
+    public static final String HTTP_PROTOCOL = HTTP_SSL_PROTOCOL;
+
+    public static final String WS_SSL_PROTOCOL = "wss";
+    public static final String WS_NON_SSL_PROTOCOL = "ws";
+    public static final String WS_PROTOCOL = WS_SSL_PROTOCOL;
+
+    public static final int WS_SSL_PORT = 443;
+    public static final int WS_NORMAL_PORT = 80;
+    public static final int WS_DEV_PORT = 8080;
+    public static final int WS_NON_SSL_PORT = WS_NORMAL_PORT;
+    public static final int WS_PORT = WS_SSL_PORT;
+
+    public static final String DEV_IP = "192.168.1.6";
+    public static final String PROD_IP = "edc.bankbjb.co.id";
+
+    public static final String IP = PROD_IP;
+
+    public static final String HTTP_REST_URL = IP+"/ARRest";
+    public static final String WEBSOCKET_URL = IP+"/tms";
+    public static final String HTTP_POST = HTTP_PROTOCOL+ "://"+IP+"/ARRest/api";
+
     public static final String POST_PATH = "api";
 
-    public static final String INIT_REST_ACT = "S000000";
+//    public static final String INIT_REST_ACT = "S000000";
+    public static final String INIT_REST_ACT = "S000SMT";
     public static final String[] LIST_MENU_KEY = {"type", "title", "id", "ver", "comps"};
     public static final String[] LIST_MENU_COMP_KEY = {"visible", "comp_type", "comp_id", "comp_lbl", "comp_act", "seq"};
     public static final String[] FORM_MENU_KEY = {"type", "title", "id", "print", "print_text", "ver", "comps"};
@@ -59,11 +70,36 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_TYPE = "Rupiah";
     public static final String DEFAULT_DISCOUNT_RATE = "0";
     public static final String EXPD = "2111";
-    public static final String DEV_TERMINAL_ID = "00000000";//"00000023";
-    public static final String DEV_MERCHANT_ID = "000000000000000";//"000001210000020"; //000001370076089
-    public static final String INIT_MERCHANT_NAME = "FESTIVAL WEST JAVA";//"GTA DEVICE";
-    public static final String INIT_MERCHANT_ADDRESS1 = "GEDUNG SATE";
+    public static final String DEV_TERMINAL_ID = "13050199";
+    public static final String DEV_MERCHANT_ID = "000063708571";
+    public static final String INIT_MERCHANT_NAME = "BJB NARIPAN";
+    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
+
+//    public static final String DEV_TERMINAL_ID = "13030001";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 3";public static final String INIT_MERCHANT_ADDRESS1 = "SOEKARNO HATTA";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030002";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 3";public static final String INIT_MERCHANT_ADDRESS1 = "SOEKARNO HATTA";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030003";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 3";public static final String INIT_MERCHANT_ADDRESS1 = "SOEKARNO HATTA";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030004";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 2";public static final String INIT_MERCHANT_ADDRESS1 = "KAWALUYAAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030005";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 2";public static final String INIT_MERCHANT_ADDRESS1 = "KAWALUYAAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030006";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 2";public static final String INIT_MERCHANT_ADDRESS1 = "KAWALUYAAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030007";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 2";public static final String INIT_MERCHANT_ADDRESS1 = "KAWALUYAAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030008";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 1";public static final String INIT_MERCHANT_ADDRESS1 = "PADJAJARAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030009";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 1";public static final String INIT_MERCHANT_ADDRESS1 = "PADJAJARAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030010";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 1";public static final String INIT_MERCHANT_ADDRESS1 = "PADJAJARAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030011";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 1";public static final String INIT_MERCHANT_ADDRESS1 = "PADJAJARAN";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
+//    public static final String DEV_TERMINAL_ID = "13030012";public static final String DEV_MERCHANT_ID = "00230025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT KK";public static final String INIT_MERCHANT_ADDRESS1 = "CIMAHI";public static final String INIT_MERCHANT_ADDRESS2 = "CAB CIMAHI";
+//    public static final String DEV_TERMINAL_ID = "13030013";public static final String DEV_MERCHANT_ID = "00230025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT KK";public static final String INIT_MERCHANT_ADDRESS1 = "CIMAHI";public static final String INIT_MERCHANT_ADDRESS2 = "CAB CIMAHI";
+//    public static final String DEV_TERMINAL_ID = "13030014";public static final String DEV_MERCHANT_ID = "00230025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG CIMAHI";public static final String INIT_MERCHANT_ADDRESS2 = "CAB CIMAHI";
+//    public static final String DEV_TERMINAL_ID = "13030015";public static final String DEV_MERCHANT_ID = "00220025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG SOREANG";public static final String INIT_MERCHANT_ADDRESS2 = "CAB SOREANG";
+//    public static final String DEV_TERMINAL_ID = "13030016";public static final String DEV_MERCHANT_ID = "00220025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG SOREANG";public static final String INIT_MERCHANT_ADDRESS2 = "CAB SOREANG";
+//    public static final String DEV_TERMINAL_ID = "13030017";public static final String DEV_MERCHANT_ID = "00220025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG SOREANG";public static final String INIT_MERCHANT_ADDRESS2 = "CAB SOREANG";
+//    public static final String DEV_TERMINAL_ID = "13030018";public static final String DEV_MERCHANT_ID = "00750025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "KAB BANDUNG BARAT";public static final String INIT_MERCHANT_ADDRESS2 = "CAB PADALARANG";
+//    public static final String DEV_TERMINAL_ID = "13030019";public static final String DEV_MERCHANT_ID = "00750025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "KAB BANDUNG BARAT";public static final String INIT_MERCHANT_ADDRESS2 = "CAB PADALARANG";
+//    public static final String DEV_TERMINAL_ID = "13030020";public static final String DEV_MERCHANT_ID = "00750025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "KAB BANDUNG BARAT";public static final String INIT_MERCHANT_ADDRESS2 = "CAB PADALARANG";
+//    public static final String DEV_TERMINAL_ID = "13030021";public static final String DEV_MERCHANT_ID = "00110025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG SUMEDANG";public static final String INIT_MERCHANT_ADDRESS2 = "CAB SUMEDANG";
+//    public static final String DEV_TERMINAL_ID = "13030022";public static final String DEV_MERCHANT_ID = "00110025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG SUMEDANG";public static final String INIT_MERCHANT_ADDRESS2 = "CAB SUMEDANG";
+//    public static final String DEV_TERMINAL_ID = "13030023";public static final String DEV_MERCHANT_ID = "00780025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG MAJALAYA";public static final String INIT_MERCHANT_ADDRESS2 = "CAB MAJALAYA";
+//    public static final String DEV_TERMINAL_ID = "13030024";public static final String DEV_MERCHANT_ID = "00780025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT";public static final String INIT_MERCHANT_ADDRESS1 = "CABANG MAJALAYA";public static final String INIT_MERCHANT_ADDRESS2 = "CAB MAJALAYA";
     public static final String CVA = "12600000";
     public static final String DEFAULT_SETTLEMENT_PASS = "1234";
     public static final String DEFAULT_MIN_BALANCE_BRIZZI = "2500";
@@ -106,7 +142,7 @@ public class CommonConfig {
         icons.put("Info Kode Bank", R.drawable.info_petunjuk);
         icons.put("Pembayaran", R.drawable.mb_isi_ulang_brizzi);
         icons.put("Pembayaran eSamsat Banten", R.drawable.icon_esamsat);
-        icons.put("Samsat Nasional", R.drawable.mb_info_dplk);
+        icons.put("SAMSAT", R.drawable.mb_info_dplk);
         icons.put("Pembayaran eSamsat via Transfer", R.drawable.mb_info_dplk);
         icons.put("Logon", R.drawable.logon);
         icons.put("Settings", R.drawable.mb_info_mutasi);

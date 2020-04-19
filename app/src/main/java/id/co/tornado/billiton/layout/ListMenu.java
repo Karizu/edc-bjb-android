@@ -160,18 +160,18 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
             isBusy = true;
             if (context instanceof ActivityList) {
                 if (!((ActivityList) context).isWSConnected()) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                    alertDialog.setTitle("Informasi");
-                    alertDialog.setMessage("EDC tidak terkoneksi dengan server\n Silahkan coba beberapa saat lagi");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    isBusy = false;
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
-                    return;
+//                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+//                    alertDialog.setTitle("Informasi");
+//                    alertDialog.setMessage("EDC tidak terkoneksi dengan server\nSilahkan coba beberapa saat lagi\nEC: WSNC");
+//                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    isBusy = false;
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//                    alertDialog.show();
+//                    return;
                 }
             }
             JSONObject obj = (JSONObject) parent.getItemAtPosition(position);

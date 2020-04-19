@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import com.cloudpos.apidemo.common.Common;
+
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
@@ -31,6 +33,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+
+import id.co.tornado.billiton.common.CommonConfig;
 
 public class WebSocketClient {
     private static final String TAG = "WebSocketClient";
@@ -78,22 +82,23 @@ public class WebSocketClient {
                 try {
                     String secret = createSecret();
 
-                    int port = (mURI.getPort() != -1) ? mURI.getPort() : (mURI.getScheme().equals("wss") ? 443 : 80);
+                    int port = (mURI.getPort() != -1) ? mURI.getPort() : (mURI.getScheme().equals(CommonConfig.WS_SSL_PROTOCOL) ? CommonConfig.WS_SSL_PORT : CommonConfig.WS_NON_SSL_PORT);
 
                     String path = TextUtils.isEmpty(mURI.getPath()) ? "/" : mURI.getPath();
                     if (!TextUtils.isEmpty(mURI.getQuery())) {
                         path += "?" + mURI.getQuery();
                     }
 
-                    String originScheme = mURI.getScheme().equals("wss") ? "https" : "http";
+                    String originScheme = mURI.getScheme().equals(CommonConfig.WS_SSL_PROTOCOL) ? CommonConfig.HTTP_SSL_PROTOCOL : CommonConfig.HTTP_NON_SSL_PROTOCOL;
                     URI origin = new URI(originScheme, "//" + mURI.getHost(), null);
 
-                    SocketFactory factory = SocketFactory.getDefault();
+                    SocketFactory factory = mURI.getScheme().equals(CommonConfig.WS_SSL_PROTOCOL) ? getSSLSocketFactory() : SocketFactory.getDefault();
                     Log.d("WEBSOCKET URI",mURI.getHost() );
                     Log.d("WEBSOCKET ORIGIN",origin.toString() );
                     Log.d("WEBSOCKET PORT",""+port );
                     Log.d("WEBSOCKET PATH",path );
                     Log.d("WEBSOCKET SECRET",secret );
+                    Log.d("WEBSOCKET FACTORY",factory.toString() );
 //                    factory.
                     mSocket = factory.createSocket(mURI.getHost(), port);
 
@@ -151,12 +156,12 @@ public class WebSocketClient {
                     mParser.start(stream);
 
                 } catch (EOFException ex) {
-                    Log.d(TAG, "WebSocket EOF!", ex);
+                    Log.d(TAG, "EDC WebSocket EOF!", ex);
                     mListener.onDisconnect(0, "EOF");
 
                 } catch (SSLException ex) {
                     // Connection reset by peer
-                    Log.d(TAG, "Websocket SSL error!", ex);
+                    Log.d(TAG, "EDC Websocket SSL error!", ex);
                     mListener.onDisconnect(0, "SSL");
 
                 } catch (Exception ex) {
@@ -175,7 +180,7 @@ public class WebSocketClient {
                     try {
                         mSocket.close();
                         mSocket = null;
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         Log.d(TAG, "Error while disconnecting", ex);
                         mListener.onError(ex);
                     }
@@ -248,7 +253,7 @@ public class WebSocketClient {
                 try {
                     synchronized (mSendLock) {
                         if (mSocket == null) {
-                            throw new IllegalStateException("Socket not connected");
+                            throw new IllegalStateException("EDC Socket not connected");
                         }
                         OutputStream outputStream = mSocket.getOutputStream();
                         outputStream.write(frame);

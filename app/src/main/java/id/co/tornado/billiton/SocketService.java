@@ -72,7 +72,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
         public void run() {
             if (!isConnect) {
                 SharedPreferences preferences = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-                client = new WebSocketClient(URI.create("wss://" + preferences.getString("sockethost", CommonConfig.WEBSOCKET_URL) + "/devlog"), SocketService.this, extraHeaders);
+                client = new WebSocketClient(URI.create(CommonConfig.WS_PROTOCOL+"://" + preferences.getString("sockethost", CommonConfig.WEBSOCKET_URL) + "/devlog"), SocketService.this, extraHeaders);
                 client.connect();
                 recoHandler.postDelayed(this, recoInterval);
                 recoJob = true;
@@ -111,7 +111,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
         SharedPreferences preferences = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         DEBUG_MODE = preferences.getBoolean("debug_mode",DEBUG_MODE);
         if(!DEBUG_MODE){
-            client = new WebSocketClient(URI.create("wss://" + preferences.getString("sockethost",CommonConfig.WEBSOCKET_URL) + "/devlog"), this, extraHeaders);
+            client = new WebSocketClient(URI.create(CommonConfig.WS_PROTOCOL+"://" + preferences.getString("sockethost",CommonConfig.WEBSOCKET_URL) + "/devlog"), this, extraHeaders);
             if (Looper.myLooper() == null) {
                 Looper.prepare();
             }
@@ -205,6 +205,10 @@ public class SocketService extends Service implements WebSocketClient.Listener {
             JSONObject response = new JSONObject(message);
             MessageMethod method = MessageMethod.valueOf(response.getString("method"));
             MessageStatus status = MessageStatus.valueOf(response.getString("status"));
+            String response_message = "";
+            if (response.has("message")){
+                response_message = response.getString("message");
+            }
             switch (method) {
                 case LOGIN:
                     if (status == MessageStatus.LOGIN_SUCCESS) {
@@ -221,14 +225,14 @@ public class SocketService extends Service implements WebSocketClient.Listener {
                         JSONObject jsonObject = new JSONObject();
                         try {
                             jsonObject.put("type", MessageType.NOTIFICATION.name());
-                            jsonObject.put("message", "EDC Tidak terkoneksi dengan server");
+                            jsonObject.put("message", "EDC Tidak terkoneksi dengan server\n"+response_message);
                             showNotification(5432, jsonObject);
                             SharedPreferences preferencesSetting = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
                             preferencesSetting.edit().putBoolean("login_state", false).apply();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Log.i("RESP","LOGIN GAGAL");
+                        Log.i("RESP","LOGIN GAGAL: "+response_message);
                     }
                     break;
                 case MESSAGE:
@@ -252,7 +256,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("type", MessageType.NOTIFICATION.name());
-                        jsonObject.put("message", "EDC Tidak terkoneksi dengan server");
+                        jsonObject.put("message", "EDC Tidak terkoneksi dengan server\nLogout Gagal");
                         showNotification(5432, jsonObject);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -303,7 +307,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("type", MessageType.NOTIFICATION.name());
-            jsonObject.put("message", "EDC Tidak terkoneksi dengan server");
+            jsonObject.put("message", "EDC Tidak terkoneksi dengan server\nDisconnected");
             showNotification(5432, jsonObject);
             SharedPreferences preferencesSetting = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
             preferencesSetting.edit().putBoolean("login_state", false).apply();
@@ -328,7 +332,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("type", MessageType.NOTIFICATION.name());
-                jsonObject.put("message", "EDC Tidak terkoneksi dengan server");
+                jsonObject.put("message", "EDC Tidak terkoneksi dengan server\nEC: TO/CRBP/NIU");
                 showNotification(5432, jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();

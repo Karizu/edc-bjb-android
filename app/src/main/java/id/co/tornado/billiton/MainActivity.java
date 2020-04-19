@@ -146,7 +146,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         } catch (Exception e) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Informasi");
-            alertDialog.setMessage("EDC tidak terkoneksi dengan server\n Silahkan coba beberapa saat lagi");
+            alertDialog.setMessage("EDC tidak terkoneksi dengan server\nGagal mengambil data\nSilahkan coba beberapa saat lagi\n");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

@@ -38,3 +38,4 @@ app/private/cache/retriever/schemas.android.com/apk/res-auto.xml
 app/private/cache/retriever/schemas.android.com/apk/res/android.xml
 app/private/
 app/src/main/assets/files/lain
+.DS_Store

@@ -57,6 +57,8 @@ public class InsertICC extends com.rey.material.widget.EditText {
     private boolean isSCIOpen = false;
     private boolean iccReady = false;
     private boolean cardPresent = false;
+    private boolean insertingCard = false;
+    public boolean removeCardFirst = false;
     private static int CHIP_SLOT_INDEX = 0;
     private byte byteArrayATR[];
     private int nCardHandle = 0;
@@ -106,20 +108,32 @@ public class InsertICC extends com.rey.material.widget.EditText {
                     }
                 }
             } catch (Exception e) {
-                writeLog("commHandler Error : " + e.getMessage());
-                if (isOpen) {
-                    closeDriver();
+                e.printStackTrace();
+                try {
+                    writeLog("commHandler Error : " + e.getMessage());
+                    if (isOpen) {
+                        closeDriver();
+                    }
+                    if (logOutput!=null) {
+                        ((TestActivity) logOutput).hideFab();
+                    }
                 }
-                if (logOutput!=null) {
-                    ((TestActivity) logOutput).hideFab();
+                catch (Exception ex){
+                    ex.printStackTrace();
                 }
             }
 //            for (InputListener listener : inputListeners) {
 //                listener.onInputCompleted(InsertICC.this, respmsg, additional, nsiccsData);
 //            }
-            if (inputListeners.size()>0) {
-                InputListener inputListener = inputListeners.get(0);
-                inputListener.onInputCompleted(InsertICC.this, respmsg, additional, nsiccsData);
+            try {
+
+                if (inputListeners.size()>0) {
+                    InputListener inputListener = inputListeners.get(0);
+                    inputListener.onInputCompleted(InsertICC.this, respmsg, additional, nsiccsData);
+                }
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
             }
         }
     };
@@ -130,7 +144,11 @@ public class InsertICC extends com.rey.material.widget.EditText {
             switch (msg.what) {
                 case ICC_INSERT:
                     try {
+//                        if (!insertingCard){
+//                            removeCardFirst = true;
+//                        }
                         if(isByPass){
+                            insertingCard = false;
                             closeDriver();
                             InputListener inputListener = inputListeners.get(0);
                             inputListener.onInputCompleted(InsertICC.this, "", "", nsiccsData);
@@ -188,14 +206,20 @@ public class InsertICC extends com.rey.material.widget.EditText {
     }
 
     public boolean openDriver() {
-        int val=0;
-//        writeLog("Opening ICC Slot");
         try {
-            val=openEmvSlot();
-        } catch (Exception e) {
-            val=-1;
+            int val=0;
+//        writeLog("Opening ICC Slot");
+            try {
+                val=openEmvSlot();
+            } catch (Exception e) {
+                val=-1;
+            }
+            return val >= 0;
         }
-        return val >= 0;
+        catch (Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
     }
 
 
@@ -204,25 +228,36 @@ public class InsertICC extends com.rey.material.widget.EditText {
         inputListeners.add(inputListener);
     }
     public void init(int stage, NsiccsData dataHolder) {
-        procStage = stage;
-        nsiccsData = dataHolder;
-        setEnabled(false);
-        setKeyListener(null);
-        if (!openDriver()) {
-            writeLog("Open Driver failed!");
+        try {
 
-        } else {
+            procStage = stage;
+            nsiccsData = dataHolder;
+            setEnabled(false);
+            setKeyListener(null);
+            if (!openDriver()) {
+                writeLog("Open Driver failed!");
+
+            } else {
 //            writeLog("ICC DRIVER", "Open Driver succeed!");
-            Thread t1 = new Thread(new CardStateListener());
-            t1.start();
+                Thread t = new Thread(new CardStateListener());
+                t.start();
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
     public void cont(int stage, NsiccsData dataHolder) {
-        procStage = stage;
-        nsiccsData = dataHolder;
-        Thread t1 = new Thread(new GetData());
-        t1.start();
+        try {
+            procStage = stage;
+            nsiccsData = dataHolder;
+            Thread t1 = new Thread(new GetData());
+            t1.start();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public void setIsQuit(boolean isQuit) {
@@ -266,29 +301,42 @@ public class InsertICC extends com.rey.material.widget.EditText {
 
                     switch (event.nEventID) {
                         case ICC_INSERT:
+                            insertingCard = true;
                             listening = false;
                             cardPresent = true;
                             eventICCHandler.sendMessage(msg);
                             break;
                         case ICC_REMOVE:
-                            listening = false;
-                            cardPresent = false;
-                            eventICCHandler.sendMessage(msg);
+                            if (!isByPass){
+                                listening = false;
+                                cardPresent = false;
+                                eventICCHandler.sendMessage(msg);
+                            }
                             break;
                         default:
                             if (cardPresent) {
                                 // ready
+                                Log.v("ICC Card", "Card is Ready");
                             } else {
                                 // waiting for card
+                                Log.v("ICC Card", "Waiting for card");
                             }
                     }
                     counter++;
+
+
                 }
             } catch (Exception e) {
-                StringWriter sw = new StringWriter();
-                PrintWriter ps = new PrintWriter(sw);
-                e.printStackTrace(ps);
-                writeFromBackground(sw.toString());
+                e.printStackTrace();
+                try {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter ps = new PrintWriter(sw);
+                    e.printStackTrace(ps);
+                    writeFromBackground(sw.toString());
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         }
     };
@@ -319,10 +367,17 @@ public class InsertICC extends com.rey.material.widget.EditText {
                             break;
                     }
                 } catch (Exception e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter ps = new PrintWriter(sw);
-                    e.printStackTrace(ps);
-                    writeFromBackground(sw.toString());
+                    e.printStackTrace();
+                    try {
+                        StringWriter sw = new StringWriter();
+                        PrintWriter ps = new PrintWriter(sw);
+                        e.printStackTrace(ps);
+                        writeFromBackground(sw.toString());
+                    }
+                    catch (Exception ex){
+                        e.printStackTrace();
+
+                    }
                 }
             }
         }
@@ -334,18 +389,24 @@ public class InsertICC extends com.rey.material.widget.EditText {
     }
 
     private void writeLog(String string) {
-        if (string!=null) {
-            if (logOutput != null) {
-                logOutput.writeLog(string);
+
+        try {
+            if (string!=null) {
+                if (logOutput != null) {
+                    logOutput.writeLog(string);
+                } else {
+                    Log.i(tag, string);
+                }
             } else {
-                Log.i(tag, string);
+                if (logOutput != null) {
+                    logOutput.writeLog("tried to write null string");
+                } else {
+                    Log.i(tag, "null");
+                }
             }
-        } else {
-            if (logOutput != null) {
-                logOutput.writeLog("tried to write null string");
-            } else {
-                Log.i(tag, "null");
-            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
@@ -391,6 +452,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
 
         } catch (Exception e) {
             writeLog(e.getMessage());
+            e.printStackTrace();
         }
 
         return val;
@@ -441,13 +503,19 @@ public class InsertICC extends com.rey.material.widget.EditText {
                 data.put("msg", "Read failed @proc " + proc);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             data.put("RC", "05");
             data.put("msg", e.getMessage() + " proc " + proc);
         }
-        iccReady = false;
-        b.putSerializable("DATA", data);
-        msg.setData(b);
-        commHandler.sendMessage(msg);
+        try {
+            iccReady = false;
+            b.putSerializable("DATA", data);
+            msg.setData(b);
+            commHandler.sendMessage(msg);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public void readStage2() {
@@ -543,13 +611,19 @@ public class InsertICC extends com.rey.material.widget.EditText {
                 data.put("msg", cResp);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             data.put("RC", "05");
             data.put("msg", e.getMessage() + " proc " + proc);
         }
-        iccReady = false;
-        b.putSerializable("DATA", data);
-        msg.setData(b);
-        commHandler.sendMessage(msg);
+        try {
+            iccReady = false;
+            b.putSerializable("DATA", data);
+            msg.setData(b);
+            commHandler.sendMessage(msg);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public void readStage3() {
@@ -579,66 +653,88 @@ public class InsertICC extends com.rey.material.widget.EditText {
                 data.put("msg", "ARPC verification failed");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             data.put("RC", "02");
             data.put("msg", e.getMessage() + " proc " + proc);
         }
-        iccReady = false;
-        b.putSerializable("DATA", data);
-        msg.setData(b);
-        commHandler.sendMessage(msg);
+
+        try {
+            iccReady = false;
+            b.putSerializable("DATA", data);
+            msg.setData(b);
+            commHandler.sendMessage(msg);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public int iccPowerOn() {
         int val = 0;
         if (!iccReady) {
+            try {
 //            writeFromBackground("ICC Power On");
-            byteArrayATR = new byte[64];
-            ContactICCardSlotInfo mSlotInfo = new ContactICCardSlotInfo();
-            val = ContactICCardReaderInterface.powerOn(nCardHandle, byteArrayATR, mSlotInfo);
+                byteArrayATR = new byte[64];
+                ContactICCardSlotInfo mSlotInfo = new ContactICCardSlotInfo();
+                val = ContactICCardReaderInterface.powerOn(nCardHandle, byteArrayATR, mSlotInfo);
 //            writeFromBackground("Power On : " + val);
-            if (val >= 0 ) {
-                iccReady = true;
+                if (val >= 0 ) {
+                    iccReady = true;
 //                for (InputListener listener : inputListeners) {
 //                    listener.onStateChanged("Melakukan transaksi CHIP\nHarap jangan lepaskan kartu sampai transaksi selesai",1);
 //                }
-                if (inputListeners.size()>0) {
-                    InputListener inputListener = inputListeners.get(0);
-                    inputListener.onStateChanged("Melakukan transaksi CHIP\nHarap jangan lepaskan kartu sampai transaksi selesai",1);
+                    if (inputListeners.size()>0) {
+                        InputListener inputListener = inputListeners.get(0);
+                        inputListener.onStateChanged("Melakukan transaksi CHIP\nHarap jangan lepaskan kartu sampai transaksi selesai",1);
+                    }
                 }
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
             }
         }
         return val;
     }
 
     public void initNsiccsTerminal(NsiccsData dataHolder) {
-        if (dataHolder==null) {
-            nsiccsData = new NsiccsData();
+        try {
+            if (dataHolder==null) {
+                nsiccsData = new NsiccsData();
+            }
+            nsiccsData.setTvr("8000040000");
+            nsiccsData.setCurrency("0360");
+            nsiccsData.setTxtype("00");
+            nsiccsData.setCountry("0360");
+            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_INVALIDATED);
+            nsiccsData.setTdol("9F02065F2A029A039C0195059F3704");
         }
-        nsiccsData.setTvr("8000040000");
-        nsiccsData.setCurrency("0360");
-        nsiccsData.setTxtype("00");
-        nsiccsData.setCountry("0360");
-        nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_INVALIDATED);
-        nsiccsData.setTdol("9F02065F2A029A039C0195059F3704");
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
 
     }
 
     public void syncNsiccsData() {
-        nsiccsData.setTrack2(recordValues.get("57"));
-        nsiccsData.setPanseq(recordValues.get("5F34"));
-        nsiccsData.setPan(recordValues.get("5A"));
-        nsiccsData.setCdol(recordValues.get("8C"));
-        nsiccsData.setCdol2(recordValues.get("8D"));
-        writeFromBackground("PAN : " + recordValues.get("5A"));
-        recordValues.put("95", nsiccsData.getTvr());
-        recordValues.put("9F1A", nsiccsData.getCountry());
-        recordValues.put("9C", nsiccsData.getTxtype());
-        recordValues.put("5F2A", nsiccsData.getCurrency());
-        recordValues.put("82", aip);
-        Iterator fcIter = fci.getFciValue().keySet().iterator();
-        while (fcIter.hasNext()) {
-            String key = (String) fcIter.next();
-            recordValues.put(key, fci.getFciValue().get(key));
+        try {
+            nsiccsData.setTrack2(recordValues.get("57"));
+            nsiccsData.setPanseq(recordValues.get("5F34"));
+            nsiccsData.setPan(recordValues.get("5A"));
+            nsiccsData.setCdol(recordValues.get("8C"));
+            nsiccsData.setCdol2(recordValues.get("8D"));
+            writeFromBackground("PAN : " + recordValues.get("5A"));
+            recordValues.put("95", nsiccsData.getTvr());
+            recordValues.put("9F1A", nsiccsData.getCountry());
+            recordValues.put("9C", nsiccsData.getTxtype());
+            recordValues.put("5F2A", nsiccsData.getCurrency());
+            recordValues.put("82", aip);
+            Iterator fcIter = fci.getFciValue().keySet().iterator();
+            while (fcIter.hasNext()) {
+                String key = (String) fcIter.next();
+                recordValues.put(key, fci.getFciValue().get(key));
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
@@ -751,130 +847,81 @@ public class InsertICC extends com.rey.material.widget.EditText {
     }
 
     public void writeFromBackground(String string) {
-        HashMap<String, String> data = new HashMap<>();
-        Message msg = new Message();
-        Bundle b = new Bundle();
-        data.put("msg", string);
-        b.putSerializable("DATA", data);
-        msg.setData(b);
-        bgMessageHandler.sendMessage(msg);
+
+        try {
+            HashMap<String, String> data = new HashMap<>();
+            Message msg = new Message();
+            Bundle b = new Bundle();
+            data.put("msg", string);
+            b.putSerializable("DATA", data);
+            msg.setData(b);
+            bgMessageHandler.sendMessage(msg);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     private Handler bgMessageHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Bundle b = msg.getData();
-            HashMap<String, String> data = (HashMap<String, String>) b.getSerializable("DATA");
-            String textMessage = data.get("msg");
-            writeLog(textMessage);
+            try {
+                Bundle b = msg.getData();
+                HashMap<String, String> data = (HashMap<String, String>) b.getSerializable("DATA");
+                String textMessage = data.get("msg");
+                writeLog(textMessage);
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     };
 
     public void sendCmd(String apdu) {
-        if (iccReady) {
-            int val = 0;
-            writeFromBackground("Send : " + apdu);
-            byteArrayAPDU = StringLib.hexStringToByteArray(apdu);
-            nAPDULength = byteArrayAPDU.length;
-            byteArrayResponse = new byte[256];
-            val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-            writeFromBackground("Transmit : " + val);
-            writeFromBackground("Card Response : " + StringLib.toHexString(byteArrayResponse, 0, byteArrayResponse.length, false));
-        } else {
-            writeFromBackground("ICC not ready");
-            if (!openDriver()) {
-                writeLog("Open Driver failed!");
-
+        try {
+            if (iccReady) {
+                int val = 0;
+                writeFromBackground("Send : " + apdu);
+                byteArrayAPDU = StringLib.hexStringToByteArray(apdu);
+                nAPDULength = byteArrayAPDU.length;
+                byteArrayResponse = new byte[256];
+                val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+                writeFromBackground("Transmit : " + val);
+                writeFromBackground("Card Response : " + StringLib.toHexString(byteArrayResponse, 0, byteArrayResponse.length, false));
             } else {
+                writeFromBackground("ICC not ready");
+                if (!openDriver()) {
+                    writeLog("Open Driver failed!");
+
+                } else {
 //            writeLog("ICC DRIVER", "Open Driver succeed!");
-                Thread t1 = new Thread(new CardStateListener());
-                t1.start();
+                    Thread t1 = new Thread(new CardStateListener());
+                    t1.start();
+                }
             }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
     private int selectAppById(String supportedAppId) {
-        int val = 0;
-        String resp = "";
-        String rc = "";
-        String rl = "";
-        String rm = "";
-        int nrLen = 0;
-        // select APP by AID
-        String cmd = "00A4040007" + supportedAppId + "00";
-        writeFromBackground("Send : " + cmd);
-        byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-        nAPDULength = byteArrayAPDU.length;
-        byteArrayResponse = new byte[256];
-        val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-        writeFromBackground("Transmit : " + val);
-        resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-        rc = resp.substring(0, 2);
-        if (resp.length() > 3) {
-            rl = resp.substring(2, 4);
-        }
-        if (resp.length() > 4) {
-            rm = resp.substring(4);
-        }
-        writeFromBackground("Card Response : " + resp);
+        try {
 
-        if (rc.equals("61") && !rl.equals("")) {
-            cmd = "00C00000" + rl;
+            int val = 0;
+            String resp = "";
+            String rc = "";
+            String rl = "";
+            String rm = "";
+            int nrLen = 0;
+            // select APP by AID
+            String cmd = "00A4040007" + supportedAppId + "00";
             writeFromBackground("Send : " + cmd);
             byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
             nAPDULength = byteArrayAPDU.length;
-            nrLen = Integer.parseInt(rl, 16);
             byteArrayResponse = new byte[256];
             val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
             writeFromBackground("Transmit : " + val);
-            resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-            writeFromBackground("Card Response : " + resp);
-            rc = resp.substring(0, 2);
-            if (resp.length() > 3) {
-                rl = resp.substring(2, 4);
-                nrLen = Integer.parseInt(rl, 16);
-            }
-            if (resp.length() > 4) {
-                rm = resp.substring(4, (nrLen * 2) + 4);
-            }
-
-            fci = new FileControlInfo(resp);
-        }
-        return val;
-    }
-
-    private int getProcessingOptions() {
-        int val = 0;
-        String resp = "";
-        String rc = "";
-        String rl = "";
-        String rm = "";
-        int nrLen = 0;
-        String cmd = "";
-        aip = null;
-        afl = null;
-        if (fci.isValid()) {
-//            Map<String, String> fciValue = fci.getFciValue();
-//            writeFromBackground("50: " + fciValue.get("50"));
-//            writeFromBackground("9F38: " + fciValue.get("9F38"));
-//            writeFromBackground("9F12: " + fciValue.get("9F12"));
-//            writeFromBackground("ST: " + fci.gethStatus());
-
-            // GPO
-            // String termCurrCode = "0360";
-            //bytelenTCC = 02
-            //tag = 83
-            //bytelenLc = 04
-            //GPO ClaIns = 80A8
-            //P1 = 00;P2 = 00
-            //Le = 00
-            cmd = "80A80000048302036000";
-//            writeFromBackground("Send : " + cmd);
-            byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-            nAPDULength = byteArrayAPDU.length;
-            byteArrayResponse = new byte[256];
-            val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-//            writeFromBackground("Transmit : " + val);
             resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
             rc = resp.substring(0, 2);
             if (resp.length() > 3) {
@@ -883,99 +930,10 @@ public class InsertICC extends com.rey.material.widget.EditText {
             if (resp.length() > 4) {
                 rm = resp.substring(4);
             }
-//            writeFromBackground("Card Response : " + resp);
+            writeFromBackground("Card Response : " + resp);
+
             if (rc.equals("61") && !rl.equals("")) {
                 cmd = "00C00000" + rl;
-//                writeFromBackground("Send : " + cmd);
-                byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-                nAPDULength = byteArrayAPDU.length;
-                nrLen = Integer.parseInt(rl, 16);
-                byteArrayResponse = new byte[256];
-                val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-//                writeFromBackground("Transmit : " + val);
-                resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-//                writeFromBackground("Card Response : " + resp);
-                rc = resp.substring(0, 2);
-                if (resp.length() > 3) {
-                    rl = resp.substring(2, 4);
-                    nrLen = Integer.parseInt(rl, 16);
-                }
-                if (resp.length() > 4) {
-                    rm = resp.substring(4, (nrLen * 2) + 4);
-                }
-
-                String rawData = resp;
-                SingleTagParser stp = new SingleTagParser("77", 0, rawData);
-                String rmtp = stp.getHval();
-                rawData = stp.getRawResult();
-                stp = new SingleTagParser("82", 1, rawData);
-                aip = stp.getHval();
-                rawData = stp.getRawResult();
-                stp = new SingleTagParser("94", 1, rawData);
-                afl = stp.getHval();
-                rawData = stp.getRawResult();
-//                writeFromBackground("AIP : " + aip);
-//                writeFromBackground("AFL : " + afl);
-//                writeFromBackground("Status : " + rawData);
-
-            }
-        }
-        return  val;
-
-    }
-
-    private int readRecords() {
-        return readRecords(null);
-    }
-
-    private int readRecords(String singleSFI) {
-        int val = 0;
-        String resp = "";
-        String rc = "";
-        String rl = "";
-        String rm = "";
-        int nrLen = 0;
-        String cmd = "";
-
-        // Read Record based on AFL
-        // SFI 08010100 -> 0x08 (+4 or 0b100) = 0x0C has 1 rec from 01 to 01 [010C]
-        // SFI 10010300 -> 0x10 (+4 or 0b100) = 0x14 has 3 rec from 01 to 03 [0114,0214,0314]
-        // SFI 18010201 -> 0x18 (+4 or 0b100) = 0x1C has 2 rec from 01 to 02 [011C,021C]
-        // SFI 20010200 -> 0x20 (+4 or 0b100) = 0x24 has 2 rec from 01 to 02 [0124,0224]
-//        writeFromBackground(getSfiFromAfl(afl).toString());
-//        String[] sfis = {"010C", "0114", "0214", "0314", "011C", "021C", "0124", "0224"};
-        String[] sfis = getSfiFromAfl(afl);
-        if (singleSFI != null) {
-            sfis = new String[1];
-            sfis[0] = singleSFI;
-        }
-
-        for (int sfiidx = 0; sfiidx < sfis.length; sfiidx++) {
-
-            String sficode = sfis[sfiidx];
-            try {
-                Thread.sleep(100);
-            } catch (Exception e) {
-
-            }
-            cmd = "00B2" + sficode + "00";
-            writeFromBackground("Send : " + cmd);
-            byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-            nAPDULength = byteArrayAPDU.length;
-            byteArrayResponse = new byte[256];
-            val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-            writeFromBackground("Transmit : " + val);
-            resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-            rc = resp.substring(0, 2);
-            if (resp.length() > 3) {
-                rl = resp.substring(2, 4);
-            }
-            if (resp.length() > 4) {
-                rm = resp.substring(4);
-            }
-            writeFromBackground("Card Response : " + resp);
-            if (rc.equals("6C") && !rl.equals("")) {
-                cmd = "00B2" + sficode + rl;
                 writeFromBackground("Send : " + cmd);
                 byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
                 nAPDULength = byteArrayAPDU.length;
@@ -994,200 +952,462 @@ public class InsertICC extends com.rey.material.widget.EditText {
                     rm = resp.substring(4, (nrLen * 2) + 4);
                 }
 
-                writeFromBackground(sficode + " : " + resp.substring(0,10) + "... ");
-                writeFromBackground(sficode + " : " + resp);
-                String rawData = resp;
-                boolean hasTag = true;
-                while (hasTag) {
-                    if (rawData.length()<5) {
-                        break;
+                fci = new FileControlInfo(resp);
+            }
+            return val;
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    private int getProcessingOptions() {
+        try {
+
+            int val = 0;
+            String resp = "";
+            String rc = "";
+            String rl = "";
+            String rm = "";
+            int nrLen = 0;
+            String cmd = "";
+            aip = null;
+            afl = null;
+            if (fci.isValid()) {
+//            Map<String, String> fciValue = fci.getFciValue();
+//            writeFromBackground("50: " + fciValue.get("50"));
+//            writeFromBackground("9F38: " + fciValue.get("9F38"));
+//            writeFromBackground("9F12: " + fciValue.get("9F12"));
+//            writeFromBackground("ST: " + fci.gethStatus());
+
+                // GPO
+                // String termCurrCode = "0360";
+                //bytelenTCC = 02
+                //tag = 83
+                //bytelenLc = 04
+                //GPO ClaIns = 80A8
+                //P1 = 00;P2 = 00
+                //Le = 00
+                cmd = "80A80000048302036000";
+//            writeFromBackground("Send : " + cmd);
+                byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                nAPDULength = byteArrayAPDU.length;
+                byteArrayResponse = new byte[256];
+                val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+//            writeFromBackground("Transmit : " + val);
+                resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+                rc = resp.substring(0, 2);
+                if (resp.length() > 3) {
+                    rl = resp.substring(2, 4);
+                }
+                if (resp.length() > 4) {
+                    rm = resp.substring(4);
+                }
+//            writeFromBackground("Card Response : " + resp);
+                if (rc.equals("61") && !rl.equals("")) {
+                    cmd = "00C00000" + rl;
+//                writeFromBackground("Send : " + cmd);
+                    byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                    nAPDULength = byteArrayAPDU.length;
+                    nrLen = Integer.parseInt(rl, 16);
+                    byteArrayResponse = new byte[256];
+                    val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+//                writeFromBackground("Transmit : " + val);
+                    resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+//                writeFromBackground("Card Response : " + resp);
+                    rc = resp.substring(0, 2);
+                    if (resp.length() > 3) {
+                        rl = resp.substring(2, 4);
+                        nrLen = Integer.parseInt(rl, 16);
                     }
-                    hasTag = false;
-                    String xTag = rawData.substring(0,2);
-                    if (!CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
-                        xTag = rawData.substring(0,4);
-                    } else {
-                        hasTag = true;
+                    if (resp.length() > 4) {
+                        rm = resp.substring(4, (nrLen * 2) + 4);
                     }
-                    if (!hasTag) {
-                        if (CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+
+                    String rawData = resp;
+                    SingleTagParser stp = new SingleTagParser("77", 0, rawData);
+                    String rmtp = stp.getHval();
+                    rawData = stp.getRawResult();
+                    stp = new SingleTagParser("82", 1, rawData);
+                    aip = stp.getHval();
+                    rawData = stp.getRawResult();
+                    stp = new SingleTagParser("94", 1, rawData);
+                    afl = stp.getHval();
+                    rawData = stp.getRawResult();
+//                writeFromBackground("AIP : " + aip);
+//                writeFromBackground("AFL : " + afl);
+//                writeFromBackground("Status : " + rawData);
+
+                }
+            }
+            return  val;
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            return 0;
+        }
+
+
+    }
+
+    private int readRecords() {
+        return readRecords(null);
+    }
+
+    private int readRecords(String singleSFI) {
+        try {
+
+            int val = 0;
+            String resp = "";
+            String rc = "";
+            String rl = "";
+            String rm = "";
+            int nrLen = 0;
+            String cmd = "";
+
+            // Read Record based on AFL
+            // SFI 08010100 -> 0x08 (+4 or 0b100) = 0x0C has 1 rec from 01 to 01 [010C]
+            // SFI 10010300 -> 0x10 (+4 or 0b100) = 0x14 has 3 rec from 01 to 03 [0114,0214,0314]
+            // SFI 18010201 -> 0x18 (+4 or 0b100) = 0x1C has 2 rec from 01 to 02 [011C,021C]
+            // SFI 20010200 -> 0x20 (+4 or 0b100) = 0x24 has 2 rec from 01 to 02 [0124,0224]
+//        writeFromBackground(getSfiFromAfl(afl).toString());
+//        String[] sfis = {"010C", "0114", "0214", "0314", "011C", "021C", "0124", "0224"};
+            String[] sfis = getSfiFromAfl(afl);
+            if (singleSFI != null) {
+                sfis = new String[1];
+                sfis[0] = singleSFI;
+            }
+
+            for (int sfiidx = 0; sfiidx < sfis.length; sfiidx++) {
+
+                String sficode = sfis[sfiidx];
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {
+
+                }
+                cmd = "00B2" + sficode + "00";
+                writeFromBackground("Send : " + cmd);
+                byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                nAPDULength = byteArrayAPDU.length;
+                byteArrayResponse = new byte[256];
+                val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+                writeFromBackground("Transmit : " + val);
+                resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+                rc = resp.substring(0, 2);
+                if (resp.length() > 3) {
+                    rl = resp.substring(2, 4);
+                }
+                if (resp.length() > 4) {
+                    rm = resp.substring(4);
+                }
+                writeFromBackground("Card Response : " + resp);
+                if (rc.equals("6C") && !rl.equals("")) {
+                    cmd = "00B2" + sficode + rl;
+                    writeFromBackground("Send : " + cmd);
+                    byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                    nAPDULength = byteArrayAPDU.length;
+                    nrLen = Integer.parseInt(rl, 16);
+                    byteArrayResponse = new byte[256];
+                    val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+                    writeFromBackground("Transmit : " + val);
+                    resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+                    writeFromBackground("Card Response : " + resp);
+                    rc = resp.substring(0, 2);
+                    if (resp.length() > 3) {
+                        rl = resp.substring(2, 4);
+                        nrLen = Integer.parseInt(rl, 16);
+                    }
+                    if (resp.length() > 4) {
+                        rm = resp.substring(4, (nrLen * 2) + 4);
+                    }
+
+                    writeFromBackground(sficode + " : " + resp.substring(0,10) + "... ");
+                    writeFromBackground(sficode + " : " + resp);
+                    String rawData = resp;
+                    boolean hasTag = true;
+                    while (hasTag) {
+                        if (rawData.length()<5) {
+                            break;
+                        }
+                        hasTag = false;
+                        String xTag = rawData.substring(0,2);
+                        if (!CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+                            xTag = rawData.substring(0,4);
+                        } else {
                             hasTag = true;
                         }
-                    }
-                    if (hasTag) {
-                        try {
-                            writeFromBackground("Parsing " + xTag);
-                            SingleTagParser stp = new SingleTagParser(xTag, CommonConfig.KNOWN_TAG_MAP().get(xTag), rawData);
-                            recordValues.put(xTag, stp.getHval());
-                            rawData = stp.getRawResult();
-                            writeFromBackground("Value " + stp.getHval());
-                        } catch (Exception e) {
-                            writeFromBackground("STP Err : " + e.getMessage());
+                        if (!hasTag) {
+                            if (CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+                                hasTag = true;
+                            }
+                        }
+                        if (hasTag) {
+                            try {
+                                writeFromBackground("Parsing " + xTag);
+                                SingleTagParser stp = new SingleTagParser(xTag, CommonConfig.KNOWN_TAG_MAP().get(xTag), rawData);
+                                recordValues.put(xTag, stp.getHval());
+                                rawData = stp.getRawResult();
+                                writeFromBackground("Value " + stp.getHval());
+                            } catch (Exception e) {
+                                writeFromBackground("STP Err : " + e.getMessage());
+                            }
                         }
                     }
                 }
             }
+            return val;
         }
-        return val;
+        catch (Exception ex){
+            ex.printStackTrace();
+            return 0;
+        }
+
     }
 
     private String[] getSfiFromAfl(String afl) {
-        List<String> arrayResult = new ArrayList<String>();
-        String sfi = "";
-        while (afl.length()>=8) {
-            sfi = afl.substring(0,8);
+        try {
+
+            List<String> arrayResult = new ArrayList<String>();
+            String sfi = "";
+            while (afl.length()>=8) {
+                sfi = afl.substring(0,8);
 //            writeFromBackground(sfi);
-            afl = afl.substring(8);
-            int idx = Integer.parseInt(sfi.substring(0,2), 16) + 4;
-            int start = Integer.parseInt(sfi.substring(2,4), 16);
-            int end = Integer.parseInt(sfi.substring(4,6), 16);
-            for (int x=start;x<=end;x++) {
-                String ressfi = String.format("%02d", x) + String.format("%02x", idx).toUpperCase();
+                afl = afl.substring(8);
+                int idx = Integer.parseInt(sfi.substring(0,2), 16) + 4;
+                int start = Integer.parseInt(sfi.substring(2,4), 16);
+                int end = Integer.parseInt(sfi.substring(4,6), 16);
+                for (int x=start;x<=end;x++) {
+                    String ressfi = String.format("%02d", x) + String.format("%02x", idx).toUpperCase();
 //                writeFromBackground(ressfi);
-                arrayResult.add(ressfi);
+                    arrayResult.add(ressfi);
+                }
             }
+            String[] result = new String[arrayResult.size()];
+            result = arrayResult.toArray(result);
+            return result;
         }
-        String[] result = new String[arrayResult.size()];
-        result = arrayResult.toArray(result);
-        return result;
+        catch (Exception ex){
+            ex.printStackTrace();
+            return new String[0];
+        }
+
     }
 
     private String getCardRandom() {
-        int val = 0;
-        String resp = "";
-        String rc = "";
-        String rl = "";
-        String rm = "";
-        int nrLen = 0;
-        // Get Random
-        String cmd = "0084000000";
-//        writeFromBackground("Send : " + cmd);
-        byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-        nAPDULength = byteArrayAPDU.length;
-        byteArrayResponse = new byte[256];
-        val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-//        writeFromBackground("Transmit : " + val);
-        resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-        rc = resp.substring(0, 2);
-        if (resp.length() > 3) {
-            rl = resp.substring(2, 4);
-        }
-        if (resp.length() > 4) {
-            rm = resp.substring(4);
-        }
-//        writeFromBackground("Card Response : " + resp);
+        try {
 
-        if (rc.equals("6C") && !rl.equals("")) {
-            cmd = "00840000" + rl;
-//            writeFromBackground("Send : " + cmd);
+            int val = 0;
+            String resp = "";
+            String rc = "";
+            String rl = "";
+            String rm = "";
+            int nrLen = 0;
+            // Get Random
+            String cmd = "0084000000";
+//        writeFromBackground("Send : " + cmd);
             byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
             nAPDULength = byteArrayAPDU.length;
-            nrLen = Integer.parseInt(rl, 16);
             byteArrayResponse = new byte[256];
             val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-//            writeFromBackground("Transmit : " + val);
+//        writeFromBackground("Transmit : " + val);
             resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+            rc = resp.substring(0, 2);
+            if (resp.length() > 3) {
+                rl = resp.substring(2, 4);
+            }
+            if (resp.length() > 4) {
+                rm = resp.substring(4);
+            }
+//        writeFromBackground("Card Response : " + resp);
+
+            if (rc.equals("6C") && !rl.equals("")) {
+                cmd = "00840000" + rl;
+//            writeFromBackground("Send : " + cmd);
+                byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                nAPDULength = byteArrayAPDU.length;
+                nrLen = Integer.parseInt(rl, 16);
+                byteArrayResponse = new byte[256];
+                val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+//            writeFromBackground("Transmit : " + val);
+                resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
 //            writeFromBackground("Card Response : " + resp);
 
+            }
+            String retVal = "";
+            if (resp.length()>=16) {
+                retVal = resp.substring(0,16);
+            }
+            return retVal;
         }
-        String retVal = "";
-        if (resp.length()>=16) {
-            retVal = resp.substring(0,16);
+        catch (Exception ex){
+            ex.printStackTrace();
+            return "";
         }
-        return retVal;
+
     }
 
     private int doGenerateAC(String p1, String cdol) {
-        int val = 0;
-        String resp = "";
-        String rc = "";
-        String rl = "";
-        String rm = "";
-        int nrLen = 0;
-        String cmd = "80AE" + p1 + "00";
-        String data = "";
-        writeFromBackground(cdol);
-        String[] cdolTemplate = getCdolTemplate(cdol);
-        for (int ic=0;ic<cdolTemplate.length;ic++) {
+        try {
 
-            if (recordValues.containsKey(cdolTemplate[ic])) {
-                data += recordValues.get(cdolTemplate[ic]);
-            } else {
-                writeFromBackground("No rec : " + cdolTemplate[ic]);
-                return -1;
+            int val = 0;
+            String resp = "";
+            String rc = "";
+            String rl = "";
+            String rm = "";
+            int nrLen = 0;
+            String cmd = "80AE" + p1 + "00";
+            String data = "";
+            writeFromBackground(cdol);
+            String[] cdolTemplate = getCdolTemplate(cdol);
+            for (int ic=0;ic<cdolTemplate.length;ic++) {
+
+                if (recordValues.containsKey(cdolTemplate[ic])) {
+                    data += recordValues.get(cdolTemplate[ic]);
+                } else {
+                    writeFromBackground("No rec : " + cdolTemplate[ic]);
+                    return -1;
+                }
             }
-        }
-        int ilen = data.length();
-        String lc = Integer.toHexString(ilen/2).toUpperCase();
-        cmd += lc;
-        cmd += data;
-        cmd += "00";
-        writeFromBackground("Send : " + cmd);
-        byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-        nAPDULength = byteArrayAPDU.length;
-        byteArrayResponse = new byte[256];
-        val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-        writeFromBackground("Transmit : " + val);
-        resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-        rc = resp.substring(0, 2);
-        if (resp.length() > 3) {
-            rl = resp.substring(2, 4);
-        }
-        if (resp.length() > 4) {
-            rm = resp.substring(4);
-        }
-        writeFromBackground("Card Response : " + resp);
-
-        if (rc.equals("6C") && !rl.equals("")) {
-            cmd = cmd.substring(0, cmd.length()-2) + rl;
+            int ilen = data.length();
+            String lc = Integer.toHexString(ilen/2).toUpperCase();
+            cmd += lc;
+            cmd += data;
+            cmd += "00";
             writeFromBackground("Send : " + cmd);
             byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
             nAPDULength = byteArrayAPDU.length;
-            nrLen = Integer.parseInt(rl, 16);
             byteArrayResponse = new byte[256];
             val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
             writeFromBackground("Transmit : " + val);
             resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-            writeFromBackground("Card Response : " + resp);
             rc = resp.substring(0, 2);
             if (resp.length() > 3) {
                 rl = resp.substring(2, 4);
-                nrLen = Integer.parseInt(rl, 16);
             }
             if (resp.length() > 4) {
-                rm = resp.substring(4, (nrLen * 2) + 4);
+                rm = resp.substring(4);
             }
-        } else if (rc.equals("61") && !rl.equals("")) {
-            cmd = "00C00000" + rl;
-            byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-            nAPDULength = byteArrayAPDU.length;
-            nrLen = Integer.parseInt(rl, 16);
-            byteArrayResponse = new byte[256];
-            val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-            writeFromBackground("Transmit : " + val);
-            resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
             writeFromBackground("Card Response : " + resp);
-            rc = resp.substring(0, 2);
-            if (resp.length() > 3) {
-                rl = resp.substring(2, 4);
+
+            if (rc.equals("6C") && !rl.equals("")) {
+                cmd = cmd.substring(0, cmd.length()-2) + rl;
+                writeFromBackground("Send : " + cmd);
+                byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                nAPDULength = byteArrayAPDU.length;
                 nrLen = Integer.parseInt(rl, 16);
+                byteArrayResponse = new byte[256];
+                val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+                writeFromBackground("Transmit : " + val);
+                resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+                writeFromBackground("Card Response : " + resp);
+                rc = resp.substring(0, 2);
+                if (resp.length() > 3) {
+                    rl = resp.substring(2, 4);
+                    nrLen = Integer.parseInt(rl, 16);
+                }
+                if (resp.length() > 4) {
+                    rm = resp.substring(4, (nrLen * 2) + 4);
+                }
+            } else if (rc.equals("61") && !rl.equals("")) {
+                cmd = "00C00000" + rl;
+                byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                nAPDULength = byteArrayAPDU.length;
+                nrLen = Integer.parseInt(rl, 16);
+                byteArrayResponse = new byte[256];
+                val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+                writeFromBackground("Transmit : " + val);
+                resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+                writeFromBackground("Card Response : " + resp);
+                rc = resp.substring(0, 2);
+                if (resp.length() > 3) {
+                    rl = resp.substring(2, 4);
+                    nrLen = Integer.parseInt(rl, 16);
+                }
+                if (resp.length() > 4) {
+                    rm = resp.substring(4, (nrLen * 2) + 4);
+                }
             }
-            if (resp.length() > 4) {
-                rm = resp.substring(4, (nrLen * 2) + 4);
+            String rawData = resp;
+            if (p1.equals("80")) {
+                if (rawData.startsWith("80") || rawData.startsWith("77")) {
+                    boolean hasTag = true;
+                    while (hasTag) {
+                        if (rawData.length() < 5) {
+                            break;
+                        }
+                        hasTag = false;
+                        String xTag = rawData.substring(0, 2);
+                        if (!CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+                            xTag = rawData.substring(0, 4);
+                        } else {
+                            hasTag = true;
+                        }
+                        if (!hasTag) {
+                            if (CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+                                hasTag = true;
+                            }
+                        }
+                        if (hasTag) {
+                            try {
+                                writeFromBackground("Parsing " + xTag);
+                                SingleTagParser stp = new SingleTagParser(xTag, CommonConfig.KNOWN_TAG_MAP().get(xTag), rawData);
+                                recordValues.put(xTag, stp.getHval());
+                                writeFromBackground("Value " + stp.getHval());
+                                if (xTag.equals("9F10")) {
+                                    nsiccsData.setIad(stp.getHval());
+                                }
+                                rawData = stp.getRawResult();
+                            } catch (Exception e) {
+                                writeFromBackground("STP Err : " + e.getMessage());
+                            }
+                        }
+                    }
+                } else {
+                    // return no TLV only primitive values len 35
+                    // CID[1],ATC[2],ARQC[8],IAD[rest] all zero
+                    if (rawData.length() > 22) {
+                        String respCid = rawData.substring(0, 2);
+                        String respAtc = rawData.substring(2, 6);
+                        String respArqc = rawData.substring(6, 22);
+                        String respIad = rawData.substring(22);
+                        recordValues.put("9F27", respCid);
+
+                        recordValues.put("9F36", respAtc);
+                        nsiccsData.setAtc(respAtc);
+                        recordValues.put("9F26", respArqc);
+                        nsiccsData.setArqc(respArqc);
+                        recordValues.put("9F10", respIad);
+                        nsiccsData.setIad(respIad);
+                    }
+                }
+            } else { // "40"
+                nsiccsData.setTc(resp);
             }
+            return val;
         }
-        String rawData = resp;
-        if (p1.equals("80")) {
-            if (rawData.startsWith("80") || rawData.startsWith("77")) {
+        catch (Exception ex){
+            ex.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    private String[] getCdolTemplate(String cdol) {
+        try {
+            String raw = cdol;
+            List<String> arrayResult = new ArrayList<String>();
+            try {
                 boolean hasTag = true;
                 while (hasTag) {
-                    if (rawData.length() < 5) {
+                    if (raw.length() < 5) {
                         break;
                     }
                     hasTag = false;
-                    String xTag = rawData.substring(0, 2);
+                    String xTag = raw.substring(0, 2);
                     if (!CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
-                        xTag = rawData.substring(0, 4);
+                        xTag = raw.substring(0, 4);
                     } else {
                         hasTag = true;
                     }
@@ -1197,113 +1417,60 @@ public class InsertICC extends com.rey.material.widget.EditText {
                         }
                     }
                     if (hasTag) {
-                        try {
-                            writeFromBackground("Parsing " + xTag);
-                            SingleTagParser stp = new SingleTagParser(xTag, CommonConfig.KNOWN_TAG_MAP().get(xTag), rawData);
-                            recordValues.put(xTag, stp.getHval());
-                            writeFromBackground("Value " + stp.getHval());
-                            if (xTag.equals("9F10")) {
-                                nsiccsData.setIad(stp.getHval());
-                            }
-                            rawData = stp.getRawResult();
-                        } catch (Exception e) {
-                            writeFromBackground("STP Err : " + e.getMessage());
-                        }
-                    }
-                }
-            } else {
-                // return no TLV only primitive values len 35
-                // CID[1],ATC[2],ARQC[8],IAD[rest] all zero
-                if (rawData.length() > 22) {
-                    String respCid = rawData.substring(0, 2);
-                    String respAtc = rawData.substring(2, 6);
-                    String respArqc = rawData.substring(6, 22);
-                    String respIad = rawData.substring(22);
-                    recordValues.put("9F27", respCid);
-
-                    recordValues.put("9F36", respAtc);
-                    nsiccsData.setAtc(respAtc);
-                    recordValues.put("9F26", respArqc);
-                    nsiccsData.setArqc(respArqc);
-                    recordValues.put("9F10", respIad);
-                    nsiccsData.setIad(respIad);
-                }
-            }
-        } else { // "40"
-            nsiccsData.setTc(resp);
-        }
-        return val;
-    }
-
-    private String[] getCdolTemplate(String cdol) {
-        String raw = cdol;
-        List<String> arrayResult = new ArrayList<String>();
-        try {
-            boolean hasTag = true;
-            while (hasTag) {
-                if (raw.length() < 5) {
-                    break;
-                }
-                hasTag = false;
-                String xTag = raw.substring(0, 2);
-                if (!CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
-                    xTag = raw.substring(0, 4);
-                } else {
-                    hasTag = true;
-                }
-                if (!hasTag) {
-                    if (CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
-                        hasTag = true;
-                    }
-                }
-                if (hasTag) {
-                    arrayResult.add(xTag);
-                    raw = raw.substring(xTag.length() + 2);
+                        arrayResult.add(xTag);
+                        raw = raw.substring(xTag.length() + 2);
 //                    writeFromBackground(xTag);
+                    }
+
                 }
-
+            } catch (Exception e) {
+                writeFromBackground("parse CDOL Err : " + e.getMessage());
             }
-        } catch (Exception e) {
-            writeFromBackground("parse CDOL Err : " + e.getMessage());
-        }
-        String[] result = new String[arrayResult.size()];
-        result = arrayResult.toArray(result);
+            String[] result = new String[arrayResult.size()];
+            result = arrayResult.toArray(result);
 
-        return result;
+            return result;
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            return new String[0];
+        }
+
     }
 
     private String composeDe55() {
-        String result = "";
-        String tag = "";
-        writeFromBackground(aip);
-        writeFromBackground("Composing DE55 ... ");
+        try {
+            String result = "";
+            String tag = "";
+            writeFromBackground(aip);
+            writeFromBackground("Composing DE55 ... ");
 //        for (String k : recordValues.keySet()) {
 //            writeFromBackground(k + " : " + recordValues.get(k));
 //        }
-        try {
+            try {
 //            String[] cHelper = {"82", "95", "5F2A", "5F34", "9A", "9C", "9F02",
 //                    "9F03", "9F10", "9F1A", "9F26", "9F36", "9F37"};
-            String[] cHelper = {"82", "9F36", "9F26", "9F27",
+                String[] cHelper = {"82", "9F36", "9F26", "9F27",
 //                    "9F34",
-                    "9F10",
+                        "9F10",
 //                    "9F33", "9F35",
-                    "95", "9F37", "9F02", "9F03",
+                        "95", "9F37", "9F02", "9F03",
 //                    "5A",
-                    "5F34", "9F1A", "5F2A", "9A", "9C",
+                        "5F34", "9F1A", "5F2A", "9A", "9C",
 //                    "9F09", "9F1E", "4F",
-                    "84"
+                        "84"
 //                    "9F41", "9F69", "9F6A"
-            };
-            for (int i = 0; i < cHelper.length; i++) {
-                tag = cHelper[i];
+                };
+                for (int i = 0; i < cHelper.length; i++) {
+                    tag = cHelper[i];
 //                writeFromBackground(tag + "[" + recordValues.get(tag).length() + "]");
 //                writeFromBackground(recordValues.get(tag));
-                result += tag;
-                String val = recordValues.get(tag);
-                String vlen = String.format("%02X",val.length()/2);
-                result += vlen;
-                result += val;
-            }
+                    result += tag;
+                    String val = recordValues.get(tag);
+                    String vlen = String.format("%02X",val.length()/2);
+                    result += vlen;
+                    result += val;
+                }
 //            if (recordValues.containsKey("9F27")) {
 //                tag = "9F27";
 //                result += tag;
@@ -1320,176 +1487,189 @@ public class InsertICC extends com.rey.material.widget.EditText {
 //                result += vlen;
 //                result += val;
 //            }
-        } catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter ps = new PrintWriter(sw);
-            e.printStackTrace(ps);
-            writeFromBackground(tag + " Not found ?");
-            writeFromBackground(sw.toString());
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter ps = new PrintWriter(sw);
+                e.printStackTrace(ps);
+                writeFromBackground(tag + " Not found ?");
+                writeFromBackground(sw.toString());
+                return "";
+            }
+            return result;
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
             return "";
         }
-        return result;
+
     }
 
     private int externalAuth() {
-        int val = 0;
-        String resp = "";
-        String rc = "";
-        String rl = "";
-        String rm = "";
-        int nrLen = 0;
-        JSONArray preProcessingCmd = new JSONArray();
-        List<String> preProcessingResult = new ArrayList<>();
-        JSONArray postProcessingCmd = new JSONArray();
-        List<String> postProcessingResult = new ArrayList<>();
-
-        String rawData = nsiccsData.getArpc();
         try {
-            JSONObject jsonData = parseHostResponse(rawData);
-            if (jsonData.has("arpc")) {
-                String arpc = jsonData.getString("arpc");
-                recordValues.put("91", arpc);
-                nsiccsData.setArpc(arpc);
-            } else {
-                nsiccsData.setArpc(null);
-            }
-            if (jsonData.has("arc")) {
-                String arc = jsonData.getString("arc");
-                recordValues.put("8A", arc);
-                nsiccsData.setArc(arc);
-            }
-            if (jsonData.has("pre")) {
-                preProcessingCmd = jsonData.getJSONArray("pre");
-            }
-            if (jsonData.has("post")) {
-                postProcessingCmd = jsonData.getJSONArray("post");
-            }
-        } catch (Exception e) {
 
-        }
+            int val = 0;
+            String resp = "";
+            String rc = "";
+            String rl = "";
+            String rm = "";
+            int nrLen = 0;
+            JSONArray preProcessingCmd = new JSONArray();
+            List<String> preProcessingResult = new ArrayList<>();
+            JSONArray postProcessingCmd = new JSONArray();
+            List<String> postProcessingResult = new ArrayList<>();
 
-        if (nsiccsData.getArpc() == null || nsiccsData.getArc() == null) {
-            writeFromBackground("Cannot parse response from host, ARPC/ARC not found");
-            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
-            nsiccsData.setTc(null);
-//            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_OK);
-//            nsiccsData.setTc(recordValues.get("9F26"));
-            return  val;
-        }
-
-        boolean prePassed = true;
-        String cmd = "";
-        int counter = 0;
-
-        if (preProcessingCmd.length()>0) {
-            // do pre cmd (71)
+            String rawData = nsiccsData.getArpc();
             try {
-                for (int i=0;i<preProcessingCmd.length();i++) {
-                    JSONObject preCmd = preProcessingCmd.getJSONObject(i);
-                    if (preCmd.has("86")) {
-                        cmd = preCmd.getString("86");
-                        writeFromBackground("Send : " + cmd);
-                        byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-                        nAPDULength = byteArrayAPDU.length;
-                        byteArrayResponse = new byte[256];
-                        val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-                        writeFromBackground("Transmit : " + val);
-                        resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-                        writeFromBackground("Card Response : " + resp);
-                        if (resp.startsWith("90") || resp.startsWith("62") || resp.startsWith("63")) {
-                            writeFromBackground(resp);
-
-                        } else {
-                            prePassed = false;
-                            break;
-                        }
-                    }
-                    counter = i;
+                JSONObject jsonData = parseHostResponse(rawData);
+                if (jsonData.has("arpc")) {
+                    String arpc = jsonData.getString("arpc");
+                    recordValues.put("91", arpc);
+                    nsiccsData.setArpc(arpc);
+                } else {
+                    nsiccsData.setArpc(null);
                 }
-
+                if (jsonData.has("arc")) {
+                    String arc = jsonData.getString("arc");
+                    recordValues.put("8A", arc);
+                    nsiccsData.setArc(arc);
+                }
+                if (jsonData.has("pre")) {
+                    preProcessingCmd = jsonData.getJSONArray("pre");
+                }
+                if (jsonData.has("post")) {
+                    postProcessingCmd = jsonData.getJSONArray("post");
+                }
             } catch (Exception e) {
 
             }
-        }
 
-        if (!prePassed) {
-            writeFromBackground("Issuer Script Failed at Pre Process Command #" + counter);
-            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
-            nsiccsData.setTc(null);
-            return  val;
-        }
-
-        cmd = "008200000A" + nsiccsData.getArpc() + nsiccsData.getArc();
-        writeFromBackground("Send : " + cmd);
-        byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-        nAPDULength = byteArrayAPDU.length;
-        byteArrayResponse = new byte[256];
-        val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-        writeFromBackground("Transmit : " + val);
-        resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-        writeFromBackground("Card Response : " + resp);
-
-        if (resp.equals("9000")) { //(true) { //
-            writeFromBackground("Authentication approved");
-            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_OK);
-            nsiccsData.setTc("Cannot get transaction certificate");
-
-            String p1genTC = "40"; // generate TC using Default TDOL
-//            val = doGenerateAC(p1genTC, nsiccsData.getTdol());
-            String txCert = "";
-            if (recordValues.containsKey("9F26")) {
-                txCert = recordValues.get("9F26");
+            if (nsiccsData.getArpc() == null || nsiccsData.getArc() == null) {
+                writeFromBackground("Cannot parse response from host, ARPC/ARC not found");
+                nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
+                nsiccsData.setTc(null);
+//            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_OK);
+//            nsiccsData.setTc(recordValues.get("9F26"));
+                return  val;
             }
+
+            boolean prePassed = true;
+            String cmd = "";
+            int counter = 0;
+
+            if (preProcessingCmd.length()>0) {
+                // do pre cmd (71)
+                try {
+                    for (int i=0;i<preProcessingCmd.length();i++) {
+                        JSONObject preCmd = preProcessingCmd.getJSONObject(i);
+                        if (preCmd.has("86")) {
+                            cmd = preCmd.getString("86");
+                            writeFromBackground("Send : " + cmd);
+                            byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                            nAPDULength = byteArrayAPDU.length;
+                            byteArrayResponse = new byte[256];
+                            val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+                            writeFromBackground("Transmit : " + val);
+                            resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+                            writeFromBackground("Card Response : " + resp);
+                            if (resp.startsWith("90") || resp.startsWith("62") || resp.startsWith("63")) {
+                                writeFromBackground(resp);
+
+                            } else {
+                                prePassed = false;
+                                break;
+                            }
+                        }
+                        counter = i;
+                    }
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            if (!prePassed) {
+                writeFromBackground("Issuer Script Failed at Pre Process Command #" + counter);
+                nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
+                nsiccsData.setTc(null);
+                return  val;
+            }
+
+            cmd = "008200000A" + nsiccsData.getArpc() + nsiccsData.getArc();
+            writeFromBackground("Send : " + cmd);
+            byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+            nAPDULength = byteArrayAPDU.length;
+            byteArrayResponse = new byte[256];
+            val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+            writeFromBackground("Transmit : " + val);
+            resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+            writeFromBackground("Card Response : " + resp);
+
+            if (resp.equals("9000")) { //(true) { //
+                writeFromBackground("Authentication approved");
+                nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_OK);
+                nsiccsData.setTc("Cannot get transaction certificate");
+
+                String p1genTC = "40"; // generate TC using Default TDOL
+//            val = doGenerateAC(p1genTC, nsiccsData.getTdol());
+                String txCert = "";
+                if (recordValues.containsKey("9F26")) {
+                    txCert = recordValues.get("9F26");
+                }
 //            if (nsiccsData.getArpc()!=null) {
 //                txCert += nsiccsData.getArpc();
 //            }
-            nsiccsData.setTc(txCert);
-        } else {
-            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
-            nsiccsData.setTc(null);
-        }
-
-        boolean postPassed = true;
-
-        if (postProcessingCmd.length()>0) {
-            // do pre cmd (71)
-            try {
-                for (int i=0;i<postProcessingCmd.length();i++) {
-                    JSONObject postCmd = postProcessingCmd.getJSONObject(i);
-                    if (postCmd.has("86")) {
-                        cmd = postCmd.getString("86");
-                        writeFromBackground("Send : " + cmd);
-                        byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
-                        nAPDULength = byteArrayAPDU.length;
-                        byteArrayResponse = new byte[256];
-                        val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
-                        writeFromBackground("Transmit : " + val);
-                        resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
-                        writeFromBackground("Card Response : " + resp);
-                        if (resp.startsWith("90") || resp.startsWith("62") || resp.startsWith("63")) {
-                            writeFromBackground(resp);
-
-                        } else {
-                            postPassed = false;
-                            break;
-                        }
-                    }
-                    counter = i;
-                }
-
-            } catch (Exception e) {
-
+                nsiccsData.setTc(txCert);
+            } else {
+                nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
+                nsiccsData.setTc(null);
             }
-        }
 
-        if (!postPassed) {
-            writeFromBackground("Issuer Script Failed at Post Process Command #" + counter);
-            nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
-            nsiccsData.setTc(null);
-            return  val;
-        }
+            boolean postPassed = true;
 
-        return val;
+            if (postProcessingCmd.length()>0) {
+                // do pre cmd (71)
+                try {
+                    for (int i=0;i<postProcessingCmd.length();i++) {
+                        JSONObject postCmd = postProcessingCmd.getJSONObject(i);
+                        if (postCmd.has("86")) {
+                            cmd = postCmd.getString("86");
+                            writeFromBackground("Send : " + cmd);
+                            byteArrayAPDU = StringLib.hexStringToByteArray(cmd);
+                            nAPDULength = byteArrayAPDU.length;
+                            byteArrayResponse = new byte[256];
+                            val = ContactICCardReaderInterface.transmit(nCardHandle, byteArrayAPDU, nAPDULength, byteArrayResponse);
+                            writeFromBackground("Transmit : " + val);
+                            resp = StringLib.toHexString(byteArrayResponse, 0, val, false);
+                            writeFromBackground("Card Response : " + resp);
+                            if (resp.startsWith("90") || resp.startsWith("62") || resp.startsWith("63")) {
+                                writeFromBackground(resp);
+
+                            } else {
+                                postPassed = false;
+                                break;
+                            }
+                        }
+                        counter = i;
+                    }
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            if (!postPassed) {
+                writeFromBackground("Issuer Script Failed at Post Process Command #" + counter);
+                nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_FAILED);
+                nsiccsData.setTc(null);
+                return  val;
+            }
+
+            return val;
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            return 0;
+        }
     }
 
     private int verifyDAC() {
@@ -1509,85 +1689,93 @@ public class InsertICC extends com.rey.material.widget.EditText {
     }
 
     private JSONObject parseHostResponse(String resp) {
+
         JSONObject listProc = new JSONObject();
         try {
-            JSONArray listPreProc = new JSONArray();
-            JSONArray listPostProc = new JSONArray();
-            String rawData = resp;
-            boolean hasTag = true;
-            boolean isPre = true;
-            JSONObject holder = new JSONObject();
-            String arpc = null;
-            String arc = null;
-            while (hasTag) {
-                if (rawData.length() < 5) {
-                    break;
-                }
-                hasTag = false;
-                String xTag = rawData.substring(0, 2);
-                if (!CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
-                    xTag = rawData.substring(0, 4);
-                } else {
-                    hasTag = true;
-                }
-                if (!hasTag) {
-                    if (CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+
+            try {
+                JSONArray listPreProc = new JSONArray();
+                JSONArray listPostProc = new JSONArray();
+                String rawData = resp;
+                boolean hasTag = true;
+                boolean isPre = true;
+                JSONObject holder = new JSONObject();
+                String arpc = null;
+                String arc = null;
+                while (hasTag) {
+                    if (rawData.length() < 5) {
+                        break;
+                    }
+                    hasTag = false;
+                    String xTag = rawData.substring(0, 2);
+                    if (!CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+                        xTag = rawData.substring(0, 4);
+                    } else {
                         hasTag = true;
                     }
-                }
-                if (hasTag) {
-                    try {
+                    if (!hasTag) {
+                        if (CommonConfig.KNOWN_TAG_MAP().containsKey(xTag)) {
+                            hasTag = true;
+                        }
+                    }
+                    if (hasTag) {
+                        try {
 //                            writeFromBackground("Parsing " + xTag);
-                        SingleTagParser stp = new SingleTagParser(xTag, CommonConfig.KNOWN_TAG_MAP().get(xTag), rawData);
-                        if (xTag.equals("91")) {
-                            arpc = stp.getHval();
-                            if (arpc.length()==20) {
-                                arc = arpc.substring(16);
-                                arpc = arpc.substring(0,16);
+                            SingleTagParser stp = new SingleTagParser(xTag, CommonConfig.KNOWN_TAG_MAP().get(xTag), rawData);
+                            if (xTag.equals("91")) {
+                                arpc = stp.getHval();
+                                if (arpc.length()==20) {
+                                    arc = arpc.substring(16);
+                                    arpc = arpc.substring(0,16);
+                                }
                             }
-                        }
-                        if (xTag.equals("8A")) {
-                            recordValues.put(xTag, stp.getHval());
-                            nsiccsData.setArc(stp.getHval());
-                            arc = stp.getHval();
-                        }
-                        if (xTag.equals("71")) {
-                            isPre = true;
-                            holder = new JSONObject();
-                        }
-                        if (xTag.equals("72")) {
-                            isPre = false;
-                            holder = new JSONObject();
-                        }
-                        if (xTag.equals("9F18")) {
-                            holder.put("9F18", stp.getHval());
-                        }
-                        if (xTag.equals("86")) {
-                            holder.put("86", stp.getHval());
-                        }
-                        if (holder.has("9F18") && holder.has("86")) {
-                            if (isPre) {
-                                listPreProc.put(holder);
-                            } else {
-                                listPostProc.put(holder);
+                            if (xTag.equals("8A")) {
+                                recordValues.put(xTag, stp.getHval());
+                                nsiccsData.setArc(stp.getHval());
+                                arc = stp.getHval();
                             }
+                            if (xTag.equals("71")) {
+                                isPre = true;
+                                holder = new JSONObject();
+                            }
+                            if (xTag.equals("72")) {
+                                isPre = false;
+                                holder = new JSONObject();
+                            }
+                            if (xTag.equals("9F18")) {
+                                holder.put("9F18", stp.getHval());
+                            }
+                            if (xTag.equals("86")) {
+                                holder.put("86", stp.getHval());
+                            }
+                            if (holder.has("9F18") && holder.has("86")) {
+                                if (isPre) {
+                                    listPreProc.put(holder);
+                                } else {
+                                    listPostProc.put(holder);
+                                }
+                            }
+                            rawData = stp.getRawResult();
+                        } catch (Exception e) {
+                            writeFromBackground("STP Err : " + e.getMessage());
                         }
-                        rawData = stp.getRawResult();
-                    } catch (Exception e) {
-                        writeFromBackground("STP Err : " + e.getMessage());
                     }
                 }
+                if (arpc.length()>16) {
+                    arpc = arpc.substring(0,16);
+                }
+                listProc.put("arpc", arpc);
+                listProc.put("arc", arc);
+                listProc.put("pre", listPreProc);
+                listProc.put("post", listPostProc);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if (arpc.length()>16) {
-                arpc = arpc.substring(0,16);
-            }
-            listProc.put("arpc", arpc);
-            listProc.put("arc", arc);
-            listProc.put("pre", listPreProc);
-            listProc.put("post", listPostProc);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+
         return listProc;
     }
 }

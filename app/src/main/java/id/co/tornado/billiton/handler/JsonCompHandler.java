@@ -63,8 +63,8 @@ public class JsonCompHandler {
         String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
         String initRest = preferences.getString("init_screen", CommonConfig.INIT_REST_ACT);
         // Create an unbound socket
-        URL url = new URL("https://" + hostname + "/screen?id=" + initRest);
-//        URL url = new URL("http://" + hostname + "/screen?id=" + initRest);
+        URL url = new URL(CommonConfig.HTTP_PROTOCOL+"://" + hostname + "/screen?id=" + initRest);
+
         InputStream is = url.openStream();
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -84,7 +84,7 @@ public class JsonCompHandler {
             String serialNum = Build.SERIAL;
             String tid = preferencesConfig.getString("terminal_id", serialNum);
             // Create an unbound socket
-            URL url = new URL("https://" + hostname + "/device/" + tid + "/loadConf");
+            URL url = new URL(CommonConfig.HTTP_PROTOCOL+"://" + hostname + "/device/" + tid + "/loadConf");
 //            URL url = new URL("http://" + hostname + "/device/" + tid + "/loadConf");
             InputStream is = url.openStream();
             is.close();
@@ -116,7 +116,7 @@ public class JsonCompHandler {
             String hostname = preferencesConfig.getString("sockethost", CommonConfig.WEBSOCKET_URL);
             String serialNum = Build.SERIAL;
             String tid = preferencesConfig.getString("terminal_id", serialNum);
-            URL url = new URL("https://" + hostname + "/device/" + serialNum + "/loadMenuSuccess");
+            URL url = new URL(CommonConfig.HTTP_PROTOCOL+"://" + hostname + "/device/" + serialNum + "/loadMenuSuccess");
 //            URL url = new URL("http://" + hostname + "/device/" + serialNum + "/loadMenuSuccess");
             InputStream is = url.openStream();
             is.close();
@@ -129,7 +129,7 @@ public class JsonCompHandler {
 
     public static JSONObject readJsonFromUrl(String id, Context ctx) throws IOException, JSONException {
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-        String hostname = "https://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+        String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
         String serialNum = Build.SERIAL;
         // Create an unbound socket
@@ -153,7 +153,7 @@ public class JsonCompHandler {
 
     public static JSONObject reprintFromArrest(String pid, String tid, String stan, Context ctx) throws IOException, JSONException {
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-        String hostname = "https://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+        String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
         String serialNum = Build.SERIAL;
 //        Log.d("LOAD URL",hostname + "/device/" + serialNum + "/loadMenu/" + id);
@@ -173,7 +173,7 @@ public class JsonCompHandler {
 
     public static JSONObject reportFromArrest(String pid, String tid, String date, Context ctx) throws IOException, JSONException {
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-        String hostname = "https://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+        String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
         String serialNum = Build.SERIAL;
 //        Log.d("LOAD URL",hostname + "/device/" + serialNum + "/loadMenu/" + id);

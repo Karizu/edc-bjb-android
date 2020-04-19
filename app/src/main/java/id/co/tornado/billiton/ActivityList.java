@@ -149,7 +149,7 @@ public class ActivityList extends Activity {
         } catch (Exception e) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Informasi");
-            alertDialog.setMessage("EDC tidak terkoneksi dengan server\n Silahkan coba beberapa saat lagi");
+            alertDialog.setMessage("EDC tidak terkoneksi dengan server\nGagal mengambil data\nSilahkan coba beberapa saat lagi.");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -326,7 +326,11 @@ public class ActivityList extends Activity {
     }
 
     public boolean isWSConnected() {
-        return myServiceBinder.isConnect();
+        boolean connected = myServiceBinder.isConnect();
+        if (!connected){
+            myServiceBinder.forceReConnect();
+        }
+        return connected;
     }
 
     public void setSyncMessenger(Messenger syncMessenger) {

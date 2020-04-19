@@ -1547,8 +1547,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                     String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
                     String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-                    String httpPost = "https://" + hostname + "/" + postpath;
-//                    String httpPost = "http://" + hostname + "/" + postpath;
+                    String httpPost = CommonConfig.HTTP_PROTOCOL+"://" + hostname + "/" + postpath;
+
                     StringRequest jor = new StringRequest(Request.Method.POST,
                             httpPost,
                             new Response.Listener<String>() {
@@ -2643,7 +2643,26 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     public void onInputCompleted(View v, String result, String additional, NsiccsData cardData) {
         boolean usingPopup = false;
 
+        if (insertICC != null && insertICC.removeCardFirst){
+            focusHasSets = true;
+            insertICC.removeCardFirst = false;
+            cancelFocus();
+            alert.dismiss();
+            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+            alertDialog.setTitle("EDC Bank BJB");
 
+            alertDialog.setMessage("Silahkan untuk melepas kartu terlebih dahulu");
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            context.onBackPressed();
+                            context.finish();
+                        }
+                    });
+            alertDialog.show();
+        }
         if (insertICC != null && insertICC.isByPass) {
 
             insertICC.isByPass = false;
@@ -2822,8 +2841,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             msgRoot.put("msg", msg);
             String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
             String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-            String httpPost = "https://" + hostname + "/" + postpath;
-//            String httpPost = "http://" + hostname + "/" + postpath;
+            String httpPost = CommonConfig.HTTP_PROTOCOL+"://" + hostname + "/" + postpath;
+
             StringRequest jor = new StringRequest(Request.Method.POST,
                     httpPost,
                     new Response.Listener<String>() {
@@ -3630,6 +3649,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     focusHasSets = true;
                     baseLayout.getChildAt(ch).requestFocus();
                     Log.i("FOCUS", baseLayout.getChildAt(ch).toString() + " had focus is #" + ch);
+                }
+            }
+        }
+    }
+
+    public void cancelFocus() {
+        for (int ch = 0; ch < baseLayout.getChildCount(); ch++) {
+            if (baseLayout.getChildAt(ch).getVisibility() == VISIBLE &&
+                    baseLayout.getChildAt(ch) instanceof EditText) {
+                if (focusHasSets) {
+                    focusHasSets = false;
+                    baseLayout.getChildAt(ch).clearFocus();
                 }
             }
         }
