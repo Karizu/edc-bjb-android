@@ -28,11 +28,11 @@ public class CommonConfig {
 
     public static final String HTTP_SSL_PROTOCOL = "https";
     public static final String HTTP_NON_SSL_PROTOCOL = "http";
-    public static final String HTTP_PROTOCOL = HTTP_SSL_PROTOCOL;
+    public static final String HTTP_PROTOCOL = HTTP_NON_SSL_PROTOCOL;
 
     public static final String WS_SSL_PROTOCOL = "wss";
     public static final String WS_NON_SSL_PROTOCOL = "ws";
-    public static final String WS_PROTOCOL = WS_SSL_PROTOCOL;
+    public static final String WS_PROTOCOL = WS_NON_SSL_PROTOCOL;
 
     public static final int WS_SSL_PORT = 443;
     public static final int WS_NORMAL_PORT = 80;
@@ -40,10 +40,10 @@ public class CommonConfig {
     public static final int WS_NON_SSL_PORT = WS_NORMAL_PORT;
     public static final int WS_PORT = WS_SSL_PORT;
 
-    public static final String DEV_IP = "192.168.1.6";
+    public static final String DEV_IP = "192.168.43.28";
     public static final String PROD_IP = "edc.bankbjb.co.id";
 
-    public static final String IP = PROD_IP;
+    public static final String IP = DEV_IP;
 
     public static final String HTTP_REST_URL = IP+"/ARRest";
     public static final String WEBSOCKET_URL = IP+"/tms";
@@ -51,8 +51,8 @@ public class CommonConfig {
 
     public static final String POST_PATH = "api";
 
-//    public static final String INIT_REST_ACT = "S000000";
-    public static final String INIT_REST_ACT = "S000SMT";
+    public static final String INIT_REST_ACT = "S000000";
+//    public static final String INIT_REST_ACT = "S000SMT";
     public static final String[] LIST_MENU_KEY = {"type", "title", "id", "ver", "comps"};
     public static final String[] LIST_MENU_COMP_KEY = {"visible", "comp_type", "comp_id", "comp_lbl", "comp_act", "seq"};
     public static final String[] FORM_MENU_KEY = {"type", "title", "id", "print", "print_text", "ver", "comps"};

@@ -67,6 +67,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
     private byte byteArrayResponse[];
     private int procStage;
     public boolean isByPass = false;
+    public String formId;
 
     private FileControlInfo fci;
     private NsiccsData nsiccsData;
@@ -724,7 +725,13 @@ public class InsertICC extends com.rey.material.widget.EditText {
             writeFromBackground("PAN : " + recordValues.get("5A"));
             recordValues.put("95", nsiccsData.getTvr());
             recordValues.put("9F1A", nsiccsData.getCountry());
+//            if (formId.equals("S000008") || formId.equals("S000011")
+//                    || formId.equals("S000010") || formId.equals("S000510")) {
+//                recordValues.put("9C", nsiccsData.getTxtype());
+//            }
             recordValues.put("9C", nsiccsData.getTxtype());
+            String data = nsiccsData.getTxtype();
+            Log.d("TAG 9C", data);
             recordValues.put("5F2A", nsiccsData.getCurrency());
             recordValues.put("82", aip);
             Iterator fcIter = fci.getFciValue().keySet().iterator();

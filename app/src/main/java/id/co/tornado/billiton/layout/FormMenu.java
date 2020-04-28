@@ -500,7 +500,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         if (formId.equals("SR30017") || formId.equals("SR50017")
                                                 || formId.equals("SR10017") || formId.equals("POC0032")
                                                 || formId.equals("POC0031") || formId.equals("POC0034")
-                                                || formId.equals("POC0035")) {
+                                                || formId.equals("POC0035") || formId.equals("MA00040")
+                                                || formId.equals("MA00041") || formId.equals("MA00030")
+                                                || formId.equals("MA00031") || formId.equals("MA00020")
+                                                || formId.equals("MA00021")) {
                                             amt = "000000000000" + amt + "00";
                                         } else {
                                             amt = "00000000000000" + amt;
@@ -1219,6 +1222,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         stan = editText.getText().toString();
                                     }
 
+                                    //INPUT CONFIG FITUR REPORT
                                     if (actionUrl.equals("R001A1")) {
                                         date = editText.getText().toString();
                                         SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
@@ -1228,6 +1232,49 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                             date = myFormat.format(fromUser.parse(date));
                                         } catch (ParseException e) {
                                             e.printStackTrace();
+                                        }
+                                    }
+
+                                    //HANDLE FITUR GANTI PIN
+                                    try {
+                                        if (actionUrl.equals("MA0070")) {
+                                            String pin = "", pin_confirm = "";
+                                            if (editText.comp.getString("comp_id").equals("MA071")) {
+                                                pin = editText.getText().toString();
+                                            }
+                                            if (editText.comp.getString("comp_id").equals("MA072")) {
+                                                pin_confirm = editText.getText().toString();
+                                                if (!pin_confirm.equals(pin)) {
+                                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"PIN Tidak Sesuai\",\n" +
+                                                            "\"value\":\"PIN Tidak Sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                                    processResponse(rps, "000000");
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                    }
+
+                                    //INPUT CONFIG FITUR BUKA REKENING
+                                    if (actionUrl.equals("MA0080")) {
+                                        String addValue = editText.getText().toString();
+                                        if (editText.comp.getString("comp_id").equals("MA097")) {
+                                            SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
+                                            SimpleDateFormat myFormat = new SimpleDateFormat("yyyyMMdd");
+
+                                            try {
+                                                addValue = myFormat.format(fromUser.parse(addValue));
+                                                editText.setText(addValue);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        if (editText.comp.getString("comp_id").equals("MA094") || editText.comp.getString("comp_id").equals("MA096")) {
+                                            String sCap = editText.getText().toString().toUpperCase();
+                                            editText.setText(sCap);
                                         }
                                     }
 
@@ -1449,7 +1496,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                 // new reprint
 
-                if (actionUrl.equals("R0000A")){
+                if (actionUrl.equals("R0000A")) {
                     String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
                     String pid = SAMSAT_PROFILES;
 
@@ -1464,7 +1511,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
 
                 //Report Samsat
-                if (actionUrl.equals("R001A1") || actionUrl.equals("R001A2")){
+                if (actionUrl.equals("R001A1") || actionUrl.equals("R001A2")) {
                     String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
                     String pid = SAMSAT_PROFILES;
 
@@ -1490,12 +1537,12 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    return;
 //                }
                 if (actionUrl.startsWith(""))
-                // void
-                if (actionUrl.startsWith("V")) {
-                    JSONObject jsonResp = handleVoid(dataOutput);
-                    processResponse(jsonResp, "void");
-                    return;
-                }
+                    // void
+                    if (actionUrl.startsWith("V")) {
+                        JSONObject jsonResp = handleVoid(dataOutput);
+                        processResponse(jsonResp, "void");
+                        return;
+                    }
                 try {
                     final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
                     msg.put("msg_id", msgId);
@@ -1547,7 +1594,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                     String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
                     String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-                    String httpPost = CommonConfig.HTTP_PROTOCOL+"://" + hostname + "/" + postpath;
+                    String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
 
                     StringRequest jor = new StringRequest(Request.Method.POST,
                             httpPost,
@@ -1581,8 +1628,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 context.finish();
                             }
                         }
-                    })
-                    {
+                    }) {
                         @Override
                         public String getBodyContentType() {
                             return "text/plain; charset=utf-8";
@@ -2050,8 +2096,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
 
         if (hasChip) {
-            insertICC.isByPass = true;
-            showIccDialog(null);
+            if (formId.equals("MA00050") || formId.equals("POC0020")
+                    || formId.equals("MA00070")) {
+
+            } else {
+                insertICC.isByPass = true;
+                showIccDialog(null);
+            }
         }
     }
 
@@ -2596,7 +2647,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             } else {
                 for (int w = 0; w < pinModuleCounter; w++) {
 //                showPinDialog(v);
-                    showChangePinDialog(v); 
+                    showChangePinDialog(v);
                     Log.e("PINPAD", "Create Dialog" + String.valueOf(w));
                 }
             }
@@ -2643,8 +2694,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     public void onInputCompleted(View v, String result, String additional, NsiccsData cardData) {
         boolean usingPopup = false;
 
-        if (insertICC != null && insertICC.removeCardFirst){
+        if (insertICC != null && insertICC.removeCardFirst) {
             focusHasSets = true;
+
             insertICC.removeCardFirst = false;
             cancelFocus();
             alert.dismiss();
@@ -2663,6 +2715,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     });
             alertDialog.show();
         }
+
         if (insertICC != null && insertICC.isByPass) {
 
             insertICC.isByPass = false;
@@ -2700,7 +2753,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         alert.dismiss();
                     }
                     updReversedSukses(lastan, lastan);
-                    sendSaleReversalAdvice();
+                    sendReversalAdvice();
                     return;
 
                 } else if (additional.startsWith("fallback")) {
@@ -2731,6 +2784,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         prepareSamsatBulkFallback();
                     } else if (formId.equals("S0000C8")) {
                         prepareSamsatCashFallback();
+                    } else if (formId.equals("POC0020")) {
+                        prepareInfoSaldoFallback();
                     }
                     return;
                 } else if (additional.startsWith("blocked")) {
@@ -2751,6 +2806,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     return;
                 }
             }
+
+
             if (result == null || result.equals("")) {
 //          Log.d("SWIPE", "BACK PRESSED");
                 if (alert.isShowing()) {
@@ -2824,7 +2881,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
     }
 
-    public void sendSaleReversalAdvice() {
+    public void sendReversalAdvice() {
         dettachPrint();
         dialog = ProgressDialog.show(context, "Transaksi Ditolak oleh Kartu", "Mengirim Reversal", true);
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -2835,13 +2892,31 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
             msg.put("msg_id", msgId);
             msg.put("msg_ui", telephonyManager.getDeviceId());
-            msg.put("msg_si", "R82510");
+
+            if (formId.equals("MA00040") || formId.equals("MA00041") || formId.equals("MA00041F")) {
+                // Reversal Setor Tunai
+                msg.put("msg_si", "RA0040");
+            } else if (formId.equals("MA00010") || formId.equals("MA0010F")) {
+                // Reversal Tarik Tunai
+                msg.put("msg_si", "RA0010");
+            } else if (formId.equals("MA00030") || formId.equals("MA00031") || formId.equals("MA0031F")) {
+                // Reversal Overbooking
+                msg.put("msg_si", "RA0030");
+            } else if (formId.equals("MA00020") || formId.equals("MA00021") || formId.equals("MA0021F")) {
+                // Reversal Transfer Antar Bank
+                msg.put("msg_si", "RA0020");
+            } else {
+                // Reversal Sale
+                msg.put("msg_si", "R82510");
+            }
+
             msg.put("msg_dt", lastan);
+
             final JSONObject msgRoot = new JSONObject();
             msgRoot.put("msg", msg);
             String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
             String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-            String httpPost = CommonConfig.HTTP_PROTOCOL+"://" + hostname + "/" + postpath;
+            String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
 
             StringRequest jor = new StringRequest(Request.Method.POST,
                     httpPost,
@@ -3228,6 +3303,32 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             } catch (Exception e) {
 
             }
+        }
+    }
+
+    public void prepareInfoSaldoFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        Log.d("VALUES", values.get(1) + " - " + values.get(2) + " - " + values.get(3));
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"P00010\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":4}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":1}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Payment Samsat Cash\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
         }
     }
 
@@ -3860,7 +3961,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
             }
 
-            if (!amount.equals("")){
+            if (!amount.equals("")) {
                 rc = "00";
             }
 
