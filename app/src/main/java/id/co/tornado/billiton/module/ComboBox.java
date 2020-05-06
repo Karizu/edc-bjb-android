@@ -28,7 +28,9 @@ public class ComboBox extends com.rey.material.widget.Spinner {
     public JSONObject comp;
     public JSONArray compValues;
     public HashMap<Integer, String> compValuesHashMap;
+    public List<String> list;
     public List<String> compValuePrints;
+    public String compId;
 
     public ComboBox(Context context) {
         super(context);
@@ -63,6 +65,21 @@ public class ComboBox extends com.rey.material.widget.Spinner {
                 e.printStackTrace();
             }
 
+            try {
+                if (comp.getString("comp_id").equals("MA015") || comp.getString("comp_id").equals("MA021")){
+                    compId = comp.getString("comp_id");
+                    JSONArray jsonArray = comp.getJSONObject("comp_values").getJSONArray("comp_value");
+                    String predefined = jsonArray.getJSONObject(0).getString("value");
+                    String[] pvalues = predefined.split("\\|");
+                    list = Arrays.asList(pvalues);
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item, list);
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this.setAdapter(dataAdapter);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
             setLabel(comp.getString("comp_lbl"));
             if (comp.getString("comp_act") != null && !comp.getString("comp_act").equalsIgnoreCase("null")) {
                 String predefined = comp.getString("comp_act");
@@ -72,6 +89,7 @@ public class ComboBox extends com.rey.material.widget.Spinner {
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 this.setAdapter(dataAdapter);
             }
+
             else if (compValues != null && compValues.length() > 0){
                 compValuesHashMap = new HashMap<>();
                 for (int i = 0; i < compValues.length(); i++){
