@@ -1,5 +1,6 @@
 package id.co.tornado.billiton;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +18,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Process;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -281,15 +283,67 @@ public class SocketService extends Service implements WebSocketClient.Listener {
 //            preferencesSetting.edit().putString("postpath", json.getString("postpath")).apply();
 //            preferencesSetting.edit().putString("sockethost", json.getString("sockethost")).apply();
 //            preferencesSetting.edit().putString("terminal_id", json.getString("terminalid")).apply();
-            preferencesSetting.edit().putString("merchant_id", json.getString("merchantid")).apply();
-            preferencesSetting.edit().putString("merchant_name", json.getString("merchantname")).apply();
-            preferencesSetting.edit().putString("merchant_address1", json.getString("address1")).apply();
-            preferencesSetting.edit().putString("merchant_address2", json.getString("address2")).apply();
-            preferencesSetting.edit().putString("init_screen", json.getString("initscreen")).apply();
-            Log.i("UPDATE", "UPDATE SUCCESSFULLY");
+
+            String merchant_id = preferencesSetting.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID);
+            String merchant_name = preferencesSetting.getString("merchant_name", "");
+            String merchant_address1 = preferencesSetting.getString("merchant_address1", "");
+            String merchant_address2 = preferencesSetting.getString("merchant_address2", "");
+            String init_screen = preferencesSetting.getString("init_screen", "");
+
+            String new_merchant_id = json.getString("merchantid");
+            String new_merchant_name = json.getString("merchantname");
+            String new_merchant_address1 = json.getString("address1");
+            String new_merchant_address2 = json.getString("address2");
+            String new_init_screen = json.getString("initscreen");
+
+            boolean settingsUpdated = false;
+            if (!merchant_id.equals(new_merchant_id)){
+                preferencesSetting.edit().putString("merchant_id", json.getString("merchantid")).apply();
+                settingsUpdated = true;
+            }
+            if (!merchant_name.equals(new_merchant_name)) {
+                preferencesSetting.edit().putString("merchant_name", json.getString("merchantname")).apply();
+                settingsUpdated = true;
+            }
+            if (!merchant_address1.equals(new_merchant_address1)){
+                preferencesSetting.edit().putString("merchant_address1", json.getString("address1")).apply();
+                settingsUpdated = true;
+            }
+            if (!merchant_address2.equals(new_merchant_address2)){
+                preferencesSetting.edit().putString("merchant_address2", json.getString("address2")).apply();
+                settingsUpdated = true;
+            }
+            if (!init_screen.equals(new_init_screen)){
+                preferencesSetting.edit().putString("init_screen", json.getString("initscreen")).apply();
+                settingsUpdated = true;
+            }
+
+            Log.i("UPDATE", "UPDATE SETTINGS SUCCESSFULLY");
+//            Toast.makeText(SocketService.this.getApplicationContext(), "Update settings edc telah dilakukan, mohon restart aplikasi untuk melanjutkan", Toast.LENGTH_LONG).show();
+
         } catch (Exception e) {
             Log.i("UPDATE", "UPDATE FAILED : " + e.getMessage());
         }
+    }
+
+    public void restart(final Context context, int delay) {
+        if (delay == 0) {
+            delay = 1;
+        }
+
+        Log.e("", "restarting app");
+        Intent restartIntent = context.getPackageManager()
+                .getLaunchIntentForPackage(context.getPackageName() );
+        restartIntent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent intent = PendingIntent.getActivity(
+                context, 0,
+                restartIntent,0);
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.set(AlarmManager.RTC, System.currentTimeMillis() + delay, intent);
+        NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nMgr.cancelAll();
+
+        Process.killProcess(Process.myPid());
     }
 
     @Override

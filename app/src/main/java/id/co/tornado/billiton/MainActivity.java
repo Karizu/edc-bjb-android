@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.rey.material.app.ThemeManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -148,6 +149,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     public void setMenu(JSONObject obj) {
         View child = null;
         Integer type = -1;
+        String message = "";
 //        Log.d("JSON_MENU", obj.toString());
 
         try {
@@ -211,9 +213,37 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 case CommonConfig.MenuType.PopupBerhasil:
                     break;
                 case CommonConfig.MenuType.PopupGagal:
+                    message = "SIM Card atau Terminal tidak terdaftar";
+                    if (obj.has("comps")) {
+                        JSONObject comps = null;
+                        try {
+                            comps = obj.getJSONObject("comps");
+
+                            if (comps.has("comp")) {
+                                JSONArray comp_array = comps.getJSONArray("comp");
+                                if (comp_array.length() == 1) {
+                                    JSONObject comp = comp_array.getJSONObject(0);
+                                    if (comp != null && comp.has("comp_values")) {
+                                        JSONArray comp_values_array = comp.getJSONArray("comp_values");
+                                        if (comp_values_array.length() == 1) {
+                                            JSONObject comp_value = comp_values_array.getJSONObject(0);
+                                            if (comp_value != null && comp_value.has("print")) {
+
+                                                message = comp_value.getString("print");
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                     alertDialog.setTitle("Informasi");
-                    alertDialog.setMessage("SIM Card tidak terdaftar");
+                    alertDialog.setMessage(message);
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
