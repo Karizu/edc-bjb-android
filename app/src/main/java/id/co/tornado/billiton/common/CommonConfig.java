@@ -40,7 +40,7 @@ public class CommonConfig {
     public static final int WS_NON_SSL_PORT = WS_NORMAL_PORT;
     public static final int WS_PORT = WS_SSL_PORT;
 
-    public static final String DEV_IP = "192.168.43.28";
+    public static final String DEV_IP = "192.168.43.28:8000"; //192.168.43.28:8080 192.168.0.7:8080
     public static final String PROD_IP = "edc.bankbjb.co.id";
 
     public static final String IP = DEV_IP;
@@ -70,11 +70,12 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_TYPE = "Rupiah";
     public static final String DEFAULT_DISCOUNT_RATE = "0";
     public static final String EXPD = "2111";
-    public static final String DEV_TERMINAL_ID = "13050199";
+    public static final String DEV_TERMINAL_ID = "13050038"; //13050033
     public static final String DEV_MERCHANT_ID = "000063708571";
-    public static final String INIT_MERCHANT_NAME = "BJB NARIPAN";
-    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
+    public static final String INIT_MERCHANT_NAME = "BJB NARIPAN"; //BJB NARIPAN
+    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT"; //KANTOR PUSAT
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
+    public static final String INIT_SIM_NUMBER = "000000";
 
 //    public static final String DEV_TERMINAL_ID = "13030001";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 3";public static final String INIT_MERCHANT_ADDRESS1 = "SOEKARNO HATTA";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
 //    public static final String DEV_TERMINAL_ID = "13030002";public static final String DEV_MERCHANT_ID = "00010025000001";public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 3";public static final String INIT_MERCHANT_ADDRESS1 = "SOEKARNO HATTA";public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
@@ -137,8 +138,8 @@ public class CommonConfig {
         icons.put("Mini ATM", R.drawable.info_atm);
         icons.put("Informasi", R.drawable.cek_saldo);
         icons.put("Transfer", R.drawable.transfer_sesama);
-        icons.put("Antar Rekening", R.drawable.transfer_sesama);
-        icons.put("Antar Bank", R.drawable.transfer_antarbank);
+        icons.put("Pemindahbukuan", R.drawable.transfer_sesama);
+        icons.put("Transfer bank lain", R.drawable.transfer_antarbank);
         icons.put("Info Kode Bank", R.drawable.info_petunjuk);
         icons.put("Pembayaran", R.drawable.mb_isi_ulang_brizzi);
         icons.put("Pembayaran eSamsat Banten", R.drawable.icon_esamsat);
@@ -153,7 +154,7 @@ public class CommonConfig {
         icons.put("Reprint", R.drawable.print);
         icons.put("Mutasi Rekening", R.drawable.cek_mutasi);
         icons.put("Mutasi", R.drawable.cek_mutasi);
-        icons.put("Tarik Tunai", R.drawable.tarik_tunai);
+        icons.put("Tarik tunai", R.drawable.tarik_tunai);
         icons.put("Void", R.drawable.void_tarik);
         icons.put("Sale", R.drawable.sale);
         icons.put("Settlement", R.drawable.settelment);

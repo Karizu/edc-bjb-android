@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rey.material.app.ThemeManager;
 
@@ -69,9 +70,6 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         txM2Name.setText(preferences.getString("merchant_name", CommonConfig.INIT_MERCHANT_NAME));
         SimpleDateFormat ydf = new SimpleDateFormat("yyyy");
         String year = ydf.format(new Date());
-        txFcopy.setText("\u00a9 BANK BJB " + year);
-        String serialNum = Build.SERIAL;
-        txFsn.setText(serialNum);
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -79,15 +77,26 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
             e.printStackTrace();
         }
         String version = pInfo.versionName;
-        txFsv.setText("Version " + version);
+
+        txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version);
+        String serialNum = Build.SERIAL;
+        txFsn.setText(serialNum);
+        txFsv.setText(preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
+
+//        txFcopy.setText("\u00a9 BANK BJB " + year);
+//        String serialNum = Build.SERIAL;
+//        txFsn.setText(serialNum);
+//        txFsv.setText("v"+version);
+
         linearLayout = (LinearLayout) findViewById(R.id.base_layout);
           try {
               Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
 //              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
               currentScreen = JsonCompHandler
-              .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
-//                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
+//              .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
+                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
               ;
+
               setMenu(currentScreen);
         } catch (IOException e) {
               e.printStackTrace();
@@ -140,6 +149,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         View child = null;
         Integer type = -1;
 //        Log.d("JSON_MENU", obj.toString());
+
         try {
             type = obj.getInt("type");
             id = obj.get("id").toString();
@@ -154,19 +164,19 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                         }
                     });
             alertDialog.show();
-            if (id.equals("")) {
-                id = "XXXXXXX";
-            }
-            if (showSetting) {
-                id += "opt:ms=on";
-            }
-            if (showViewer) {
-                if (id.contains("opt")) {
-                    id += ",ls=on";
-                } else {
-                    id += "opt:ls=on";
-                }
-            }
+//            if (id.equals("")) {
+//                id = "XXXXXXX";
+//            }
+//            if (showSetting) {
+//                id += "opt:ms=on";
+//            }
+//            if (showViewer) {
+//                if (id.contains("opt")) {
+//                    id += ",ls=on";
+//                } else {
+//                    id += "opt:ls=on";
+//                }
+//            }
             ListMenu lm = new ListMenu(this, id);
 //                    LinearLayout vp = lm.getPager();
 //                    child = vp;
@@ -201,7 +211,17 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 case CommonConfig.MenuType.PopupBerhasil:
                     break;
                 case CommonConfig.MenuType.PopupGagal:
-                    break;
+                    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                    alertDialog.setTitle("Informasi");
+                    alertDialog.setMessage("SIM Card tidak terdaftar");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                    return;
                 case CommonConfig.MenuType.PopupLogout:
                     break;
                 case CommonConfig.MenuType.SecuredForm:
@@ -239,6 +259,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         }
         if (codeHolder.equals("147258")) {
             if (!showSetting) {
+                Log.d("onKeyDown", "Code : " + keyCode + ", Event : " + event);
                 showSetting = true;
                 setMenu(currentScreen);
             }

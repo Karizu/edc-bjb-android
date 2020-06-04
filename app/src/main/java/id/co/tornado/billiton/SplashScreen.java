@@ -1,5 +1,6 @@
 package id.co.tornado.billiton;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -19,6 +20,7 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -63,6 +65,12 @@ public class SplashScreen extends Activity {
             e.printStackTrace();
         }
 
+        TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        @SuppressLint("HardwareIds") String getSimNumber = telemamanger.getSimSerialNumber();
+        if (getSimNumber != null && !getSimNumber.isEmpty()){
+            getSimNumber = getSimNumber.substring(2, 18);
+        }
+        preferences.edit().putString("sim_number", getSimNumber).apply();
 
         String version = pInfo.versionName;
 
@@ -72,6 +80,7 @@ public class SplashScreen extends Activity {
         Log.i("OP", "©TORNADO 2016");
         Log.i("OP", "---------------------------");
         Log.i("OP", "S/N : " + Build.SERIAL);
+        Log.i("OP", "SIM Number : " + preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
         Log.i("OP", "Application start");
         setContentView(R.layout.splash_screen);
         if (!PreferenceManager.getDefaultSharedPreferences(
