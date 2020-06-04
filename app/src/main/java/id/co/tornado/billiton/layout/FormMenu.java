@@ -4640,7 +4640,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         + "order by log_id desc";
             } else {
                 qLog = "select * from edc_log  "
-                        + "where service_id like 'M00%' "
+                        + "where service_id like 'E825%' "
                         + "and rc <> '' and settled = 0 "
                         + "order by log_id desc";
             }
