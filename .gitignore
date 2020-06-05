@@ -39,3 +39,9 @@ app/private/cache/retriever/schemas.android.com/apk/res/android.xml
 app/private/
 app/src/main/assets/files/lain
 .DS_Store
+lib/.externalNativeBuild/ndkBuild/debug/armeabi-v7a/android_gradle_build.json
+lib/.externalNativeBuild/ndkBuild/debug/armeabi-v7a/ndkBuild_build_command.txt
+lib/.externalNativeBuild/ndkBuild/debug/armeabi-v7a/ndkBuild_build_output.txt
+lib/.externalNativeBuild/ndkBuild/release/armeabi-v7a/android_gradle_build.json
+lib/.externalNativeBuild/ndkBuild/release/armeabi-v7a/ndkBuild_build_command.txt
+lib/.externalNativeBuild/ndkBuild/release/armeabi-v7a/ndkBuild_build_output.txt
