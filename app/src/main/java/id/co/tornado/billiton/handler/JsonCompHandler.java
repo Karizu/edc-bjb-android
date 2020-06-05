@@ -446,7 +446,11 @@ public class JsonCompHandler {
         int r = 0;
         try {
             SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-            checkVer(ctx, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), CommonConfig.LIST_MENU_KEY, CommonConfig.LIST_MENU_COMP_KEY);
+            String[] screenFiles = ctx.fileList();
+            for (int i = 0; i < screenFiles.length; i++) {
+                ctx.deleteFile(screenFiles[i]);
+            }
+//            checkVer(ctx, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), CommonConfig.LIST_MENU_KEY, CommonConfig.LIST_MENU_COMP_KEY);
             r = loadConf(ctx);
             if (r>0) {
                 r = notifyConfigSuccess(ctx);
