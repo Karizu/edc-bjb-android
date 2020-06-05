@@ -86,25 +86,6 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
 //            JSONObject obj = JsonCompHandler.readJsonFromUrl(context, id);
             List<JSONObject> jsonObjects = new ArrayList<>();
             boolean hasSettlement = false;
-            if (!id.equals("XXXXXXX")) {
-                JSONObject obj = JsonCompHandler
-                        .readJsonFromCacheIfAvailable(context, id)
-//                    .readJsonFromUrl(id, context)
-                        ;
-                JSONArray comps = obj.getJSONObject("comps").getJSONArray("comp");
-                for (int i = 0; i < comps.length(); i++) {
-                    String visb = ((JSONObject) comps.get(i)).getString("visible");
-                    if (visb.equals("t") || visb.equals("true")) {
-                        jsonObjects.add((JSONObject) comps.get(i));
-                    }
-                }
-                String printText = obj.getString("print_text");
-                if (printText!=null) {
-                    if (printText.contains("HSTL")) {
-                        hasSettlement = true;
-                    }
-                }
-            }
             //inject admin page
             if (!opt.equals("")) {
                 if (opt.contains("ms=on")) {
@@ -130,19 +111,44 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                     jsonObjects.add(adl);
                 }
             }
+            else{
 
-            //inject local settlement (print report)
-            if (hasSettlement) {
-                JSONObject stl = new JSONObject("            {\n" +
-                        "              \"seq\":\"90\",\n" +
-                        "              \"comp_type\":\"0\",\n" +
-                        "              \"comp_id\":\"ADM02\",\n" +
-                        "              \"visible\":\"true\",\n" +
-                        "              \"comp_lbl\":\"Settlement\",\n" +
-                        "              \"comp_act\":\"0A0D0S\"\n" +
-                        "            }\n");
-                jsonObjects.add(stl);
+                if (!id.equals("XXXXXXX")) {
+                    JSONObject obj = JsonCompHandler
+                            .readJsonFromCacheIfAvailable(context, id)
+//                    .readJsonFromUrl(id, context)
+                            ;
+                    JSONArray comps = obj.getJSONObject("comps").getJSONArray("comp");
+                    for (int i = 0; i < comps.length(); i++) {
+                        String visb = ((JSONObject) comps.get(i)).getString("visible");
+                        if (visb.equals("t") || visb.equals("true")) {
+                            jsonObjects.add((JSONObject) comps.get(i));
+                        }
+                    }
+                    String printText = obj.getString("print_text");
+                    if (printText!=null) {
+                        if (printText.contains("HSTL")) {
+                            hasSettlement = true;
+                        }
+                    }
+                }
+
+                //inject local settlement (print report)
+                if (hasSettlement) {
+                    JSONObject stl = new JSONObject("            {\n" +
+                            "              \"seq\":\"90\",\n" +
+                            "              \"comp_type\":\"0\",\n" +
+                            "              \"comp_id\":\"ADM02\",\n" +
+                            "              \"visible\":\"true\",\n" +
+                            "              \"comp_lbl\":\"Settlement\",\n" +
+                            "              \"comp_act\":\"0A0D0S\"\n" +
+                            "            }\n");
+                    jsonObjects.add(stl);
+                }
             }
+
+
+
             listView.setAdapter(new ListAdapter(context, R.layout.grid_item_layout, jsonObjects));
         } catch (IOException e) {
             e.printStackTrace();
@@ -218,18 +224,40 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                                     String userName = editTextUserName.getText().toString();
                                     String password = editTextPassword.getText().toString();
 
+                                    // check user to db
+                                    JSONObject rps = new JSONObject();
+
+                                    try {
+                                        rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
+                                                "\"value\":\"Username atau password tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                "\"type\":\"3\",\"title\":\"Gagal\"}}");
+                                        rps = JsonCompHandler.loginSetting(userName, password, context);
+                                    } catch (IOException | JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
                                     // fetch the Password form database for respective user name
+                                    String id = "000000F";
+                                    try {
+                                        id = rps.getJSONObject("screen").getString("id");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 
-
-                                    // check if the Stored password matches with  Password entered by user
-                                    if (password.equals(CommonConfig.PASS_ADMIN) && userName.equals(CommonConfig.USERNAME_ADMIN)) {
+                                    // check if the Stored password and password matches with db
+//                                    if (password.equals(CommonConfig.PASS_ADMIN) && userName.equals(CommonConfig.USERNAME_ADMIN)) {
+//                                        Toast.makeText(context, "Login Successfull", Toast.LENGTH_LONG).show();
+//                                        dialog.dismiss();
+//                                        Intent i = new Intent(context, AdminActivity.class);
+//                                        context.startActivity(i);
+//                                    }
+                                    if (!id.equals("000000F")) {
                                         Toast.makeText(context, "Login Successfull", Toast.LENGTH_LONG).show();
                                         dialog.dismiss();
                                         Intent i = new Intent(context, AdminActivity.class);
                                         context.startActivity(i);
                                     } else {
-
-                                        Toast.makeText(context, "User Name and Does Not Matches", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(context, "Username atau password tidak sesuai", Toast.LENGTH_LONG).show();
                                     }
 
                                 }

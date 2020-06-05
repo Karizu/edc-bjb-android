@@ -290,10 +290,11 @@ public class ESCPOSApi {
         sameLine = addSpaceBetween("MERCHANT ID : ", mid, false);
         printCommandsSmall(sameLine + "\n");
         printCommandsSmall("\n");
+        Boolean isBjbCard = true;
         if (!cardNumber.equals("")) {
             printCommandsSmall(cardType + "\n");
             if (!cardType.contains("FLY")) {
-                printBoldCommands(" "+cardNumber + "\n");
+                printBold_2Commands(" "+cardNumber + "\n");
             }
             printCommandsSmall("\n");
         }
@@ -345,6 +346,20 @@ public class ESCPOSApi {
                 PrintSize cPz = new PrintSize(FontSize.NORMAL, content);
                 printCommands(cPz);
                 printCommands(CENTER_ALIGN);
+                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
+                printCommands(fPz);
+            }
+            else if (pz.getMessage().contains("PROSES AWAL PEMBUKAAN REKENING BSA")) {
+                String content = pz.getMessage().substring(0, pz.getMessage().indexOf("PROSES AWAL PEMBUKAAN REKENING BSA"));
+                printBold_2Commands(content);
+                printCommands(LEFT_ALIGN);
+                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
+                printCommands(fPz);
+            }
+            else if (pz.getMessage().contains("Pembayaran PKB/SWDKLLJ/BBNKB/PNBP")) {
+                String content = pz.getMessage().substring(0, pz.getMessage().indexOf("Pembayaran PKB/SWDKLLJ/BBNKB/PNBP"));
+                printBold_2Commands(content);
+                printCommands(LEFT_ALIGN);
                 PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
                 printCommands(fPz);
             }
@@ -806,8 +821,12 @@ public class ESCPOSApi {
         printCommands(data.getBytes());
     }
 
-    private static void printBoldCommands(String data) {
+    private static void printBold_2Commands(String data) {
         printCommands(new PrintSize(FontSize.BOLD_2, data));
+    }
+
+    private static void printBoldCommands(String data) {
+        printCommands(new PrintSize(FontSize.BOLD, data));
     }
 
     private static void printCommands(PrintSize pz){
