@@ -44,6 +44,7 @@ public class SplashScreen extends Activity {
     private HelveticaTextView txtConnecting;
     private boolean DEBUG_MODE = CommonConfig.DEBUG_MODE;
     private SocketService socketService;
+    private String formId = "", amountFromSelada = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,12 @@ public class SplashScreen extends Activity {
                 restart(this, 100);
             }
         }
+
+        //GET INTENT FROM SELADA APPSSSSSSSSSSSSS
+        if (intent.getStringExtra("menu") != null){
+            formId = intent.getStringExtra("menu");
+        }
+
         SharedPreferences preferences = SplashScreen.this.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
 //        Log.d("DEVICE", CommonConfig.getDeviceName());
         DEBUG_MODE = preferences.getBoolean("debug_mode",DEBUG_MODE);
@@ -292,6 +299,7 @@ public class SplashScreen extends Activity {
 //                            }
 //                        }
                         Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                        intent.putExtra("menu", formId);
                         startActivity(intent);
                     }
                 }
@@ -299,6 +307,7 @@ public class SplashScreen extends Activity {
             thread.start();
         } else {
             Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+            intent.putExtra("menu", formId);
             startActivity(intent);
         }
     }

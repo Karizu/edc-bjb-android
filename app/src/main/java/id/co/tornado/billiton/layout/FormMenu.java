@@ -240,6 +240,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private String sal_amount;
     private String stan;
     private String date = "null";
+    private String stanForReversal = "null";
     private String pin, pin_confirm;
     private int counter = 0;
     private String messageId;
@@ -1314,6 +1315,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         }
                                     }
 
+                                    //INPUT CONFIG FITUR SALE REVERSAL
+                                    if (actionUrl.equals("REV561")) {
+                                        stanForReversal = editText.getText().toString();
+                                    }
+
                                     //HANDLE FITUR GANTI PIN
                                     try {
                                         if (actionUrl.equals("MA0070")) {
@@ -1728,6 +1734,12 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         e.printStackTrace();
                     }
                     processResponse(rps, "");
+                    return;
+                }
+
+                //Reversal Sale Selada
+                if (actionUrl.equals("REV561")) {
+                    sendReversalAdviceSale(stanForReversal);
                     return;
                 }
 
@@ -3149,6 +3161,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             } else if (formId.equals("MA00020") || formId.equals("MA00021") || formId.equals("MA0002F")) {
                 // Reversal Transfer Antar Bank
                 msg.put("msg_si", "RA0020");
+            } else if (formId.equals("MB82560") || formId.equals("MB82561") || formId.equals("MB82562")) {
+                // Reversal Sale Selada
+                msg.put("msg_si", "R82561");
             } else {
                 // Reversal Sale
                 msg.put("msg_si", "R82510");
@@ -3172,6 +3187,96 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Transaksi ditolak oleh kartu\",\n" +
                                         "\"value\":\"Transaksi ditolak oleh kartu\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
                                         "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                processResponse(rps, msgId);
+                                dialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        try {
+                            Toast.makeText(context, "Request Timeout",
+                                    Toast.LENGTH_LONG).show();
+                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[" +
+                                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[" +
+                                    "{\"print\":\"Transaksi ditolak oleh kartu\nTidak dapat mengirim Reversal\",\n" +
+                                    "\"value\":\"Transaksi ditolak oleh kartu\nTidak dapat mengirim Reversal\"}]" +
+                                    "},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                            processResponse(rps, msgId);
+                            dialog.dismiss();
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "text/plain; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+
+                        return msgRoot == null ? null : msgRoot.toString().getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        Log.e("VOLLEY", "Unsupported Encoding while trying to get the bytes of " + msgRoot.toString() + "utf-8");
+                        return null;
+                    }
+                }
+
+
+            };
+            jor.setRetryPolicy(new DefaultRetryPolicy(10000,
+                    0,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            RequestQueue revrq = Volley.newRequestQueue(context);
+            revrq.add(jor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //ADD REVERSAL FOR SALE SELADA
+    public void sendReversalAdviceSale(String stan) {
+        dettachPrint();
+        dialog = ProgressDialog.show(context, "Reversal", "Sedang Mengirim Reversal", true);
+        final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        final JSONObject msg = new JSONObject();
+        try {
+            final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
+            msg.put("msg_id", msgId);
+            msg.put("msg_ui", telephonyManager.getDeviceId());
+            // Reversal Sale
+            msg.put("msg_si", "R82561");
+            msg.put("msg_dt", stan);
+
+            final JSONObject msgRoot = new JSONObject();
+            msgRoot.put("msg", msg);
+            String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+            String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
+            String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
+
+            StringRequest jor = new StringRequest(Request.Method.POST,
+                    httpPost,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                Log.d("TERIMA", response);
+                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Reversal Berhasil Dikirim\",\n" +
+                                        "\"value\":\"Reversal Berhasil Dikirim\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                        "\"type\":\"3\",\"title\":\"Reversal\"}}");
 
                                 processResponse(rps, msgId);
                                 dialog.dismiss();

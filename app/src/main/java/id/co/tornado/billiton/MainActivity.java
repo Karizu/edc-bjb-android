@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -47,6 +48,13 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private JSONObject currentScreen;
     private TextView txFcopy;
     private boolean KEY_DEBUG = false;
+    private String MENU_TARIK_TUNAI = "MA00015";
+    private String MENU_SETOR_TUNAI = "MA00040";
+    private String MENU_REPORT_TRANSAKSI = "RMA0010";
+    private String MENU_MINI_BANKING = "S000025";
+    private String MENU_INFO_SALDO = "MA00065";
+    private String MENU_PUCHASE = "MB82510";
+    private String formId = "", amountFromSelada = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,15 +98,52 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 //        txFsv.setText("v"+version);
 
         linearLayout = (LinearLayout) findViewById(R.id.base_layout);
-          try {
-              Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
-//              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
-              currentScreen = JsonCompHandler
-//              .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
-                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
-              ;
 
-              setMenu(currentScreen);
+        //GET INTENT FROM SELADA APP
+        Intent intent = getIntent();
+        if (getIntent().getStringExtra("menu") != null){
+            formId = intent.getStringExtra("menu");
+
+            // try {
+            //     amountFromSelada = intent.getStringExtra("nominal");
+            // }catch (Exception e){}
+
+            if (formId.equals("setting")) {
+                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+                Bundle bundle = new Bundle();
+                bundle.putString("TID", preferences.getString("terminal_id",CommonConfig.DEV_TERMINAL_ID));
+                bundle.putString("MID", preferences.getString("merchant_id",CommonConfig.DEV_MERCHANT_ID));
+                if (launchIntent != null) {
+                    launchIntent.putExtras(bundle);
+                    startActivity(launchIntent);//null pointer check in case package name was not found
+                    finish();
+                }
+            }
+        }
+
+          try {
+
+            //GET SCREEN FROM INTENT SELADA
+              if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI) || formId.equals(MENU_REPORT_TRANSAKSI)
+                      || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO) || formId.equals(MENU_PUCHASE)) {
+                  Log.i("Set Menu", formId);
+                  currentScreen = JsonCompHandler
+                      .readJsonFromIntent(formId, this);
+                  Log.d("JSON", currentScreen.toString());
+                  setMenu(currentScreen);
+              }
+              else if (formId.equals("ONCLICK")) {
+                  // SKIP
+              }
+              else {
+                  Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
+//              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
+                  currentScreen = JsonCompHandler
+                          .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
+//                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
+                  ;
+                  setMenu(currentScreen);
+              }
         } catch (IOException e) {
               e.printStackTrace();
         } catch (JSONException e) {
@@ -155,6 +200,19 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         try {
             type = obj.getInt("type");
             id = obj.get("id").toString();
+
+            //FORCE INTENT TO FORM MENU FROM SELADA
+            if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI)
+                    || formId.equals(MENU_INFO_SALDO) || formId.equals(MENU_PUCHASE)) {
+                Intent intent = new Intent(MainActivity.this, ActivityList.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("comp_act", id);
+                bundle.putString("nominal", amountFromSelada);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return;
+            }
+
         } catch (Exception e) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Informasi");
