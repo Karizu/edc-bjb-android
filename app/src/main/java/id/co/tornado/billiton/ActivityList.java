@@ -52,6 +52,11 @@ public class ActivityList extends Activity {
     private Messenger syncMessenger = null;
     private SocketService myServiceBinder;
     private Intent serviceIntent;
+    private String serviceId = "";
+    private String mid = "";
+    private String mobileNumber = "";
+    private String nominal = "";
+    private String amount = "";
 
     public int modulStage = CommonConfig.ICC_PROCESS_STAGE_INIT;
     public NsiccsData cardData = new NsiccsData();
@@ -131,6 +136,15 @@ public class ActivityList extends Activity {
         footer = (LinearLayout) findViewById(R.id.base_print_footer);
 //        Log.d("ACT", "Footer is " + footer.toString());
         compAct = getIntent().getExtras().getString("comp_act");
+        try {
+            serviceId = getIntent().getExtras().getString("serviceId");
+            mid = getIntent().getExtras().getString("mid");
+            mobileNumber = getIntent().getExtras().getString("mobileNumber");
+            nominal = getIntent().getExtras().getString("nominal");
+            amount = getIntent().getExtras().getString("amount");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -166,12 +180,12 @@ public class ActivityList extends Activity {
             switch (type) {
                 case CommonConfig.MenuType.Form:
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    child = new FormMenu(this, id);
+                    child = new FormMenu(this, id, serviceId, mid, mobileNumber, nominal, amount);
                     tellService(true);
                     break;
                 case CommonConfig.MenuType.SecuredForm:
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    child = new FormMenu(this, id);
+                    child = new FormMenu(this, id, "", "", "", "","");
                     break;
                 case CommonConfig.MenuType.ListMenu:
                     child = new ListMenu(this, id);
@@ -195,7 +209,7 @@ public class ActivityList extends Activity {
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         tellService(true);
 
-        child = new FormMenu(this, id);
+        child = new FormMenu(this, id, "", "", "", "","");
         linearLayout.removeAllViews();
         linearLayout.addView(child);
     }

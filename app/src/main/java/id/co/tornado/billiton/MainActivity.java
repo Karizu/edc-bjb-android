@@ -53,8 +53,15 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private String MENU_REPORT_TRANSAKSI = "RMA0010";
     private String MENU_MINI_BANKING = "S000025";
     private String MENU_INFO_SALDO = "MA00065";
-    private String MENU_PUCHASE = "MB82510";
+    private String PURCHASE_SELADA = "MB82560";
+    private String PURCHASE_BJB = "MB82510";
+    private String MENU_PUCHASE = PURCHASE_SELADA;
     private String formId = "", amountFromSelada = "";
+    private String serviceId = "";
+    private String mid = "";
+    private String mobileNumber = "";
+    private String nominal = "";
+    private String amount = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +110,15 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         Intent intent = getIntent();
         if (getIntent().getStringExtra("menu") != null){
             formId = intent.getStringExtra("menu");
+            try {
+                serviceId = intent.getStringExtra("serviceId");
+                mid = intent.getStringExtra("mid");
+                mobileNumber = intent.getStringExtra("mobileNumber");
+                nominal = intent.getStringExtra("nominal");
+                amount = intent.getStringExtra("amount");
+            } catch (Exception e){
+                e.printStackTrace();
+            }
 
             // try {
             //     amountFromSelada = intent.getStringExtra("nominal");
@@ -125,12 +141,53 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
             //GET SCREEN FROM INTENT SELADA
               if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI) || formId.equals(MENU_REPORT_TRANSAKSI)
-                      || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO) || formId.equals(MENU_PUCHASE)) {
+                      || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO)) {
                   Log.i("Set Menu", formId);
                   currentScreen = JsonCompHandler
                       .readJsonFromIntent(formId, this);
                   Log.d("JSON", currentScreen.toString());
                   setMenu(currentScreen);
+              }
+              else if (formId.equals(MENU_PUCHASE)){
+                  JSONObject jsonObject = new JSONObject("{\n" +
+                          "    \"action_url\": \"E82560\",\n" +
+                          "    \"ver\": \"1\",\n" +
+                          "    \"print\": null,\n" +
+                          "    \"comps\": {\n" +
+                          "      \"comp\": [\n" +
+                          "        {\n" +
+                          "          \"visible\": false,\n" +
+                          "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
+                          "          \"comp_type\": \"9\",\n" +
+                          "          \"comp_id\": \"I0209\",\n" +
+                          "          \"seq\": 0\n" +
+                          "        },\n" +
+                          "        {\n" +
+                          "          \"visible\": true,\n" +
+                          "          \"comp_lbl\": \"PIN\",\n" +
+                          "          \"comp_type\": \"3\",\n" +
+                          "          \"comp_id\": \"I0001\",\n" +
+                          "          \"comp_opt\": \"102006006\",\n" +
+                          "          \"seq\": 1\n" +
+                          "        },\n" +
+                          "        {\n" +
+                          "          \"visible\": true,\n" +
+                          "          \"comp_lbl\": \"Proses\",\n" +
+                          "          \"comp_type\": \"7\",\n" +
+                          "          \"comp_id\": \"G0001\",\n" +
+                          "          \"seq\": 2\n" +
+                          "        }\n" +
+                          "      ]\n" +
+                          "    },\n" +
+                          "    \"static_menu\": [\n" +
+                          "      \"Purchase\"\n" +
+                          "    ],\n" +
+                          "    \"print_text\": \"IPOP\",\n" +
+                          "    \"id\": \"MB82560\",\n" +
+                          "    \"type\": \"1\",\n" +
+                          "    \"title\": \"Purchase\"\n" +
+                          "  }");
+                  setMenu(jsonObject);
               }
               else if (formId.equals("ONCLICK")) {
                   // SKIP
@@ -207,7 +264,11 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 Intent intent = new Intent(MainActivity.this, ActivityList.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("comp_act", id);
-                bundle.putString("nominal", amountFromSelada);
+                bundle.putString("serviceId", serviceId);
+                bundle.putString("mid", mid);
+                bundle.putString("mobileNumber", mobileNumber);
+                bundle.putString("nominal", nominal);
+                bundle.putString("amount", amount);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 return;
@@ -249,7 +310,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         if (type != -1 && !id.equals("")) {
             switch (type) {
                 case CommonConfig.MenuType.Form:
-                    child = new FormMenu(this, id);
+                    child = new FormMenu(this, id, "", "", "", "","");
 
                     break;
                 case CommonConfig.MenuType.ListMenu:
@@ -313,7 +374,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 case CommonConfig.MenuType.PopupLogout:
                     break;
                 case CommonConfig.MenuType.SecuredForm:
-                    child = new FormMenu(this, id);
+                    child = new FormMenu(this, id, "", "", "", "","");
                     break;
             }
             linearLayout.removeAllViews();

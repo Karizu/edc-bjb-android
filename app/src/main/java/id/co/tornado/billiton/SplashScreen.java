@@ -45,6 +45,12 @@ public class SplashScreen extends Activity {
     private boolean DEBUG_MODE = CommonConfig.DEBUG_MODE;
     private SocketService socketService;
     private String formId = "", amountFromSelada = "";
+    private String serviceId = "";
+    private String mid = "";
+    private String mobileNumber = "";
+    private String nominal = "";
+    private String amount = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +65,15 @@ public class SplashScreen extends Activity {
         //GET INTENT FROM SELADA APPSSSSSSSSSSSSS
         if (intent.getStringExtra("menu") != null){
             formId = intent.getStringExtra("menu");
+            try {
+                serviceId = intent.getStringExtra("serviceId");
+                mid = intent.getStringExtra("mid");
+                mobileNumber = intent.getStringExtra("mobileNumber");
+                nominal = intent.getStringExtra("nominal");
+                amount = intent.getStringExtra("amount");
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         SharedPreferences preferences = SplashScreen.this.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
@@ -300,6 +315,11 @@ public class SplashScreen extends Activity {
 //                        }
                         Intent intent = new Intent(SplashScreen.this, MainActivity.class);
                         intent.putExtra("menu", formId);
+                        intent.putExtra("serviceId", serviceId);
+                        intent.putExtra("mid", mid);
+                        intent.putExtra("mobileNumber", mobileNumber);
+                        intent.putExtra("nominal", nominal);
+                        intent.putExtra("amount", amount);
                         startActivity(intent);
                     }
                 }
@@ -308,6 +328,11 @@ public class SplashScreen extends Activity {
         } else {
             Intent intent = new Intent(SplashScreen.this, MainActivity.class);
             intent.putExtra("menu", formId);
+            intent.putExtra("serviceId", serviceId);
+            intent.putExtra("mid", mid);
+            intent.putExtra("mobileNumber", mobileNumber);
+            intent.putExtra("nominal", nominal);
+            intent.putExtra("amount", amount);
             startActivity(intent);
         }
     }

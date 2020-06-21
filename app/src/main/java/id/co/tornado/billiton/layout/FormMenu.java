@@ -245,6 +245,14 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private int counter = 0;
     private String messageId;
     private String TAG_CARD = null;
+    private String PURCHASE_SELADA = "MB82560";
+    private String PURCHASE_BJB = "MB82510";
+    private String MENU_PUCHASE = PURCHASE_SELADA;
+    private String serviceId = "";
+    private String mid = "";
+    private String mobileNumber = "";
+    private String nominal = "";
+    private String amount = "";
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -260,13 +268,19 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //    PEMKAB KUNINGAN
 
 
-    public FormMenu(Activity context, String id) {
+    public FormMenu(Activity context, String id, String serviceIds, String mids, String mobileNumbers, String nominals, String amounts) {
         super(context);
         ThemeManager.init(context, 1, 0, null);
         this.context = context;
         parent = (ActivityList) context;
         dummyTrack = composeNumber();
         this.syncMessenger = parent.getSyncMessenger();
+
+        serviceId = serviceIds;
+        mid = mids;
+        mobileNumber = mobileNumbers;
+        nominal = nominals;
+        amount = amounts;
 
         li = LayoutInflater.from(context);
         ScrollView ll = (ScrollView) li.inflate(R.layout.form_menu, this);
@@ -311,7 +325,49 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             } else if (id.equals("STL0001")) {
                 comp = parent.prepareSettlement(); //parent is null
                 init();
-            } else {
+            }
+            else if (id.equals(PURCHASE_SELADA)){
+                comp = new JSONObject("{\n" +
+                        "    \"action_url\": \"E82560\",\n" +
+                        "    \"ver\": \"1\",\n" +
+                        "    \"print\": null,\n" +
+                        "    \"comps\": {\n" +
+                        "      \"comp\": [\n" +
+                        "        {\n" +
+                        "          \"visible\": false,\n" +
+                        "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
+                        "          \"comp_type\": \"9\",\n" +
+                        "          \"comp_id\": \"I0209\",\n" +
+                        "          \"seq\": 0\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "          \"visible\": true,\n" +
+                        "          \"comp_lbl\": \"PIN\",\n" +
+                        "          \"comp_type\": \"3\",\n" +
+                        "          \"comp_id\": \"I0001\",\n" +
+                        "          \"comp_opt\": \"102006006\",\n" +
+                        "          \"seq\": 1\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "          \"visible\": true,\n" +
+                        "          \"comp_lbl\": \"Proses\",\n" +
+                        "          \"comp_type\": \"7\",\n" +
+                        "          \"comp_id\": \"G0001\",\n" +
+                        "          \"seq\": 2\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    \"static_menu\": [\n" +
+                        "      \"Purchase\"\n" +
+                        "    ],\n" +
+                        "    \"print_text\": \"IPOP\",\n" +
+                        "    \"id\": \"MB82560\",\n" +
+                        "    \"type\": \"1\",\n" +
+                        "    \"title\": \"Purchase\"\n" +
+                        "  }");
+                init();
+            }
+            else {
 //                comp = JsonCompHandler.readJson(context, id);
                 comp = JsonCompHandler
                         .readJsonFromCacheIfAvailable(context, id)
@@ -1592,6 +1648,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         }
                     }
                 }
+
+                if (formId.equals(PURCHASE_SELADA)){
+                    data.add(nominal);
+                }
+
                 String dataOutput = TextUtils.join("|", data);
 //                Toast.makeText(context, "Sending " + dataOutput, Toast.LENGTH_SHORT).show();
                 if (actionUrl.equals("L00001")) {
@@ -2324,7 +2385,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("MA00055") || formId.equals("MA00035")
                     || formId.equals("MA00075") || formId.equals("MA00095")
                     || formId.equals("MA00085") || formId.equals("MA00025")
-                    || formId.equals("MA00015")) {
+                    || formId.equals("MA00015") || formId.equals(MENU_PUCHASE)) {
 
             } else {
                 insertICC.isByPass = true;
