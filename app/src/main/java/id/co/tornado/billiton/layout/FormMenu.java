@@ -39,24 +39,19 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.rey.material.app.ThemeManager;
 import com.wizarpos.apidemo.printer.ESCPOSApi;
 import com.wizarpos.apidemo.printer.FontSize;
 import com.wizarpos.apidemo.printer.PrintSize;
-import com.wizarpos.apidemo.util.StringUtility;
 import com.wizarpos.jni.PINPadInterface;
-import com.wizarpos.jni.PinPadCallbackHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,21 +60,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -112,8 +100,6 @@ import id.co.tornado.billiton.common.StringLib;
 import id.co.tornado.billiton.handler.DataBaseHelper;
 import id.co.tornado.billiton.handler.JsonCompHandler;
 import id.co.tornado.billiton.handler.Track2BINChecker;
-import id.co.tornado.billiton.handler.WebSocketClient;
-import id.co.tornado.billiton.handler.txHandler;
 import id.co.tornado.billiton.module.Button;
 import id.co.tornado.billiton.module.CardData;
 import id.co.tornado.billiton.module.CheckBox;
@@ -128,7 +114,6 @@ import id.co.tornado.billiton.module.TextView;
 import id.co.tornado.billiton.module.listener.GPSLocation;
 import id.co.tornado.billiton.module.listener.InputListener;
 import id.co.tornado.billiton.module.listener.SwipeListener;
-import me.grantland.widget.AutofitTextView;
 
 
 /**
@@ -245,14 +230,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private int counter = 0;
     private String messageId;
     private String TAG_CARD = null;
-    private String PURCHASE_SELADA = "MB82560";
     private String PURCHASE_BJB = "MB82510";
+    private String PURCHASE_SELADA = "MB82560";
+    private String SERVICE_PURCHASE_SELADA = "E82560";
     private String MENU_PUCHASE = PURCHASE_SELADA;
     private String serviceId = "";
     private String mid = "";
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String SCREEN_PURCHASE_SELADA = "MB82561";
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -293,6 +280,12 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         baseLayout.setPadding(8, 8, 8, 8);
         this.dettachPrint();
         dummyTrack += "=" + composeCV();
+
+        if (id.equals("REVERSALEFROMSELADA")){
+            sendReversalAdviceSale(serviceId);
+            return;
+        }
+
         try {
             if (Arrays.asList(TapCard.BRIZZI_MENU).contains(id)
                     // && !id.equals(TapCard.INITIALIZE)
@@ -326,47 +319,47 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 comp = parent.prepareSettlement(); //parent is null
                 init();
             }
-            else if (id.equals(PURCHASE_SELADA)){
-                comp = new JSONObject("{\n" +
-                        "    \"action_url\": \"E82560\",\n" +
-                        "    \"ver\": \"1\",\n" +
-                        "    \"print\": null,\n" +
-                        "    \"comps\": {\n" +
-                        "      \"comp\": [\n" +
-                        "        {\n" +
-                        "          \"visible\": false,\n" +
-                        "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
-                        "          \"comp_type\": \"9\",\n" +
-                        "          \"comp_id\": \"I0209\",\n" +
-                        "          \"seq\": 0\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "          \"visible\": true,\n" +
-                        "          \"comp_lbl\": \"PIN\",\n" +
-                        "          \"comp_type\": \"3\",\n" +
-                        "          \"comp_id\": \"I0001\",\n" +
-                        "          \"comp_opt\": \"102006006\",\n" +
-                        "          \"seq\": 1\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "          \"visible\": true,\n" +
-                        "          \"comp_lbl\": \"Proses\",\n" +
-                        "          \"comp_type\": \"7\",\n" +
-                        "          \"comp_id\": \"G0001\",\n" +
-                        "          \"seq\": 2\n" +
-                        "        }\n" +
-                        "      ]\n" +
-                        "    },\n" +
-                        "    \"static_menu\": [\n" +
-                        "      \"Purchase\"\n" +
-                        "    ],\n" +
-                        "    \"print_text\": \"IPOP\",\n" +
-                        "    \"id\": \"MB82560\",\n" +
-                        "    \"type\": \"1\",\n" +
-                        "    \"title\": \"Purchase\"\n" +
-                        "  }");
-                init();
-            }
+//            else if (id.equals(MENU_PUCHASE)){
+//                comp = new JSONObject("{\n" +
+//                        "    \"action_url\": \"E82560\",\n" +
+//                        "    \"ver\": \"1\",\n" +
+//                        "    \"print\": null,\n" +
+//                        "    \"comps\": {\n" +
+//                        "      \"comp\": [\n" +
+//                        "        {\n" +
+//                        "          \"visible\": false,\n" +
+//                        "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
+//                        "          \"comp_type\": \"9\",\n" +
+//                        "          \"comp_id\": \"I0209\",\n" +
+//                        "          \"seq\": 0\n" +
+//                        "        },\n" +
+//                        "        {\n" +
+//                        "          \"visible\": true,\n" +
+//                        "          \"comp_lbl\": \"PIN\",\n" +
+//                        "          \"comp_type\": \"3\",\n" +
+//                        "          \"comp_id\": \"I0001\",\n" +
+//                        "          \"comp_opt\": \"102006006\",\n" +
+//                        "          \"seq\": 1\n" +
+//                        "        },\n" +
+//                        "        {\n" +
+//                        "          \"visible\": true,\n" +
+//                        "          \"comp_lbl\": \"Proses\",\n" +
+//                        "          \"comp_type\": \"7\",\n" +
+//                        "          \"comp_id\": \"G0001\",\n" +
+//                        "          \"seq\": 2\n" +
+//                        "        }\n" +
+//                        "      ]\n" +
+//                        "    },\n" +
+//                        "    \"static_menu\": [\n" +
+//                        "      \"Purchase\"\n" +
+//                        "    ],\n" +
+//                        "    \"print_text\": \"IPOP\",\n" +
+//                        "    \"id\": \"MB82560\",\n" +
+//                        "    \"type\": \"1\",\n" +
+//                        "    \"title\": \"Purchase\"\n" +
+//                        "  }");
+//                init();
+//            }
             else {
 //                comp = JsonCompHandler.readJson(context, id);
                 comp = JsonCompHandler
@@ -1649,9 +1642,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     }
                 }
 
-                if (formId.equals(PURCHASE_SELADA)){
-                    data.add(nominal);
-                }
+//                if (actionUrl.equals(SERVICE_PURCHASE_SELADA)){
+//                    data.add(nominal);
+//                    data.add(mobileNumber);
+//                    Log.d("DATA", data.toString());
+//                }
 
                 String dataOutput = TextUtils.join("|", data);
 //                Toast.makeText(context, "Sending " + dataOutput, Toast.LENGTH_SHORT).show();
@@ -2385,7 +2380,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("MA00055") || formId.equals("MA00035")
                     || formId.equals("MA00075") || formId.equals("MA00095")
                     || formId.equals("MA00085") || formId.equals("MA00025")
-                    || formId.equals("MA00015") || formId.equals(MENU_PUCHASE)) {
+                    || formId.equals("MA00015")
+//                    || formId.equals(MENU_PUCHASE)
+                    ) {
 
             } else {
                 insertICC.isByPass = true;
@@ -2502,6 +2499,26 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 print();
                 context.onBackPressed();
             }
+
+//            if (formId.equals(SCREEN_PURCHASE_SELADA)) {
+////                print();
+//                context.onBackPressed();
+//                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+//                Bundle bundle = new Bundle();
+//                bundle.putString("serciveId", serviceId);
+//                bundle.putString("mid", mid);
+//                bundle.putString("mobileNumber", mobileNumber);
+//                bundle.putString("nominal", nominal);
+//                bundle.putString("amount", amount);
+//                bundle.putString("stan", lastan);
+//                Log.d("stan", lastan);
+//                if (launchIntent != null) {
+//                    launchIntent.putExtras(bundle);
+//                    context.startActivity(launchIntent);//null pointer check in case package name was not found
+//                    context.finish();
+//                }
+//            }
+
             focusHandler.postDelayed(delayFocus, 400);
             if (formId.equals("292000F")) {
                 dettachPrint();

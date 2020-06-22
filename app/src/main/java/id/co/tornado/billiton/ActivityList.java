@@ -57,6 +57,7 @@ public class ActivityList extends Activity {
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String stan;
 
     public int modulStage = CommonConfig.ICC_PROCESS_STAGE_INIT;
     public NsiccsData cardData = new NsiccsData();
@@ -136,6 +137,7 @@ public class ActivityList extends Activity {
         footer = (LinearLayout) findViewById(R.id.base_print_footer);
 //        Log.d("ACT", "Footer is " + footer.toString());
         compAct = getIntent().getExtras().getString("comp_act");
+
         try {
             serviceId = getIntent().getExtras().getString("serviceId");
             mid = getIntent().getExtras().getString("mid");
@@ -145,6 +147,10 @@ public class ActivityList extends Activity {
         } catch (Exception e){
             e.printStackTrace();
         }
+
+        try {
+            stan = getIntent().getExtras().getString("stan");
+        } catch (Exception e){}
     }
 
     @Override
@@ -175,6 +181,11 @@ public class ActivityList extends Activity {
             return;
         }
         tellService(false);
+
+        //SET STAN FOR SEND REVERSAL FROM SELADA APP
+        if (stan!=null){
+            serviceId = stan;
+        }
 
         if (type != -1 && !id.equals("")) {
             switch (type) {

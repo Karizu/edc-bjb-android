@@ -50,6 +50,7 @@ public class SplashScreen extends Activity {
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String stan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,12 @@ public class SplashScreen extends Activity {
                 mobileNumber = intent.getStringExtra("mobileNumber");
                 nominal = intent.getStringExtra("nominal");
                 amount = intent.getStringExtra("amount");
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            try {
+                stan = intent.getStringExtra("stan");
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -320,6 +327,9 @@ public class SplashScreen extends Activity {
                         intent.putExtra("mobileNumber", mobileNumber);
                         intent.putExtra("nominal", nominal);
                         intent.putExtra("amount", amount);
+                        if (stan != null){
+                            intent.putExtra("stan", stan);
+                        }
                         startActivity(intent);
                     }
                 }
@@ -333,6 +343,9 @@ public class SplashScreen extends Activity {
             intent.putExtra("mobileNumber", mobileNumber);
             intent.putExtra("nominal", nominal);
             intent.putExtra("amount", amount);
+            if (stan != null){
+                intent.putExtra("stan", stan);
+            }
             startActivity(intent);
         }
     }

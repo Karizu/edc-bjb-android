@@ -62,6 +62,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String stan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +120,10 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
             } catch (Exception e){
                 e.printStackTrace();
             }
+
+            try {
+                stan = intent.getStringExtra("stan");
+            } catch (Exception e){}
 
             // try {
             //     amountFromSelada = intent.getStringExtra("nominal");
@@ -260,7 +265,8 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
             //FORCE INTENT TO FORM MENU FROM SELADA
             if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI)
-                    || formId.equals(MENU_INFO_SALDO) || formId.equals(MENU_PUCHASE)) {
+                    || formId.equals(MENU_INFO_SALDO) || formId.equals(MENU_PUCHASE)
+                    || formId.equals("REVERSALEFROMSELADA")) {
                 Intent intent = new Intent(MainActivity.this, ActivityList.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("comp_act", id);
@@ -269,6 +275,9 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 bundle.putString("mobileNumber", mobileNumber);
                 bundle.putString("nominal", nominal);
                 bundle.putString("amount", amount);
+                if (stan!=null){
+                    bundle.putString("stan", stan);
+                }
                 intent.putExtras(bundle);
                 startActivity(intent);
                 return;
