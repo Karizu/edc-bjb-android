@@ -62,7 +62,9 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String margin = "";
     private String stan;
+    private boolean isKill = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
         ThemeManager.init(this, 1, 0, null);
         setContentView(R.layout.activity_main);
+
         showSetting = false;
         showViewer = false;
         currentScreen = new JSONObject();
@@ -117,6 +120,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 mobileNumber = intent.getStringExtra("mobileNumber");
                 nominal = intent.getStringExtra("nominal");
                 amount = intent.getStringExtra("amount");
+                margin = intent.getStringExtra("margin");
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -142,16 +146,27 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
             }
         }
 
+        //KILL APP FROM POPUP GAGAL
+        Intent intents = getIntent();
+        if (intents.getStringExtra("kill") != null){
+            isKill = true;
+            Log.d("INTENT KILL", "MASUK");
+            finishAffinity();
+            return;
+        }
+
           try {
 
             //GET SCREEN FROM INTENT SELADA
               if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI) || formId.equals(MENU_REPORT_TRANSAKSI)
                       || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO)) {
                   Log.i("Set Menu", formId);
-                  currentScreen = JsonCompHandler
-                      .readJsonFromIntent(formId, this);
-                  Log.d("JSON", currentScreen.toString());
-                  setMenu(currentScreen);
+                  if (!isKill){
+                      currentScreen = JsonCompHandler
+                              .readJsonFromIntent(formId, this);
+                      Log.d("JSON", currentScreen.toString());
+                      setMenu(currentScreen);
+                  }
               }
               else if (formId.equals(MENU_PUCHASE)){
                   JSONObject jsonObject = new JSONObject("{\n" +
@@ -275,6 +290,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 bundle.putString("mobileNumber", mobileNumber);
                 bundle.putString("nominal", nominal);
                 bundle.putString("amount", amount);
+                bundle.putString("margin", margin);
                 if (stan!=null){
                     bundle.putString("stan", stan);
                 }
@@ -319,7 +335,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         if (type != -1 && !id.equals("")) {
             switch (type) {
                 case CommonConfig.MenuType.Form:
-                    child = new FormMenu(this, id, "", "", "", "","");
+                    child = new FormMenu(this, id, "", "", "", "","", "");
 
                     break;
                 case CommonConfig.MenuType.ListMenu:
@@ -383,7 +399,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 case CommonConfig.MenuType.PopupLogout:
                     break;
                 case CommonConfig.MenuType.SecuredForm:
-                    child = new FormMenu(this, id, "", "", "", "","");
+                    child = new FormMenu(this, id, "", "", "", "","","");
                     break;
             }
             linearLayout.removeAllViews();

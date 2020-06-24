@@ -50,6 +50,7 @@ public class SplashScreen extends Activity {
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String margin = "";
     private String stan;
 
     @Override
@@ -72,6 +73,7 @@ public class SplashScreen extends Activity {
                 mobileNumber = intent.getStringExtra("mobileNumber");
                 nominal = intent.getStringExtra("nominal");
                 amount = intent.getStringExtra("amount");
+                margin = intent.getStringExtra("margin");
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -327,6 +329,7 @@ public class SplashScreen extends Activity {
                         intent.putExtra("mobileNumber", mobileNumber);
                         intent.putExtra("nominal", nominal);
                         intent.putExtra("amount", amount);
+                        intent.putExtra("margin", margin);
                         if (stan != null){
                             intent.putExtra("stan", stan);
                         }
@@ -343,6 +346,7 @@ public class SplashScreen extends Activity {
             intent.putExtra("mobileNumber", mobileNumber);
             intent.putExtra("nominal", nominal);
             intent.putExtra("amount", amount);
+            intent.putExtra("margin", margin);
             if (stan != null){
                 intent.putExtra("stan", stan);
             }

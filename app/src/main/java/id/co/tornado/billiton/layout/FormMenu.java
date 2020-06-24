@@ -239,7 +239,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String margin = "";
     private String SCREEN_PURCHASE_SELADA = "MB82561";
+    private String SCREEN_PURCHASE_FALLBACK = "MB82562";
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -255,7 +257,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //    PEMKAB KUNINGAN
 
 
-    public FormMenu(Activity context, String id, String serviceIds, String mids, String mobileNumbers, String nominals, String amounts) {
+    public FormMenu(Activity context, String id, String serviceIds, String mids, String mobileNumbers, String nominals, String amounts, String margins) {
         super(context);
         ThemeManager.init(context, 1, 0, null);
         this.context = context;
@@ -268,6 +270,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         mobileNumber = mobileNumbers;
         nominal = nominals;
         amount = amounts;
+        margin = margins;
 
         li = LayoutInflater.from(context);
         ScrollView ll = (ScrollView) li.inflate(R.layout.form_menu, this);
@@ -1277,6 +1280,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                                 if (v instanceof EditText) {
                                     EditText editText = (EditText) v;
+
+                                    //HANDEL TRANSFER IF REFERENSI IS EMPTY
+                                    if (actionUrl.equals("MA0020") || actionUrl.equals("MA0030") || actionUrl.equals("MA0022") || actionUrl.equals("MA0032")){
+                                        if (editText.comp.getString("comp_id").equals("MA033") || editText.comp.getString("comp_id").equals("MA024")){
+                                            Log.d("REFERENSI BEFORE", "MASUK");
+                                            String value = editText.getText().toString();
+                                            editText.setText(value + " ");
+                                            Log.d("REFERENSI BEFORE", "MASUK "+editText.getText().toString());
+                                        }
+                                    }
+
                                     if (editText.getText().toString().equals("") && editText.isMandatory()) {
                                         continue;
                                     }
@@ -1344,12 +1358,6 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         stan = editText.getText().toString();
                                     }
 
-                                    //HANDEL TRANSFER IF REFERENSI IS EMPTY
-                                    if (editText.comp.getString("comp_id").equals("MA033") || editText.comp.getString("comp_id").equals("MA024")){
-                                        if (editText.getText().toString().isEmpty()){
-                                            editText.setText("-");
-                                        }
-                                    }
 
                                     //INPUT CONFIG FITUR REPORT
                                     if (actionUrl.equals("R001A1") || actionUrl.equals("RMA011") || actionUrl.equals("RMA014")) {
@@ -2160,6 +2168,19 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         editText.setTag(R.string.seq_holder, seq);
                         editText.setTag(R.string.lbl_holder, lbl);
                         editText.setLayoutParams(params);
+
+                        if (formId.equals(MENU_PUCHASE)){
+                            if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
+                                editText.setText(amount);
+                            }
+                            if (editText.getHint().toString().contains("Masukkan Kode Billing")) {
+                                editText.setText(mobileNumber);
+                            }
+                            if (editText.getHint().toString().contains("Biaya Margin")) {
+                                editText.setText(margin);
+                            }
+                        }
+
                         baseLayout.addView(editText);
                         break;
                     case CommonConfig.ComponentType.PasswordField:
@@ -2500,24 +2521,43 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 context.onBackPressed();
             }
 
-//            if (formId.equals(SCREEN_PURCHASE_SELADA)) {
-////                print();
-//                context.onBackPressed();
-//                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
-//                Bundle bundle = new Bundle();
-//                bundle.putString("serciveId", serviceId);
-//                bundle.putString("mid", mid);
-//                bundle.putString("mobileNumber", mobileNumber);
-//                bundle.putString("nominal", nominal);
-//                bundle.putString("amount", amount);
-//                bundle.putString("stan", lastan);
-//                Log.d("stan", lastan);
-//                if (launchIntent != null) {
-//                    launchIntent.putExtras(bundle);
-//                    context.startActivity(launchIntent);//null pointer check in case package name was not found
-//                    context.finish();
-//                }
-//            }
+            if (formId.equals(SCREEN_PURCHASE_SELADA) || formId.equals(SCREEN_PURCHASE_FALLBACK)) {
+//                context.finish();
+//                print();
+//                context.finish();
+                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+                Bundle bundle = new Bundle();
+
+
+                Log.d("EDC: SVCID", serviceId);
+                Log.d("EDC: mid", mid);
+                Log.d("EDC: mobileNumber", mobileNumber);
+                Log.d("EDC: nominal", nominal);
+                Log.d("EDC: amount", amount);
+                Log.d("EDC: stan", lastan);
+
+
+                bundle.putString("serviceId", serviceId);
+                bundle.putString("mid", mid);
+                bundle.putString("mobileNumber", mobileNumber);
+                bundle.putString("nominal", nominal);
+                bundle.putString("amount", amount);
+                bundle.putString("stan", lastan);
+                Log.d("stan", lastan);
+
+
+                if (launchIntent != null) {
+                    Log.d("EDC AFTER: SVCID", bundle.getString("serviceId"));
+                    Log.d("EDC AFTER: mid", bundle.getString("mid"));
+                    Log.d("EDC AFTER: mobileNumber", bundle.getString("mobileNumber"));
+                    Log.d("EDC AFTER: nominal", bundle.getString("nominal"));
+                    Log.d("EDC AFTER: amount", bundle.getString("amount"));
+                    Log.d("EDC AFTER: stan", bundle.getString("stan"));
+                    launchIntent.putExtras(bundle);
+                    context.startActivity(launchIntent);//null pointer check in case package name was not found
+                    context.finish();
+                }
+            }
 
             focusHandler.postDelayed(delayFocus, 400);
             if (formId.equals("292000F")) {
@@ -2530,7 +2570,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             }
 //        Toast.makeText(context, dbgtxt, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -3082,6 +3122,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     insertICC = null;
                     if (formId.equals("MB82510")) {
                         prepareSaleFallback();
+                    } else if (formId.equals("MB82560")) {
+                        prepareSaleSeladaFallback();
                     } else if (formId.equals("S000008") || formId.equals("S000011")) {
                         prepareSamsatFallback();
                     } else if (formId.equals("S0000C4")) {
@@ -3435,6 +3477,48 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                     "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":3}]}," +
                     "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Setor Tunai Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareSaleSeladaFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        String[] amts = getAmountFromScreen();
+        String lastAmount = String.format("%.0f", Double.parseDouble(amts[0]) / 100);
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+
+                    "{\"fallback\":1,\"action_url\":\"E82561\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":4}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + amount +
+                    "\",\"value\":\"" + amount +
+                    "\"}]},\"comp_lbl\":\"Masukkan Nominal Sale\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"E8251\",\"comp_opt\":\"102012012\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + mobileNumber +
+                    "\",\"value\":\"" + mobileNumber +
+                    "\"}]},\"comp_lbl\":\"Masukkan Kode Billing\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"M1001\",\"comp_opt\":\"102012012\",\"seq\":2}," +
+
+                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"" + margin +
+                    "\",\"value\":\"" + margin +
+                    "\"}]},\"comp_lbl\":\"Biaya Margin\",\"comp_type\":\"2\"," +
+                    "\"comp_id\":\"E8252\",\"comp_opt\":\"102012012\",\"seq\":3}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":5}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Sale Selada Fallback\"}}");
 //            processResponse(fallbackScreen, "001");
             comp = fallbackScreen.getJSONObject("screen");
             pinpadTextList = new ArrayList();
@@ -4609,7 +4693,6 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             }
 
             try {
-
                 if (responObj.has("comps")) {
                     JSONObject comps = responObj.getJSONObject("comps");
                     if (comps.has("comp")) {
@@ -4766,8 +4849,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            context.onBackPressed();
-                            context.finish();
+
+                            Intent intents = new Intent(context, MainActivity.class);
+                            intents.putExtra("kill", "kill");
+                            context.startActivity(intents);
+
                         }
                     });
             alertDialog.show();

@@ -317,10 +317,10 @@ public class InsertICC extends com.rey.material.widget.EditText {
                         default:
                             if (cardPresent) {
                                 // ready
-                                Log.v("ICC Card", "Card is Ready");
+//                                Log.v("ICC Card", "Card is Ready");
                             } else {
                                 // waiting for card
-                                Log.v("ICC Card", "Waiting for card");
+//                                Log.v("ICC Card", "Waiting for card");
                             }
                     }
                     counter++;

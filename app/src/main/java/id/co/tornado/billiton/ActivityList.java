@@ -57,6 +57,7 @@ public class ActivityList extends Activity {
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
+    private String margin = "";
     private String stan;
 
     public int modulStage = CommonConfig.ICC_PROCESS_STAGE_INIT;
@@ -144,6 +145,7 @@ public class ActivityList extends Activity {
             mobileNumber = getIntent().getExtras().getString("mobileNumber");
             nominal = getIntent().getExtras().getString("nominal");
             amount = getIntent().getExtras().getString("amount");
+            margin = getIntent().getExtras().getString("margin");
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -191,12 +193,12 @@ public class ActivityList extends Activity {
             switch (type) {
                 case CommonConfig.MenuType.Form:
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    child = new FormMenu(this, id, serviceId, mid, mobileNumber, nominal, amount);
+                    child = new FormMenu(this, id, serviceId, mid, mobileNumber, nominal, amount, margin);
                     tellService(true);
                     break;
                 case CommonConfig.MenuType.SecuredForm:
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    child = new FormMenu(this, id, "", "", "", "","");
+                    child = new FormMenu(this, id, "", "", "", "","","");
                     break;
                 case CommonConfig.MenuType.ListMenu:
                     child = new ListMenu(this, id);
@@ -220,7 +222,7 @@ public class ActivityList extends Activity {
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         tellService(true);
 
-        child = new FormMenu(this, id, "", "", "", "","");
+        child = new FormMenu(this, id, "", "", "", "","","");
         linearLayout.removeAllViews();
         linearLayout.addView(child);
     }
