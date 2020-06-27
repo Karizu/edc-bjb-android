@@ -63,6 +63,10 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private String nominal = "";
     private String amount = "";
     private String margin = "";
+    private String tid = "";
+    private String mids = "";
+    private String mn = "";
+    private String ma = "";
     private String stan;
     private boolean isKill = false;
 
@@ -126,6 +130,13 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
             }
 
             try {
+                tid = intent.getStringExtra("tid");
+                mids = intent.getStringExtra("mids");
+                mn = intent.getStringExtra("mn");
+                ma = intent.getStringExtra("ma");
+            } catch (Exception e){e.printStackTrace();}
+
+            try {
                 stan = intent.getStringExtra("stan");
             } catch (Exception e){}
 
@@ -135,9 +146,15 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
             if (formId.equals("setting")) {
                 Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+                preferences.edit().putString("terminal_id",tid).apply();
+                preferences.edit().putString("merchant_id",mids).apply();
+                preferences.edit().putString("merchant_name",mn).apply();
+                preferences.edit().putString("merchant_address1",ma).apply();
                 Bundle bundle = new Bundle();
                 bundle.putString("TID", preferences.getString("terminal_id",CommonConfig.DEV_TERMINAL_ID));
                 bundle.putString("MID", preferences.getString("merchant_id",CommonConfig.DEV_MERCHANT_ID));
+                bundle.putString("MerchantName", preferences.getString("merchant_name",CommonConfig.INIT_MERCHANT_NAME));
+                bundle.putString("MerchantAddress", preferences.getString("merchant_address1",CommonConfig.INIT_MERCHANT_ADDRESS1));
                 if (launchIntent != null) {
                     launchIntent.putExtras(bundle);
                     startActivity(launchIntent);//null pointer check in case package name was not found

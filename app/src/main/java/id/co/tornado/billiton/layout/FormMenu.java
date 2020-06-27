@@ -996,7 +996,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         boolean isLogin = preferences.getBoolean("login_state", false);
-        if (false) { //(!isLogin) {
+        if (!isLogin) {
             AlertDialog alertDialog = new AlertDialog.Builder(context).create();
             alertDialog.setTitle("Koneksi Gagal");
             alertDialog.setMessage("EDC tidak terkoneksi ke server, silahkan periksa notifikasi terminal");
