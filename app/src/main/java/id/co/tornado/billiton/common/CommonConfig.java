@@ -72,9 +72,9 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_TYPE = "Rupiah";
     public static final String DEFAULT_DISCOUNT_RATE = "0";
     public static final String EXPD = "2111";
-    public static final String DEV_TERMINAL_ID = "13050201"; //13050033
-    public static final String DEV_MERCHANT_ID = "000063708571";
-    public static final String INIT_MERCHANT_NAME = "BJB NARIPAN"; //BJB NARIPAN
+    public static final String DEV_TERMINAL_ID = "00000000"; //13050033
+    public static final String DEV_MERCHANT_ID = "000000000000";
+    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA"; //BJB NARIPAN
     public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT"; //KANTOR PUSAT
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
     public static final String INIT_SIM_NUMBER = "000000";

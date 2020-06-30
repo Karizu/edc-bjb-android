@@ -67,6 +67,8 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private String mids = "";
     private String mn = "";
     private String ma = "";
+    private String ct = "";
+    private String sid = "";
     private String stan;
     private boolean isKill = false;
 
@@ -134,6 +136,8 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 mids = intent.getStringExtra("mids");
                 mn = intent.getStringExtra("mn");
                 ma = intent.getStringExtra("ma");
+                ct = intent.getStringExtra("ct");
+                sid = intent.getStringExtra("sid");
             } catch (Exception e){e.printStackTrace();}
 
             try {
@@ -146,10 +150,18 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
             if (formId.equals("setting")) {
                 Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
-                preferences.edit().putString("terminal_id",tid).apply();
-                preferences.edit().putString("merchant_id",mids).apply();
-                preferences.edit().putString("merchant_name",mn).apply();
-                preferences.edit().putString("merchant_address1",ma).apply();
+                if (tid != null && !tid.equals("")) preferences.edit().putString("terminal_id",tid).apply();
+                if (mids != null && !mids.equals("")) preferences.edit().putString("merchant_id",mids).apply();
+                if (mn != null && !mn.equals("")) preferences.edit().putString("merchant_name",mn).apply();
+                if (ma != null && !ma.equals("")) preferences.edit().putString("merchant_address1",ma).apply();
+                if (ct != null && !ct.equals("")) preferences.edit().putString("merchant_address2",ct).apply();
+                if (sid != null && sid.equals("")) {
+                    preferences.edit().putString("init_screen",sid).apply();
+                    String[] screenFiles = getApplicationContext().fileList();
+                    for (int i = 0; i < screenFiles.length; i++) {
+                        getApplicationContext().deleteFile(screenFiles[i]);
+                    }
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("TID", preferences.getString("terminal_id",CommonConfig.DEV_TERMINAL_ID));
                 bundle.putString("MID", preferences.getString("merchant_id",CommonConfig.DEV_MERCHANT_ID));
@@ -175,59 +187,70 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
           try {
 
             //GET SCREEN FROM INTENT SELADA
-              if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI) || formId.equals(MENU_REPORT_TRANSAKSI)
-                      || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO)) {
-                  Log.i("Set Menu", formId);
-                  if (!isKill){
+              if (formId != null){
+                  if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI) || formId.equals(MENU_REPORT_TRANSAKSI)
+                          || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO)) {
+                      Log.i("Set Menu", formId);
+                      if (!isKill){
+                          currentScreen = JsonCompHandler
+                                  .readJsonFromIntent(formId, this);
+                          Log.d("JSON", currentScreen.toString());
+                          setMenu(currentScreen);
+                      }
+                  }
+                  else if (formId.equals(MENU_PUCHASE)){
+                      JSONObject jsonObject = new JSONObject("{\n" +
+                              "    \"action_url\": \"E82560\",\n" +
+                              "    \"ver\": \"1\",\n" +
+                              "    \"print\": null,\n" +
+                              "    \"comps\": {\n" +
+                              "      \"comp\": [\n" +
+                              "        {\n" +
+                              "          \"visible\": false,\n" +
+                              "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
+                              "          \"comp_type\": \"9\",\n" +
+                              "          \"comp_id\": \"I0209\",\n" +
+                              "          \"seq\": 0\n" +
+                              "        },\n" +
+                              "        {\n" +
+                              "          \"visible\": true,\n" +
+                              "          \"comp_lbl\": \"PIN\",\n" +
+                              "          \"comp_type\": \"3\",\n" +
+                              "          \"comp_id\": \"I0001\",\n" +
+                              "          \"comp_opt\": \"102006006\",\n" +
+                              "          \"seq\": 1\n" +
+                              "        },\n" +
+                              "        {\n" +
+                              "          \"visible\": true,\n" +
+                              "          \"comp_lbl\": \"Proses\",\n" +
+                              "          \"comp_type\": \"7\",\n" +
+                              "          \"comp_id\": \"G0001\",\n" +
+                              "          \"seq\": 2\n" +
+                              "        }\n" +
+                              "      ]\n" +
+                              "    },\n" +
+                              "    \"static_menu\": [\n" +
+                              "      \"Purchase\"\n" +
+                              "    ],\n" +
+                              "    \"print_text\": \"IPOP\",\n" +
+                              "    \"id\": \"MB82560\",\n" +
+                              "    \"type\": \"1\",\n" +
+                              "    \"title\": \"Purchase\"\n" +
+                              "  }");
+                      setMenu(jsonObject);
+                  }
+                  else if (formId.equals("ONCLICK")) {
+                      // SKIP
+                  }
+                  else {
+                      Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
+//              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
                       currentScreen = JsonCompHandler
-                              .readJsonFromIntent(formId, this);
-                      Log.d("JSON", currentScreen.toString());
+                              .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
+//                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
+                      ;
                       setMenu(currentScreen);
                   }
-              }
-              else if (formId.equals(MENU_PUCHASE)){
-                  JSONObject jsonObject = new JSONObject("{\n" +
-                          "    \"action_url\": \"E82560\",\n" +
-                          "    \"ver\": \"1\",\n" +
-                          "    \"print\": null,\n" +
-                          "    \"comps\": {\n" +
-                          "      \"comp\": [\n" +
-                          "        {\n" +
-                          "          \"visible\": false,\n" +
-                          "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
-                          "          \"comp_type\": \"9\",\n" +
-                          "          \"comp_id\": \"I0209\",\n" +
-                          "          \"seq\": 0\n" +
-                          "        },\n" +
-                          "        {\n" +
-                          "          \"visible\": true,\n" +
-                          "          \"comp_lbl\": \"PIN\",\n" +
-                          "          \"comp_type\": \"3\",\n" +
-                          "          \"comp_id\": \"I0001\",\n" +
-                          "          \"comp_opt\": \"102006006\",\n" +
-                          "          \"seq\": 1\n" +
-                          "        },\n" +
-                          "        {\n" +
-                          "          \"visible\": true,\n" +
-                          "          \"comp_lbl\": \"Proses\",\n" +
-                          "          \"comp_type\": \"7\",\n" +
-                          "          \"comp_id\": \"G0001\",\n" +
-                          "          \"seq\": 2\n" +
-                          "        }\n" +
-                          "      ]\n" +
-                          "    },\n" +
-                          "    \"static_menu\": [\n" +
-                          "      \"Purchase\"\n" +
-                          "    ],\n" +
-                          "    \"print_text\": \"IPOP\",\n" +
-                          "    \"id\": \"MB82560\",\n" +
-                          "    \"type\": \"1\",\n" +
-                          "    \"title\": \"Purchase\"\n" +
-                          "  }");
-                  setMenu(jsonObject);
-              }
-              else if (formId.equals("ONCLICK")) {
-                  // SKIP
               }
               else {
                   Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));

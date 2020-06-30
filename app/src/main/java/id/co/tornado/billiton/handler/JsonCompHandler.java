@@ -143,14 +143,25 @@ public class JsonCompHandler {
 //        URL url = new URL(hostname + "/device/" + serialNum + "/loadMenu/" + id);
         URL url = new URL(hostname + "/screen?id=" + id);
 //        URL url = new URL(hostname + "/screen?id=" + id + "&simNumber=" + simNumber + "&tid=" + tid);
-        InputStream is = url.openStream();
+        InputStream is = null;
+
         try {
+            is = url.openStream();
+
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             JSONObject json = new JSONObject(jsonText);
             return (JSONObject) json.get("screen");
-        } finally {
-            is.close();
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new JSONObject();
+        }
+        finally {
+            if (is != null){
+                is.close();
+            }
         }
     }
 
