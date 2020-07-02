@@ -999,7 +999,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         if (!isLogin) {
             AlertDialog alertDialog = new AlertDialog.Builder(context).create();
             alertDialog.setTitle("Koneksi Gagal");
-            alertDialog.setMessage("EDC tidak terkoneksi ke server, silahkan periksa notifikasi terminal");
+            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

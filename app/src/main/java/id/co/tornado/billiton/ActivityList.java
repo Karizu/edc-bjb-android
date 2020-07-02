@@ -14,6 +14,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -164,6 +165,7 @@ public class ActivityList extends Activity {
     public void setMenu(JSONObject obj) {
         View child = null;
         Integer type = -1;
+
         try {
             type = obj.getInt("type");
             id = obj.get("id").toString();
