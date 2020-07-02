@@ -1555,18 +1555,19 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         if (actionUrl.equals("E31000")) {
                                             pan = pan.substring(0, 16);
                                             data.add(pan);
-                                        } else if (actionUrl.equals("MA0042")) {
-                                            if (!pan.startsWith("110226")) {
-                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
-                                                        "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
-
-                                                processResponse(rps, "000000");
-                                                return;
-                                            } else {
-                                                data.add(pan);
-                                            }
                                         }
+//                                        else if (actionUrl.equals("MA0042")) {
+//                                            if (!pan.startsWith("110226")) {
+//                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+//                                                        "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+//                                                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
+//
+//                                                processResponse(rps, "000000");
+//                                                return;
+//                                            } else {
+//                                                data.add(pan);
+//                                            }
+//                                        }
 //                                        else if (!isMiniBanking) {
 //                                            if (pan.startsWith("110226")) {
 //                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
