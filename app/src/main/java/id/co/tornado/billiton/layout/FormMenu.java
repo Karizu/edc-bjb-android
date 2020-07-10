@@ -234,14 +234,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private String PURCHASE_SELADA = "MB82560";
     private String SERVICE_PURCHASE_SELADA = "E82560";
     private String MENU_PUCHASE = PURCHASE_SELADA;
+    private String MENU_PUCHASE_BJB = PURCHASE_BJB;
     private String serviceId = "";
     private String mid = "";
     private String mobileNumber = "";
     private String nominal = "";
     private String amount = "";
     private String margin = "";
+    private String json = "";
     private String SCREEN_PURCHASE_SELADA = "MB82561";
     private String SCREEN_PURCHASE_FALLBACK = "MB82562";
+    private String SCREEN_PURCHASE_BJB = "MB82511";
+    private String SCREEN_PURCHASE_BJB_FALLBACK = "MB82512";
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -257,7 +261,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //    PEMKAB KUNINGAN
 
 
-    public FormMenu(Activity context, String id, String serviceIds, String mids, String mobileNumbers, String nominals, String amounts, String margins) {
+    public FormMenu(Activity context, String id, String serviceIds, String mids, String mobileNumbers, String nominals, String amounts, String margins, String jsons) {
         super(context);
         ThemeManager.init(context, 1, 0, null);
         this.context = context;
@@ -271,6 +275,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         nominal = nominals;
         amount = amounts;
         margin = margins;
+        json = jsons;
 
         li = LayoutInflater.from(context);
         ScrollView ll = (ScrollView) li.inflate(R.layout.form_menu, this);
@@ -996,21 +1001,21 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         boolean isLogin = preferences.getBoolean("login_state", false);
-        if (!isLogin) {
-            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-            alertDialog.setTitle("Koneksi Gagal");
-            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            context.onBackPressed();
-                            context.finish();
-                        }
-                    });
-            alertDialog.show();
-            return;
-        }
+//        if (!isLogin) {
+//            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+//            alertDialog.setTitle("Koneksi Gagal");
+//            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            context.onBackPressed();
+//                            context.finish();
+//                        }
+//                    });
+//            alertDialog.show();
+//            return;
+//        }
 
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         final JSONObject msg = new JSONObject();
@@ -2182,6 +2187,12 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             }
                         }
 
+                        if (formId.equals(MENU_PUCHASE_BJB)){
+                            if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
+                                editText.setText(amount);
+                            }
+                        }
+
                         baseLayout.addView(editText);
                         break;
                     case CommonConfig.ComponentType.PasswordField:
@@ -2526,37 +2537,74 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                context.finish();
 //                print();
 //                context.finish();
-                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
-                Bundle bundle = new Bundle();
+
+                if (!json.equals("")) {
+                    Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("json", json);
+                    bundle.putString("stan", lastan);
+
+                    if (launchIntent != null) {
+                        Log.d("EDC AFTER: JSON", bundle.getString("json"));
+                        launchIntent.putExtras(bundle);
+                        context.startActivity(launchIntent);//null pointer check in case package name was not found
+                        context.finish();
+                    }
+                } else {
+                    Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+                    Bundle bundle = new Bundle();
 
 
-                Log.d("EDC: SVCID", serviceId);
-                Log.d("EDC: mid", mid);
-                Log.d("EDC: mobileNumber", mobileNumber);
-                Log.d("EDC: nominal", nominal);
-                Log.d("EDC: amount", amount);
-                Log.d("EDC: stan", lastan);
+                    Log.d("EDC: SVCID", serviceId);
+                    Log.d("EDC: mid", mid);
+                    Log.d("EDC: mobileNumber", mobileNumber);
+                    Log.d("EDC: nominal", nominal);
+                    Log.d("EDC: amount", amount);
+                    Log.d("EDC: stan", lastan);
 
 
-                bundle.putString("serviceId", serviceId);
-                bundle.putString("mid", mid);
-                bundle.putString("mobileNumber", mobileNumber);
-                bundle.putString("nominal", nominal);
-                bundle.putString("amount", amount);
-                bundle.putString("stan", lastan);
-                Log.d("stan", lastan);
+                    bundle.putString("serviceId", serviceId);
+                    bundle.putString("mid", mid);
+                    bundle.putString("mobileNumber", mobileNumber);
+                    bundle.putString("nominal", nominal);
+                    bundle.putString("amount", amount);
+                    bundle.putString("stan", lastan);
+                    Log.d("stan", lastan);
 
 
-                if (launchIntent != null) {
-                    Log.d("EDC AFTER: SVCID", bundle.getString("serviceId"));
-                    Log.d("EDC AFTER: mid", bundle.getString("mid"));
-                    Log.d("EDC AFTER: mobileNumber", bundle.getString("mobileNumber"));
-                    Log.d("EDC AFTER: nominal", bundle.getString("nominal"));
-                    Log.d("EDC AFTER: amount", bundle.getString("amount"));
-                    Log.d("EDC AFTER: stan", bundle.getString("stan"));
-                    launchIntent.putExtras(bundle);
-                    context.startActivity(launchIntent);//null pointer check in case package name was not found
-                    context.finish();
+                    if (launchIntent != null) {
+                        Log.d("EDC AFTER: SVCID", bundle.getString("serviceId"));
+                        Log.d("EDC AFTER: mid", bundle.getString("mid"));
+                        Log.d("EDC AFTER: mobileNumber", bundle.getString("mobileNumber"));
+                        Log.d("EDC AFTER: nominal", bundle.getString("nominal"));
+                        Log.d("EDC AFTER: amount", bundle.getString("amount"));
+                        Log.d("EDC AFTER: stan", bundle.getString("stan"));
+                        launchIntent.putExtras(bundle);
+                        context.startActivity(launchIntent);//null pointer check in case package name was not found
+                        context.finish();
+                    }
+                }
+
+            }
+
+            if (formId.equals(SCREEN_PURCHASE_BJB) || formId.equals(SCREEN_PURCHASE_BJB_FALLBACK)) {
+//                context.finish();
+//                print();
+//                context.finish();
+                if (!json.equals("")) {
+                    Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("json", json);
+                    bundle.putString("stan", lastan);
+
+                    if (launchIntent != null) {
+                        Log.d("EDC AFTER: JSON", bundle.getString("json"));
+                        launchIntent.putExtras(bundle);
+                        context.startActivity(launchIntent);//null pointer check in case package name was not found
+                        context.finish();
+                    }
                 }
             }
 
@@ -4449,6 +4497,14 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 }
             }
             printInUse = true;
+
+            //ADD STORE NAME HEADER
+            SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
+            String storeName = CommonConfig.STORE_NAME;
+            try {
+                storeName = preferences.getString("store_name", CommonConfig.STORE_NAME);
+            } catch (Exception e){}
+
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             AssetManager assetManager = context.getAssets();
@@ -4468,9 +4524,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             if (isStl) {
                 ESCPOSApi.printSettlement(bitmap, data, mdata, tid, mid, stan, svrDate, svrTime);
             } else if (isReport) {
-                ESCPOSApi.printReport(bitmap, data, mdata, tid, mid, reportDate);
+                ESCPOSApi.printReport(bitmap, data, mdata, tid, mid, reportDate, storeName);
             } else if (isDetail) {
-                ESCPOSApi.printDetailReport(bitmap, data, mdata, tid, mid, reportDate);
+                ESCPOSApi.printDetailReport(bitmap, data, mdata, tid, mid, reportDate, storeName);
             } else {
                 if (tid != null) {
 //                    Log.d(TAG, "Count Print : " + String.valueOf(countPrint));
@@ -4486,7 +4542,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         data = addTrfSamsatFooter(data);
                     }
                     ESCPOSApi.printStruk(bitmap, data, mdata, tid, mid, stan, countPrint,
-                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr);
+                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName);
                 } else {
                     ESCPOSApi.printStruk(bitmap, data);
                 }

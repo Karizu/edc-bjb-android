@@ -221,7 +221,7 @@ public class ESCPOSApi {
     public static void printStruk(Bitmap image,List<PrintSize>data,List<String> mdata,
                                   String tid, String mid, String stan, int pcopy, String svrRef,
                                   String svrDate, String svrTime, String cardType, String cardNumber,
-                                  String screenLoader, String batchNumber, String svrAppr) {
+                                  String screenLoader, String batchNumber, String svrAppr, String storeName) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -272,6 +272,12 @@ public class ESCPOSApi {
         }
         printCommands(LINE_SPACING_30DOTS);
         printCommands("\n");
+
+        //ADD STORE NAME HEADER
+        if (!storeName.equals("AGEN")){
+            printCommandsSmall(storeName+"\n");
+        }
+
         for (String md : mdata) {
             printCommandsSmall(md+"\n");
         }
@@ -493,7 +499,7 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    public static void printReport(Bitmap image,List<PrintSize>data,List<String> mdata, String tid, String mid, String stan) {
+    public static void printReport(Bitmap image,List<PrintSize>data,List<String> mdata, String tid, String mid, String stan, String storeName) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -544,6 +550,12 @@ public class ESCPOSApi {
         }
         printCommands(LINE_SPACING_30DOTS);
         printCommands("\n");
+
+        //ADD STORE NAME HEADER
+        if (!storeName.equals("AGEN")){
+            printCommandsSmall(storeName+"\n");
+        }
+
         for (String md : mdata) {
             printCommandsSmall(md+"\n");
         }
@@ -586,7 +598,7 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    public static void printDetailReport(Bitmap image,List<PrintSize>data,List<String> mdata, String tid, String mid, String stan) {
+    public static void printDetailReport(Bitmap image,List<PrintSize>data,List<String> mdata, String tid, String mid, String stan, String storeName) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -637,6 +649,12 @@ public class ESCPOSApi {
         }
         printCommands(LINE_SPACING_30DOTS);
         printCommands("\n");
+
+        //ADD STORE NAME HEADER
+        if (!storeName.equals("AGEN")){
+            printCommandsSmall(storeName+"\n");
+        }
+
         for (String md : mdata) {
             printCommandsSmall(md+"\n");
         }

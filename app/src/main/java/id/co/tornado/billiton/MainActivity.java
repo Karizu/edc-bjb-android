@@ -69,7 +69,9 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private String ma = "";
     private String ct = "";
     private String sid = "";
+    private String storeName = "";
     private String stan;
+    private String json = "";
     private boolean isKill = false;
 
     @Override
@@ -144,6 +146,14 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 stan = intent.getStringExtra("stan");
             } catch (Exception e){}
 
+            try {
+                json = intent.getStringExtra("json");
+            } catch (Exception e){}
+
+            try {
+                storeName = intent.getStringExtra("storeName");
+            } catch (Exception e){}
+
             // try {
             //     amountFromSelada = intent.getStringExtra("nominal");
             // }catch (Exception e){}
@@ -173,6 +183,14 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                     finish();
                 }
             }
+
+            if (formId.equals("profil")) {
+                if (storeName != null && !storeName.equals("")) preferences.edit().putString("store_name",storeName).apply();
+                isKill = true;
+                Log.d("INTENT PROFIL", "MASUK");
+                finishAffinity();
+                return;
+            }
         }
 
         //KILL APP FROM POPUP GAGAL
@@ -198,7 +216,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                           setMenu(currentScreen);
                       }
                   }
-                  else if (formId.equals(MENU_PUCHASE)){
+                  else if (formId.equals(PURCHASE_SELADA)){
                       JSONObject jsonObject = new JSONObject("{\n" +
                               "    \"action_url\": \"E82560\",\n" +
                               "    \"ver\": \"1\",\n" +
@@ -234,6 +252,47 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                               "    ],\n" +
                               "    \"print_text\": \"IPOP\",\n" +
                               "    \"id\": \"MB82560\",\n" +
+                              "    \"type\": \"1\",\n" +
+                              "    \"title\": \"Purchase\"\n" +
+                              "  }");
+                      setMenu(jsonObject);
+                  }
+                  else if (formId.equals(PURCHASE_BJB)){
+                      JSONObject jsonObject = new JSONObject("{\n" +
+                              "    \"action_url\": \"E82510\",\n" +
+                              "    \"ver\": \"1\",\n" +
+                              "    \"print\": null,\n" +
+                              "    \"comps\": {\n" +
+                              "      \"comp\": [\n" +
+                              "        {\n" +
+                              "          \"visible\": false,\n" +
+                              "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
+                              "          \"comp_type\": \"9\",\n" +
+                              "          \"comp_id\": \"I0209\",\n" +
+                              "          \"seq\": 0\n" +
+                              "        },\n" +
+                              "        {\n" +
+                              "          \"visible\": true,\n" +
+                              "          \"comp_lbl\": \"PIN\",\n" +
+                              "          \"comp_type\": \"3\",\n" +
+                              "          \"comp_id\": \"I0001\",\n" +
+                              "          \"comp_opt\": \"102006006\",\n" +
+                              "          \"seq\": 1\n" +
+                              "        },\n" +
+                              "        {\n" +
+                              "          \"visible\": true,\n" +
+                              "          \"comp_lbl\": \"Proses\",\n" +
+                              "          \"comp_type\": \"7\",\n" +
+                              "          \"comp_id\": \"G0001\",\n" +
+                              "          \"seq\": 2\n" +
+                              "        }\n" +
+                              "      ]\n" +
+                              "    },\n" +
+                              "    \"static_menu\": [\n" +
+                              "      \"Purchase\"\n" +
+                              "    ],\n" +
+                              "    \"print_text\": \"IPOP\",\n" +
+                              "    \"id\": \"MB82510\",\n" +
                               "    \"type\": \"1\",\n" +
                               "    \"title\": \"Purchase\"\n" +
                               "  }");
@@ -320,8 +379,8 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
             //FORCE INTENT TO FORM MENU FROM SELADA
             if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI)
-                    || formId.equals(MENU_INFO_SALDO) || formId.equals(MENU_PUCHASE)
-                    || formId.equals("REVERSALEFROMSELADA")) {
+                    || formId.equals(MENU_INFO_SALDO) || formId.equals(PURCHASE_SELADA)
+                    || formId.equals(PURCHASE_BJB)|| formId.equals("REVERSALEFROMSELADA")) {
                 Intent intent = new Intent(MainActivity.this, ActivityList.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("comp_act", id);
@@ -333,6 +392,9 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 bundle.putString("margin", margin);
                 if (stan!=null){
                     bundle.putString("stan", stan);
+                }
+                if (json!=null){
+                    bundle.putString("json", json);
                 }
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -375,7 +437,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         if (type != -1 && !id.equals("")) {
             switch (type) {
                 case CommonConfig.MenuType.Form:
-                    child = new FormMenu(this, id, "", "", "", "","", "");
+                    child = new FormMenu(this, id, "", "", "", "","", "", json);
 
                     break;
                 case CommonConfig.MenuType.ListMenu:
@@ -439,7 +501,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 case CommonConfig.MenuType.PopupLogout:
                     break;
                 case CommonConfig.MenuType.SecuredForm:
-                    child = new FormMenu(this, id, "", "", "", "","","");
+                    child = new FormMenu(this, id, "", "", "", "","","",json);
                     break;
             }
             linearLayout.removeAllViews();

@@ -4808,7 +4808,7 @@ public class TapCard extends RelativeLayout implements ReqListener {
                     }
                 }
                 ESCPOSApi.printStruk(bitmap, data, mdata, tid, mid, stan, printcount, txRefNum,
-                        svrDate, svrTime, cardType, nomorKartu, "TAPDIALOG", "000000", svrAppr);
+                        svrDate, svrTime, cardType, nomorKartu, "TAPDIALOG", "000000", svrAppr, "AGEN");
             } else {
                 ESCPOSApi.printStruk(bitmap, data);
             }

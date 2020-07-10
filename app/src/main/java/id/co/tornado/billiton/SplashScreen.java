@@ -57,7 +57,9 @@ public class SplashScreen extends Activity {
     private String ma = "";
     private String ct = "";
     private String sid = "";
+    private String storeName = "";
     private String stan;
+    private String json;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,14 @@ public class SplashScreen extends Activity {
             } catch (Exception e){
                 e.printStackTrace();
             }
+
+            try {
+                storeName = intent.getStringExtra("storeName");
+            } catch (Exception e){e.printStackTrace();}
+
+            try {
+                json = intent.getStringExtra("json");
+            } catch (Exception e){e.printStackTrace();}
         }
 
         SharedPreferences preferences = SplashScreen.this.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
@@ -352,6 +362,13 @@ public class SplashScreen extends Activity {
                         intent.putExtra("ma", ma);
                         intent.putExtra("ct", ct);
                         intent.putExtra("sid", sid);
+
+                        intent.putExtra("storeName", storeName);
+
+                        if (json != null) {
+                            intent.putExtra("json", json);
+                        }
+
                         if (stan != null){
                             intent.putExtra("stan", stan);
                         }
@@ -376,6 +393,12 @@ public class SplashScreen extends Activity {
             intent.putExtra("ma", ma);
             intent.putExtra("ct", ct);
             intent.putExtra("sid", sid);
+
+            intent.putExtra("storeName", storeName);
+
+            if (json != null) {
+                intent.putExtra("json", json);
+            }
 
             if (stan != null){
                 intent.putExtra("stan", stan);

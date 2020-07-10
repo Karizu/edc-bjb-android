@@ -60,6 +60,7 @@ public class ActivityList extends Activity {
     private String amount = "";
     private String margin = "";
     private String stan;
+    private String json;
 
     public int modulStage = CommonConfig.ICC_PROCESS_STAGE_INIT;
     public NsiccsData cardData = new NsiccsData();
@@ -154,6 +155,10 @@ public class ActivityList extends Activity {
         try {
             stan = getIntent().getExtras().getString("stan");
         } catch (Exception e){}
+
+        try {
+            json = getIntent().getExtras().getString("json");
+        } catch (Exception e){}
     }
 
     @Override
@@ -195,12 +200,12 @@ public class ActivityList extends Activity {
             switch (type) {
                 case CommonConfig.MenuType.Form:
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    child = new FormMenu(this, id, serviceId, mid, mobileNumber, nominal, amount, margin);
+                    child = new FormMenu(this, id, serviceId, mid, mobileNumber, nominal, amount, margin, json);
                     tellService(true);
                     break;
                 case CommonConfig.MenuType.SecuredForm:
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    child = new FormMenu(this, id, "", "", "", "","","");
+                    child = new FormMenu(this, id, "", "", "", "","","", json);
                     break;
                 case CommonConfig.MenuType.ListMenu:
                     child = new ListMenu(this, id);
@@ -224,7 +229,7 @@ public class ActivityList extends Activity {
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         tellService(true);
 
-        child = new FormMenu(this, id, "", "", "", "","","");
+        child = new FormMenu(this, id, "", "", "", "","","", json);
         linearLayout.removeAllViews();
         linearLayout.addView(child);
     }
