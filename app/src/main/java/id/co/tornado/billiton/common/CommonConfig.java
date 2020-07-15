@@ -28,11 +28,11 @@ public class CommonConfig {
 
     public static final String HTTP_SSL_PROTOCOL = "https";
     public static final String HTTP_NON_SSL_PROTOCOL = "http";
-    public static final String HTTP_PROTOCOL = HTTP_SSL_PROTOCOL;
+    public static final String HTTP_PROTOCOL = HTTP_NON_SSL_PROTOCOL;
 
     public static final String WS_SSL_PROTOCOL = "wss";
     public static final String WS_NON_SSL_PROTOCOL = "ws";
-    public static final String WS_PROTOCOL = WS_SSL_PROTOCOL;
+    public static final String WS_PROTOCOL = WS_NON_SSL_PROTOCOL;
 
     public static final int WS_SSL_PORT = 443;
     public static final int WS_NORMAL_PORT = 80;
@@ -45,7 +45,7 @@ public class CommonConfig {
     public static final String PROD_IP_SELADA = "36.94.58.179:8080";
     public static final String PROD_IP = "edc.bankbjb.co.id";
 
-    public static final String IP = PROD_IP;
+    public static final String IP = PROD_IP_SELADA;
 
     public static final String HTTP_REST_URL = IP+"/ARRest";
     public static final String WEBSOCKET_URL = IP+"/tms";
