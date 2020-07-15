@@ -2538,20 +2538,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                print();
 //                context.finish();
 
-                if (!json.equals("")) {
-                    Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
-                    Bundle bundle = new Bundle();
 
-                    bundle.putString("json", json);
-                    bundle.putString("stan", lastan);
-
-                    if (launchIntent != null) {
-                        Log.d("EDC AFTER: JSON", bundle.getString("json"));
-                        launchIntent.putExtras(bundle);
-                        context.startActivity(launchIntent);//null pointer check in case package name was not found
-                        context.finish();
-                    }
-                } else {
                     Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
                     Bundle bundle = new Bundle();
 
@@ -2583,7 +2570,6 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         launchIntent.putExtras(bundle);
                         context.startActivity(launchIntent);//null pointer check in case package name was not found
                         context.finish();
-                    }
                 }
 
             }
@@ -2592,7 +2578,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                context.finish();
 //                print();
 //                context.finish();
-                if (!json.equals("")) {
+                if (json != null) {
                     Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
                     Bundle bundle = new Bundle();
 
