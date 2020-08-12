@@ -16,7 +16,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -613,7 +612,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                                     || formId.equals("MA00031") || formId.equals("MA00020")
                                                     || formId.equals("MA00021") || formId.equals("MA00091")
                                                     || formId.equals("MA00010") || formId.equals("MA00016")
-                                                    || formId.equals("MA0080F")) {
+                                                    || formId.equals("MA0080F") || formId.equals("EP00301")
+                                                    || formId.equals("EP00311") || formId.equals("EP00321")
+                                                    || formId.equals("EP00411") || formId.equals("EP00511")
+                                                    || formId.equals("EP00611") || formId.equals("EP00711")
+                                                    || formId.equals("EP00811") || formId.equals("EP00821")
+                                                    || formId.equals("EP00911")
+                                                    ) {
                                                 amt = "000000000000" + amt + "00";
                                             } else {
                                                 amt = "00000000000000" + amt;
@@ -1365,7 +1370,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
 
                                     //INPUT CONFIG FITUR REPORT
-                                    if (actionUrl.equals("R001A1") || actionUrl.equals("RMA011") || actionUrl.equals("RMA014")) {
+                                    if (actionUrl.equals("R001A1") || actionUrl.equals("RMA011")
+                                            || actionUrl.equals("RMA014") || actionUrl.equals("R002A1")) {
                                         date = editText.getText().toString();
                                         SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
                                         SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1465,18 +1471,36 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         if (comboBox.compValuesHashMap != null && comboBox.compValuesHashMap.size() > 0){
                                             cdata = comboBox.compValuesHashMap.get(comboBox.getSelectedItemPosition());
                                         } else {
+
                                             //CONFIG COMBOBOX FOR GET ACCOUNT LIST
                                             cdata = comboBox.list.get(comboBox.getSelectedItemPosition());
+
                                             if (comboBox.compId.equals("MA015")){
-                                                if (!formId.equals("MA00050") && !formId.equals("MA00051") && !formId.equals("MA00080") && !formId.equals("MA00082") && !formId.equals("MA00090") && !formId.equals("MA00092")){
+                                                if (!formId.equals("MA00050") && !formId.equals("MA00051") && !formId.equals("MA00080") && !formId.equals("MA00082") && !formId.equals("MA00090") && !formId.equals("MA00092")
+                                                        && !formId.equals("EP00300") && !formId.equals("EP00310") && !formId.equals("EP00410") && !formId.equals("EP00610") && !formId.equals("EP00612")
+                                                        && !formId.equals("EP00710") && !formId.equals("EP00712") && !formId.equals("EP00810") && !formId.equals("EP00812")
+                                                        && !formId.equals("EP00820") && !formId.equals("EP00822") && !formId.equals("EP00910") && !formId.equals("EP00912")){
                                                     cdata = cdata.substring(0,2) + "|" + cdata.substring(2);
                                                 } else {
                                                     cdata = cdata.substring(2);
                                                 }
                                             }
 
-                                            if (comboBox.compId.equals("MA021")){
+                                            //CONFIG COMBOBOX
+                                            if (comboBox.compId.equals("MA021") || comboBox.compId.equals("EP010")
+                                                    || comboBox.compId.equals("EP025") || comboBox.compId.equals("EP060")
+                                                    ){
                                                 cdata = cdata.substring(0,3);
+                                            }
+
+                                            //CONFIG COMBOBOX PEMDA BPHTB
+                                            if (comboBox.compId.equals("EP075")) {
+                                                cdata = cdata.substring(0,4) + "|" + cdata.substring(5, 8);
+                                            }
+
+                                            //CONFIG COMBOBOX PEMDA PJDL & WEB-REG
+                                            if (comboBox.compId.equals("EP130")) {
+                                                cdata = cdata.substring(0,4) + "|" + cdata.substring(0, 4);
                                             }
                                         }
 
@@ -1494,6 +1518,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                                 }
                                             }
                                         } catch (Exception e) {
+                                        }
+
+                                        if (comboBox.compId.equals("EP025")) {
+                                            if (formId.equals("EP00310") && cdata.equals("PKD")){
+                                                //HANDLING ESAMSAT SAMOLNAS CHIP TO OTHER SERVICE
+                                                newActionUrl = "EP0320";
+                                            } else
+                                            if (formId.equals("EP00312") && cdata.equals("PKD")){
+                                                //HANDLING ESAMSAT SAMOLNAS SWIPE TO OTHER SERVICE
+                                                newActionUrl = "EP0322";
+                                            }
                                         }
 
                                         Log.d("EDIT READ", cdata);
@@ -1770,6 +1805,21 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     JSONObject rps = null;
                     try {
                         rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    processResponse(rps, "");
+                    return;
+                }
+
+                //Report Detail Samsat
+                if (actionUrl.equals("R002A1") || actionUrl.equals("R002A2")) {
+                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+                    String pid = SAMSAT_PROFILES;
+
+                    JSONObject rps = null;
+                    try {
+                        rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -2178,12 +2228,15 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         if (formId.equals(MENU_PUCHASE)){
                             if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
                                 editText.setText(amount);
+                                editText.setEnabled(false);
                             }
                             if (editText.getHint().toString().contains("Masukkan Kode Billing")) {
                                 editText.setText(mobileNumber);
+                                editText.setEnabled(false);
                             }
                             if (editText.getHint().toString().contains("Biaya Margin")) {
                                 editText.setText(margin);
+                                editText.setEnabled(false);
                             }
                         }
 
@@ -2413,10 +2466,14 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("MA00055") || formId.equals("MA00035")
                     || formId.equals("MA00075") || formId.equals("MA00095")
                     || formId.equals("MA00085") || formId.equals("MA00025")
-                    || formId.equals("MA00015")
+                    || formId.equals("MA00015") || formId.equals("EPG0300")
+                    || formId.equals("EPG0310") || formId.equals("EPG0410")
+                    || formId.equals("EPG0510") || formId.equals("EPG0610")
+                    || formId.equals("EPG0710") || formId.equals("EPG0810")
+                    || formId.equals("EPG0820") || formId.equals("EPG0910")
 //                    || formId.equals(MENU_PUCHASE)
                     ) {
-
+                //Skip icc
             } else {
                 insertICC.isByPass = true;
                 showIccDialog(null);
@@ -3197,6 +3254,24 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         prepareMiniStatementFallback();
                     } else if (formId.equals("MA00070")) {
                         prepareGantiPinFallback();
+                    } else if (formId.equals("EPG0300")) {
+                        prepareEdupayFallback();
+                    } else if (formId.equals("EPG0310")) {
+                        prepareEsamsatFallback();
+                    } else if (formId.equals("EPG0410")) {
+                        preparePdamMitraFallback();
+                    } else if (formId.equals("EPG0510")) {
+                        prepareBphtbFallback();
+                    } else if (formId.equals("EPG0610")) {
+                        preparePjdlFallback();
+                    } else if (formId.equals("EPG0710")) {
+                        prepareWebRegFallback();
+                    } else if (formId.equals("EPG0810")) {
+                        prepareFallback("EPG812");
+                    } else if (formId.equals("EPG0820")) {
+                        prepareFallback("EPG822");
+                    } else if (formId.equals("EPG0910")) {
+                        prepareFallback("EPG912");
                     }
                     return;
                 } else if (additional.startsWith("blocked")) {
@@ -4085,6 +4160,183 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                     "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":4}]}," +
                     "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"MA00072\",\"type\":\"1\",\"title\":\"Ganti PIN Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareEdupayFallback(){
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"EPG302\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareEsamsatFallback(){
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"EPG312\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void preparePdamMitraFallback(){
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"EPG412\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareBphtbFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"EPG512\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void preparePjdlFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"EPG612\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareWebRegFallback() {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"EPG712\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
+//            processResponse(fallbackScreen, "001");
+            comp = fallbackScreen.getJSONObject("screen");
+            pinpadTextList = new ArrayList();
+            pinModuleCounter = 0;
+            init();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void prepareFallback(String svcId) {
+        if (alert.isShowing()) {
+            alert.dismiss();
+        }
+        List<String> values = getValueFromScreen();
+        try {
+            JSONObject fallbackScreen = new JSONObject("{\"screen\":" +
+                    "{\"fallback\":1,\"action_url\":\"" +
+                    svcId +
+                    "\",\"ver\":\"1\",\"print\":null," +
+                    "\"comps\":{\"comp\":[" +
+
+                    "{\"visible\":false,\"comp_lbl\":\"Magnetic Swipe\",\"comp_type\":\"8\",\"comp_id\":\"I0003\",\"seq\":0}," +
+                    "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
+
+                    "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
 //            processResponse(fallbackScreen, "001");
             comp = fallbackScreen.getJSONObject("screen");
             pinpadTextList = new ArrayList();

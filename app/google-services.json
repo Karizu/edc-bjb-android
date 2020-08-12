@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "478796142645",
+    "firebase_url": "https://edc-bjb.firebaseio.com",
+    "project_id": "edc-bjb",
+    "storage_bucket": "edc-bjb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478796142645:android:c0efd02e0d189e5606397c",
+        "android_client_info": {
+          "package_name": "id.co.tornado.billiton"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478796142645-qr16mea1l8qceru2kkjfbdm3p9jt3j54.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.co.tornado.billiton",
+            "certificate_hash": "6d1a3db39b1a5f78e147674e97ea2e491ef5f7c6"
+          }
+        },
+        {
+          "client_id": "478796142645-cqe34l9pgdq8i8c24nt6l1ge027piend.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrvFpgdJIpFwcIdrqbl920a57tYXe2vSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478796142645-cqe34l9pgdq8i8c24nt6l1ge027piend.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

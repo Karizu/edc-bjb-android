@@ -83,9 +83,9 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/logo_bjb_small"
         android:label="@string/app_name"
-        android:hardwareAccelerated="false"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppTheme">
         <activity
@@ -97,8 +97,8 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.HOME" />-->
+                <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+                <!-- <category android:name="android.intent.category.HOME" /> -->
             </intent-filter>
         </activity>
         <activity
@@ -107,7 +107,7 @@
         <activity
             android:name=".TestActivity"
             android:label="@string/title_activity_test"
-            android:theme="@style/Theme.AppTheme"></activity>
+            android:theme="@style/Theme.AppTheme" />
         <activity android:name=".ActivityList" />
         <activity
             android:name=".AdminActivity"
@@ -161,7 +161,16 @@
             android:exported="true" />
 
         <activity android:name=".LogViewer" />
-        <activity android:name=".DatabaseViewer"></activity>
+        <activity android:name=".DatabaseViewer" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+
     </application>
 
 </manifest>
