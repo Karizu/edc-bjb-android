@@ -106,7 +106,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         }
         String version = pInfo.versionName;
 
-        txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version);
+        txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "180720");
         String serialNum = Build.SERIAL;
         txFsn.setText(serialNum);
         txFsv.setText(preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));

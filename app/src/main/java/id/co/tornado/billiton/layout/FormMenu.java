@@ -1006,21 +1006,21 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         boolean isLogin = preferences.getBoolean("login_state", false);
-//        if (!isLogin) {
-//            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-//            alertDialog.setTitle("Koneksi Gagal");
-//            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
-//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                    new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                            context.onBackPressed();
-//                            context.finish();
-//                        }
-//                    });
-//            alertDialog.show();
-//            return;
-//        }
+        if (!isLogin) {
+            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+            alertDialog.setTitle("Koneksi Gagal");
+            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            context.onBackPressed();
+                            context.finish();
+                        }
+                    });
+            alertDialog.show();
+            return;
+        }
 
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         final JSONObject msg = new JSONObject();

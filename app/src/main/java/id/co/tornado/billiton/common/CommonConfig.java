@@ -28,11 +28,11 @@ public class CommonConfig {
 
     public static final String HTTP_SSL_PROTOCOL = "https";
     public static final String HTTP_NON_SSL_PROTOCOL = "http";
-    public static final String HTTP_PROTOCOL = HTTP_NON_SSL_PROTOCOL;
+    public static final String HTTP_PROTOCOL = HTTP_SSL_PROTOCOL;
 
     public static final String WS_SSL_PROTOCOL = "wss";
     public static final String WS_NON_SSL_PROTOCOL = "ws";
-    public static final String WS_PROTOCOL = WS_NON_SSL_PROTOCOL;
+    public static final String WS_PROTOCOL = WS_SSL_PROTOCOL;
 
     public static final int WS_SSL_PORT = 443;
     public static final int WS_NORMAL_PORT = 80;
@@ -46,7 +46,7 @@ public class CommonConfig {
     public static final String PROD_IP_SELADA = "36.94.58.179:8080";
     public static final String PROD_IP = "edc.bankbjb.co.id";
 
-    public static final String IP = DEV_IP_LOKAL;
+    public static final String IP = PROD_IP;
 
     public static final String HTTP_REST_URL = IP+"/ARRest";
     public static final String WEBSOCKET_URL = IP+"/tms";
@@ -73,8 +73,8 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_TYPE = "Rupiah";
     public static final String DEFAULT_DISCOUNT_RATE = "0";
     public static final String EXPD = "2111";
-    public static final String DEV_TERMINAL_ID = "13050201"; //13050033
-    public static final String DEV_MERCHANT_ID = "000063708571";
+    public static final String DEV_TERMINAL_ID = "00000000"; //13050033
+    public static final String DEV_MERCHANT_ID = "000000000000";
     public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA"; //BJB NARIPAN
     public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT"; //KANTOR PUSAT
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
