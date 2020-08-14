@@ -1000,22 +1000,22 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //        Toast.makeText(context, "pinblock " + pinblockHolder, Toast.LENGTH_SHORT).show();
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-        boolean isLogin = preferences.getBoolean("login_state", false);
-        if (!isLogin) {
-            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-            alertDialog.setTitle("Koneksi Gagal");
-            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            context.onBackPressed();
-                            context.finish();
-                        }
-                    });
-            alertDialog.show();
-            return;
-        }
+//        boolean isLogin = preferences.getBoolean("login_state", false);
+//        if (!isLogin) {
+//            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+//            alertDialog.setTitle("Koneksi Gagal");
+//            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            context.onBackPressed();
+//                            context.finish();
+//                        }
+//                    });
+//            alertDialog.show();
+//            return;
+//        }
 
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         final JSONObject msg = new JSONObject();
@@ -2178,18 +2178,26 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         if (formId.equals(MENU_PUCHASE)){
                             if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
                                 editText.setText(amount);
+                                editText.setEnabled(false);
                             }
                             if (editText.getHint().toString().contains("Masukkan Kode Billing")) {
                                 editText.setText(mobileNumber);
+                                editText.setEnabled(false);
                             }
                             if (editText.getHint().toString().contains("Biaya Margin")) {
                                 editText.setText(margin);
+                                editText.setEnabled(false);
                             }
                         }
 
                         if (formId.equals(MENU_PUCHASE_BJB)){
                             if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
                                 editText.setText(amount);
+                                editText.setFocusable(false);
+                                editText.setEnabled(false);
+                            }
+                            else{
+                                editText.setFocusable(true);
                             }
                         }
 
@@ -2426,6 +2434,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
     private void preparePrint() {
         try {
+
+
+
+
             JSONArray array = comp.getJSONObject("comps").getJSONArray("comp");
             if (comp.has("print")) {
                 if (!comp.get("print").equals(null)) {
@@ -2590,6 +2602,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         launchIntent.putExtras(bundle);
                         context.startActivity(launchIntent);//null pointer check in case package name was not found
                         context.finish();
+                        return;
                     }
                 }
             }
@@ -2973,6 +2986,42 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
         mLastClickTime = SystemClock.elapsedRealtime();
         insideClick(v);
+//        Toast.makeText(context, "GOING BACK TO SELADA",
+//                Toast.LENGTH_LONG).show();
+
+//        if (formId.equals("MB82510")) {
+////                context.finish();
+////                print();
+////                context.finish();
+//            if (json != null) {
+////                Toast.makeText(context, "JSON FOUND",
+////                        Toast.LENGTH_LONG).show();
+//                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.boardinglabs.mireta.selada");
+//                Bundle bundle = new Bundle();
+//
+//                bundle.putString("json", json);
+//                bundle.putString("stan", "12345");
+//
+//                if (launchIntent != null) {
+////                    Toast.makeText(context, "INTENT FOUND",
+////                            Toast.LENGTH_LONG).show();
+//                    Log.d("EDC AFTER: JSON", bundle.getString("json"));
+//                    launchIntent.putExtras(bundle);
+//                    context.startActivity(launchIntent);//null pointer check in case package name was not found
+//                    context.finish();
+//                }
+//            }
+//            else{
+//
+////                Toast.makeText(context, "JSON NOT FOUND",
+////                        Toast.LENGTH_LONG).show();
+//            }
+//        }
+//        else{
+////            Toast.makeText(context, "MENU ID NOT FOUND: "+formId,
+////                    Toast.LENGTH_LONG).show();
+//
+//        }
     }
 
     private void insideClick(View v) {
