@@ -96,6 +96,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         txMid.setText("MID : " + preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID));
         txMName.setText(preferences.getString("merchant_address1", CommonConfig.INIT_MERCHANT_ADDRESS1));
         txM2Name.setText(preferences.getString("merchant_name", CommonConfig.INIT_MERCHANT_NAME));
+
         SimpleDateFormat ydf = new SimpleDateFormat("yyyy");
         String year = ydf.format(new Date());
         PackageInfo pInfo = null;
@@ -172,6 +173,11 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                         getApplicationContext().deleteFile(screenFiles[i]);
                     }
                 }
+
+                //set IP for BJB Selada
+                preferences.edit().putString("hostname", CommonConfig.HTTP_REST_URL).apply();
+                preferences.edit().putString("sockethost", CommonConfig.WEBSOCKET_URL).apply();
+
                 Bundle bundle = new Bundle();
                 bundle.putString("TID", preferences.getString("terminal_id",CommonConfig.DEV_TERMINAL_ID));
                 bundle.putString("MID", preferences.getString("merchant_id",CommonConfig.DEV_MERCHANT_ID));

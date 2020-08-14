@@ -40,9 +40,10 @@ public class CommonConfig {
     public static final int WS_NON_SSL_PORT = WS_NORMAL_PORT;
     public static final int WS_PORT = WS_SSL_PORT;
 
+    public static final String DEV_IP_LOKAL = "192.168.43.28:8080";
     public static final String DEV_IP = "192.168.43.28:8000";
     public static final String DEV_IP_SELADA = "36.94.58.181:8080";//192.168.43.28:8080 192.168.0.7:8080
-    public static final String PROD_IP_SELADA = "36.94.58.179:8080";
+    public static final String PROD_IP_SELADA = "36.94.58.182:8080";
     public static final String PROD_IP = "edc.bankbjb.co.id";
 
     public static final String IP = PROD_IP_SELADA;

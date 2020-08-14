@@ -72,23 +72,31 @@ public class DataBaseHelper  extends SQLiteOpenHelper{
     }
     
     private void copyDatabase() throws IOException {
-        InputStream myInput = myContext.getAssets().open(DB_NAME);
-        String outputFileName = DB_PATH + DB_NAME;
-        OutputStream myOutput = new FileOutputStream(outputFileName);
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length=myInput.read(buffer))>0) {
-            myOutput.write(buffer, 0, length);
+        try {
+            InputStream myInput = myContext.getAssets().open(DB_NAME);
+            String outputFileName = DB_PATH + DB_NAME;
+            OutputStream myOutput = new FileOutputStream(outputFileName);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length=myInput.read(buffer))>0) {
+                myOutput.write(buffer, 0, length);
+            }
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
 //        Log.d("Test", "Copy DB done");
     }
     
     public void openDataBase() throws SQLException {
-        String myPath = DB_PATH + DB_NAME;
-        liteDb = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+        try {
+            String myPath = DB_PATH + DB_NAME;
+            liteDb = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
