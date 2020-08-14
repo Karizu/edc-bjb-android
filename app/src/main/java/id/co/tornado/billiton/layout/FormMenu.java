@@ -23,9 +23,11 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.SystemClock;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -323,6 +325,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 comp.put("comps", comps);
                 init();
             } else if (id.equals("STL0001")) {
+                comp = parent.prepareSettlement(); //parent is null
                 comp = parent.prepareSettlement(); //parent is null
                 init();
             }
@@ -2218,7 +2221,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         baseLayout.addView(textView);
                         break;
                     case CommonConfig.ComponentType.EditText:
-                        EditText editText = (EditText) li.inflate(R.layout.edit_text, null);
+                        final EditText editText = (EditText) li.inflate(R.layout.edit_text, null);
                         editText.init(data);
                         String txt = editText.getText().toString();
                         editText.setTag(R.string.seq_holder, seq);
@@ -2244,6 +2247,44 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
                                 editText.setText(amount);
                             }
+                        }
+
+                        if (editText.getHint().toString().equals("Jumlah Transfer")
+                                || editText.getHint().toString().equals("Nominal Setor")
+                                || editText.getHint().toString().equals("Jumlah Penarikan")
+                                || editText.getHint().toString().contains("Nominal")
+                                )
+                        {
+                            editText.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable editable) {
+                                    editText.removeTextChangedListener(this);
+                                    try {
+                                        StringBuilder originalString = new StringBuilder(editable.toString().replaceAll(",", ""));
+                                        int indx = 0;
+                                        for (int i = originalString.length(); i > 0; i--) {
+                                            if (indx % 3 == 0 && indx > 0)
+                                                originalString = originalString.insert(i, ",");
+                                            indx++;
+                                        }
+                                        editText.setText(originalString);
+                                        editText.setSelection(originalString.length());
+                                    } catch (NumberFormatException nfe) {
+                                        nfe.printStackTrace();
+                                    }
+                                    editText.addTextChangedListener(this);
+                                }
+                            });
                         }
 
                         baseLayout.addView(editText);
