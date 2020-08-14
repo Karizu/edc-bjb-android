@@ -1009,21 +1009,21 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         boolean isLogin = preferences.getBoolean("login_state", false);
-        if (!isLogin) {
-            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-            alertDialog.setTitle("Koneksi Gagal");
-            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            context.onBackPressed();
-                            context.finish();
-                        }
-                    });
-            alertDialog.show();
-            return;
-        }
+//        if (!isLogin) {
+//            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+//            alertDialog.setTitle("Koneksi Gagal");
+//            alertDialog.setMessage("EDC tidak terkoneksi ke server atau EDC tidak terdaftar, silahkan periksa notifikasi terminal");
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            context.onBackPressed();
+//                            context.finish();
+//                        }
+//                    });
+//            alertDialog.show();
+//            return;
+//        }
 
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         final JSONObject msg = new JSONObject();
@@ -2249,43 +2249,47 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             }
                         }
 
-                        if (editText.getHint().toString().equals("Jumlah Transfer")
-                                || editText.getHint().toString().equals("Nominal Setor")
-                                || editText.getHint().toString().equals("Jumlah Penarikan")
-                                || editText.getHint().toString().contains("Nominal")
-                                )
-                        {
-                            editText.addTextChangedListener(new TextWatcher() {
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                                }
-
-                                @Override
-                                public void afterTextChanged(Editable editable) {
-                                    editText.removeTextChangedListener(this);
-                                    try {
-                                        StringBuilder originalString = new StringBuilder(editable.toString().replaceAll(",", ""));
-                                        int indx = 0;
-                                        for (int i = originalString.length(); i > 0; i--) {
-                                            if (indx % 3 == 0 && indx > 0)
-                                                originalString = originalString.insert(i, ",");
-                                            indx++;
-                                        }
-                                        editText.setText(originalString);
-                                        editText.setSelection(originalString.length());
-                                    } catch (NumberFormatException nfe) {
-                                        nfe.printStackTrace();
-                                    }
-                                    editText.addTextChangedListener(this);
-                                }
-                            });
-                        }
+//                        if (editText.getHint().toString().equals("Jumlah Transfer")
+//                                || editText.getHint().toString().equals("Nominal Setor")
+//                                || editText.getHint().toString().equals("Jumlah Penarikan")
+//                                || editText.getHint().toString().contains("Nominal")
+//                                )
+//                        {
+//                            editText.addTextChangedListener(new TextWatcher() {
+//                                @Override
+//                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//                                }
+//
+//                                @Override
+//                                public void afterTextChanged(Editable editable) {
+//                                    try {
+//                                        editText.removeTextChangedListener(this);
+//                                        try {
+//                                            StringBuilder originalString = new StringBuilder(editable.toString().replaceAll(",", ""));
+//                                            int indx = 0;
+//                                            for (int i = originalString.length(); i > 0; i--) {
+//                                                if (indx % 3 == 0 && indx > 0)
+//                                                    originalString = originalString.insert(i, ",");
+//                                                indx++;
+//                                            }
+//                                            editText.setText(originalString);
+//                                            editText.setSelection(originalString.length());
+//                                        } catch (NumberFormatException nfe) {
+//                                            nfe.printStackTrace();
+//                                        }
+//                                        editText.addTextChangedListener(this);
+//                                    } catch (Exception e){
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            });
+//                        }
 
                         baseLayout.addView(editText);
                         break;
