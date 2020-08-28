@@ -1,0 +1,73 @@
+[arm64-v8a] Compile        : jni_cloudpos_battery <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_battery <= battery_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_battery <= battery_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_battery.so
+[arm64-v8a] Compile        : jni_cloudpos_cashdrawer <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_cashdrawer <= moneybox_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_cashdrawer <= moneybox_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_cashdrawer.so
+[arm64-v8a] Compile        : jni_cloudpos_clonescreen <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_clonescreen <= clone_screen_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_clonescreen <= clone_screen_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_clonescreen.so
+[arm64-v8a] Compile        : jni_cloudpos_emv <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_emv <= jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_emv <= emv_kernal_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_emv.so
+[arm64-v8a] Compile        : jni_cloudpos_fingerprint <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_fingerprint <= fingerprint_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_fingerprint <= fingerprint_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_fingerprint.so
+[arm64-v8a] Compile        : jni_cloudpos_hsm <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_hsm <= jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_hsm <= osm_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_hsm.so
+[arm64-v8a] Compile        : jni_cloudpos_idcard <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_idcard <= identity_card_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_idcard <= identity_card_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_idcard.so
+[arm64-v8a] Compile        : jni_cloudpos_iso_fingerprint <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_iso_fingerprint <= iso_fingerprint_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_iso_fingerprint <= iso_fingerprint_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_iso_fingerprint.so
+[arm64-v8a] Compile        : jni_cloudpos_led <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_led <= led_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_led <= led_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_led.so
+[arm64-v8a] Compile        : jni_cloudpos_msr <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_msr <= msr_jni_interface.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_msr <= msr_jni_register.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_msr.so
+[arm64-v8a] Compile        : jni_cloudpos_pinpad <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_pinpad <= jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_pinpad <= pinpad_jni_interface.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_pinpad <= DES.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_pinpad <= pinpad_utility.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_pinpad <= pinpad_test.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_pinpad.so
+[arm64-v8a] Compile++      : jni_cloudpos_printer <= jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_printer <= printer_jni_interface.cpp
+[arm64-v8a] Compile        : jni_cloudpos_printer <= hal_sys_log.c
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_printer.so
+[arm64-v8a] Compile        : jni_cloudpos_rfcard <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_rfcard <= contactless_card_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_rfcard <= contactless_card_jni_interface.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_rfcard <= contactless_card_event.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_rfcard.so
+[arm64-v8a] Compile        : jni_cloudpos_secondarydisplay <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_secondarydisplay <= customer_display_jni_interface.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_secondarydisplay <= customer_display_jni_register.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_secondarydisplay.so
+[arm64-v8a] Compile        : jni_cloudpos_serial <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_serial <= serial_port_jni_interface.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_serial <= serial_port_jni_register.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_serial.so
+[arm64-v8a] Compile        : jni_cloudpos_smartcard <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_smartcard <= smart_card_jni_interface.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_smartcard <= smart_card_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_smartcard <= smart_card_event.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_smartcard.so
+[arm64-v8a] Compile        : jni_cloudpos_terminal <= hal_sys_log.c
+[arm64-v8a] Compile++      : jni_cloudpos_terminal <= terminal_jni_register.cpp
+[arm64-v8a] Compile++      : jni_cloudpos_terminal <= terminal_jni_interface.cpp
+[arm64-v8a] SharedLibrary  : libjni_cloudpos_terminal.so

@@ -19,9 +19,7 @@ public class SmartCardInterface {
     };
     
     public static final int MAX_NUMBER = 4;
-    /**
-     * 默认的IC卡卡槽
-     */
+    
     public static final int DEFAULT_SLOT = 0;
 
     public static final int EVENT_INSERT_CARD = 0;
@@ -32,25 +30,25 @@ public class SmartCardInterface {
     public static final int SLOT_INDEX_NONE = -1;
 
     /**
-     * The function query the max the slot in this smart card reader
+     * The function query the max the slot in this smart card reader.
      * 
      * @return value < 0 : error code, value == 0 : not defined, value > 0 ;
      *         number of slot.
      */
-    public synchronized native static int queryMaxNumber();
+    public native static int queryMaxNumber();
 
     /**
      * The function query whether the smart card is not existent Attention : not
-     * every slot can support this function
+     * every slot can support this function.
      * 
      * @param nSlotIndex : Slot index, from 0 to ( MAX_SUPPORT_SLOT - 1 )
      * @return value < 0 : error code, value == 0 : not existent, value > 0 ; be
      *         existent.
      */
-    public synchronized native static int queryPresence(int nSlotIndex);
+    public native static int queryPresence(int nSlotIndex);
 
     /**
-     * The function open the specified card
+     * The function open the specified card.
      * 
      * @param nSlotIndex : Slot index, from 0 to (MAX_SUPPORT_SLOT - 1).
      * @return value < 0 : error code, value >= 0: success, return value is a
@@ -60,23 +58,24 @@ public class SmartCardInterface {
     public synchronized native static int open(int nSlotIndex);
 
     /**
-     * The function initialize the smart card reader
+     * The function initialize the smart card reader.
      * 
-     * @param handle : returned from method of open
-     * @return value >= 0, success in starting the process; value < 0, error
-     *         code
+     * @param handle : returned from method of open.
+     * @return value >= 0, success in starting the process; value < 0, error code.
      */
-    public synchronized native static int close(int handle);
+    public native static int close(int handle);
     
     /**
-     * set PSAM card baudrate and validate
-     * nBuadrate 可以取 9600 跟38400 
-     * nVoltage 可以取 1, 2 ,3 分别对应1.8v 3v 5v
+     * Set PSAM card baudrate and validate.
+     * @param handle returned from method of open。
+     * @param nBuadrate value is 9600 or 38400. 
+     * @param nVoltage value is 1, 2, 3 means 1.8v, 3v, 5v.
      */
     public synchronized native static int  setCardInfo(int handle, int nBuadrate , int nVoltage);
 
     /**
-     * @param Handle : returned from method of open
+     * Power on the smart card in the slot opened before.
+     * @param Handle : returned from method of open.
      * @param byteArrayATR : ATR
      * @param info : card information
      * @return value >= 0 : ATR length value < 0 : error code
@@ -84,7 +83,7 @@ public class SmartCardInterface {
     public synchronized native static int powerOn(int handle, byte byteArrayATR[], SmartCardSlotInfo info);
 
     /**
-     * The function power off the smart card
+     * Power off the smart card in the slot opened before.
      * 
      * @param handle : return from method of open
      * @return value >= 0, success in starting the process; value < 0, error
@@ -97,7 +96,7 @@ public class SmartCardInterface {
      * The function set the slot control information
      * 
      * @param Handle ：return from method of open
-     * @param info ：SMART_CARD_SLOT_INFO* pSlotInfo
+     * @param info ：SmartCardSlotInfo
      * @return value >= 0, success in starting the process; value < 0, error
      *         code
      */
@@ -105,9 +104,9 @@ public class SmartCardInterface {
     public synchronized native static int setSlotInfo(int handle, SmartCardSlotInfo info);
 
     /**
+     * The function sends a command Application Protocol Data Unit(APDU) to a card and retrieve the response APDU, plus the status words SW1 and SW2.
      * @param Handle : return from method of open
      * @param byteArrayAPDU : command of APDU
-     * @param nAPDULength : length of command of APDU
      * @param byteArrayResponse : response of command of APDU
      * @return value >= 0 : response data length value < 0 : error code
      */
@@ -116,25 +115,23 @@ public class SmartCardInterface {
     /**
      * This function is responsible for reading data from memory card
      * 
-     * @param[in] : int Handle, return from method of open
-     * @param[in] : unsigned int nAreaType, area type : 0 : main memory, 1 :
+     * @param handle, return from method of open.
+     * @param nAreaType, area type : 0 : main memory, 1 :
      *            protected memory 2 : security memory
-     * @param[in][out] : unsigned char* pDataBuffer : data buffer
-     * @param[in] : unsigned int nDataLength : data length of expecting reading
-     * @param[in] : unsigned char cStartAddress : starting address
+     * @param byteArryData : data buffer
+     * @param nStartAddress : starting address
      * @return value : < 0 : error code >= 0 : data length
      */
     public synchronized native static int read(int handle, int nAreaType, byte[] byteArryData, int nStartAddress);
 
     /**
-     * This function is responsible for writing data to memory card
+     * This function is responsible for writing data to memory card.
      * 
-     * @param[in] : int Handle, return from method of open
-     * @param[in] : unsigned int nAreaType, area type : 0 : main memory, 1 :
-     *            protected memory 2 : security memory
-     * @param[in] : unsigned char* pData : data buffer
-     * @param[in] : unsigned int nDataLength : data length of expecting reading
-     * @param[in] : unsigned char cStartAddress : starting address
+     * @param handle, return from method of open.
+     * @param nAreaType, area type : 0 : main memory, 1 :
+     *            protected memory 2 : security memory。
+     * @param byteArryData : data buffer。
+     * @param nStartAddress : starting address。
      * @return value : < 0 : error code >= 0 : data length
      */
 
@@ -143,14 +140,31 @@ public class SmartCardInterface {
     /**
      * Verification of data
      * 
-     * @param[in] : int Handle, return from method of open
-     * @param[in] : unsigned char* pData : data buffer
-     * @param[in] : unsigned int nDataLength : data length
+     * @param handle, return from method of open
+     * @param byteArrayAPDU : data buffer
      * @return value : < 0 : error code = 0 : failed in verifying data > 0 :
      *         success
      */
     public synchronized native static int verify(int handle, byte byteArrayAPDU[]);
     
+    /**
+     * Verification of data, for AT88SC102 card
+     * @param handle : return from method of open
+     * @param byteArrayAPDU : data buffer
+     * @param nAddress: 1.  80  	Security Code。
+     * 					2.  688 	Application Zone 1 Erase Key.
+     * 					3.  1248 	Application Zone 2 Erase Key。
+     * @return value : < 0 : error code, >= 0: success.
+     */
+    public synchronized native static int verify_extend(int handle, byte byteArrayAPDU[], int nAddress);
+    
+    /**
+     * @deprecated
+     * Check whether this is a card on the smart card reader
+     * return value : == 0 : no card
+     *                >0 : find a card
+     *                <0 : error code
+     */
     public synchronized native static int touch(int handle);
 
     // 回调
@@ -179,7 +193,12 @@ public class SmartCardInterface {
     public static Object objAbsent = new Object();
     public static NotifyEvent notifyEvent;
     public static boolean isCardPresent = false;
-
+    
+    /**
+     * Call back method, called by driver.
+     * @param nEvent
+     * @param nData
+     */
     public static void callBack(int slotIndex, int eventID) {
         Log.i(TAG, "slotIndex = " + slotIndex + ", eventID = " + eventID);
         notifyEvent = new NotifyEvent(eventID, slotIndex);

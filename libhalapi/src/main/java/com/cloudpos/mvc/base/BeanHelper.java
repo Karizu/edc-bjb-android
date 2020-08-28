@@ -39,7 +39,7 @@ class BeanHelper {
 			if (tempMatchLevel < 0) {
 				continue;
 			}
-			if (isFirst && matchLevel < tempMatchLevel) {
+			if (isFirst) {
 				isFirst = false;
 				matchLevel = tempMatchLevel;
 			} else if (matchLevel < tempMatchLevel) { // compare and find the method of matching degree is higher.
@@ -62,8 +62,8 @@ class BeanHelper {
 	/**
 	 * calculate the method matching degree. which is represent with int level.It's important
 	 * @param paramTypes
-	 * @param destParamTypes
-	 * @return metch level. begin from 1. 1 is th highest level. the level number is bigger, matching degree is lower.
+	 * @param transferParamTypes
+	 * @return match level. begin from 1. 1 is th highest level. the level number is bigger, matching degree is lower.
 	 */
 	public int matchLevel(Class<?>[] paramTypes, Class<?>[] transferParamTypes) {
 		int matchLevel = -1;

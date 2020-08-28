@@ -136,6 +136,7 @@ public class PINPadAction extends ConstantAction {
 
     public void updateMasterKey(Map<String, Object> param, ActionCallbackImpl callback) {
         setParams(param, callback);
+        //09 FA 17 0B 03 11 22 76 09 FA 17 0B 03 11 22 76
         String masterKey = "09 FA 17 0B 03 11 22 76 09 FA 17 0B 03 11 22 76";
         final byte[] arryCipherNewMasterKey = new byte[16];
         StringUtility.StringToByteArray(masterKey, arryCipherNewMasterKey);
@@ -189,7 +190,7 @@ public class PINPadAction extends ConstantAction {
             @Override
             public int getResult() {
                 int result = 0;
-                result = PINPadInterface.updateUserKey(0, 0, arryCipherNewUserKey,
+                result = PINPadInterface.updateUserKey(masterKeyID, 0, arryCipherNewUserKey,
                         arryCipherNewUserKey.length);
                 return result;
             }
@@ -200,6 +201,7 @@ public class PINPadAction extends ConstantAction {
         setParams(param, callback);
         // plain user key = 00 01 02 03 04 05 06 07 00 01 02 03 04 05 06 07
         String userKey = "09 FA 17 0B 03 11 22 76 09 FA 17 0B 03 11 22 76";
+
         final byte[] arryCipherNewUserKey = new byte[16];
         StringUtility.StringToByteArray(userKey, arryCipherNewUserKey);
         String checkValue = "A5 17 3A D5";
@@ -258,12 +260,59 @@ public class PINPadAction extends ConstantAction {
 
     }
 
+    public void getMKCheckValue(Map<String, Object> param, ActionCallbackImpl callback) {
+        setParams(param, callback);
+        final byte[] mkCheckValue = new byte[8];
+        checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                int result = PINPadInterface.getMKCheckValue(0, 0, mkCheckValue, mkCheckValue.length);
+                if (result >= 0) {
+                    mCallback.sendSuccessMsg("mkCheckValue = "
+                            + StringUtility.ByteArrayToString(mkCheckValue, result));
+                }
+                return result;
+            }
+        });
+
+    }
+
+    public void getSKCheckValue(Map<String, Object> param, ActionCallbackImpl callback) {
+        setParams(param, callback);
+        final byte[] skCheckValue = new byte[8];
+        checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                int result = PINPadInterface.getSKCheckValue(0, 0, 0, skCheckValue, skCheckValue.length);
+                if (result >= 0) {
+                    mCallback.sendSuccessMsg("skCheckValue = "
+                            + StringUtility.ByteArrayToString(skCheckValue, result));
+                }
+                return result;
+            }
+        });
+
+    }
+
     private void selectKey(final int masterKeyID, final int userKeyID) {
         checkOpenedAndGetData(new DataAction() {
 
             @Override
             public int getResult() {
                 return PINPadInterface.selectKey(PINPadInterface.KEY_TYPE_MASTER, masterKeyID,
+                        userKeyID, 0);
+            }
+        });
+    }
+
+    private void selectDukptKey(final int dukptType, final int masterKeyID, final int userKeyID) {
+        checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                return PINPadInterface.selectKey(dukptType, masterKeyID,
                         userKeyID, 0);
             }
         });
@@ -279,7 +328,7 @@ public class PINPadAction extends ConstantAction {
             }
         });
     }
-    
+
     public void setAllowBypassPinFlag(Map<String, Object> param, ActionCallbackImpl callback) {
         if (flag == 0) {
             flag = 1;
@@ -324,7 +373,7 @@ public class PINPadAction extends ConstantAction {
     public void calculateMAC(Map<String, Object> param, ActionCallbackImpl callback) {
         // the default userkeyID to calculateMAC is 1--MAC key
         setParams(param, callback);
-        userKeyID = 1;
+        userKeyID = 0;
         selectKey(masterKeyID, userKeyID);
         // The length of arrPlainData is 8
         final byte[] arryMACInData = Common.createMasterKey(16);
@@ -346,20 +395,69 @@ public class PINPadAction extends ConstantAction {
         });
     }
 
+    public void verifyResponseMac(Map<String, Object> param, ActionCallbackImpl callback) {
+        setParams(param, callback);
+        selectDukptKey(1, 0, 0);
+        final byte[] arryMACInData = Common.createMasterKey(16);
+        callback.sendSuccessMsg("verifyResponseMac MAC In Data = " + StringUtility.ByteArrayToString(arryMACInData, 16));
+        final byte[] arryMACOutData = new byte[8];//需要对应dukpt次数的respMAC数据
+        int length = StringUtility.StringToByteArray("20 36 42 23 C1 FF 00 FA", arryMACOutData);
+        checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                int result = PINPadInterface.verifyResponseMac(arryMACInData, arryMACInData.length, 2,
+                        arryMACOutData, arryMACOutData.length, 0);
+                if (result == 1) {
+                    mCallback.sendSuccessMsg("verifyResponseMac MAC Out Data = " + StringUtility.ByteArrayToString(arryMACOutData, result));
+                }
+                return result;
+            }
+        });
+    }
+
+
+    public void setGuiConfiguration(Map<String, Object> param, ActionCallbackImpl callback) {
+        setParams(param, callback);
+        userKeyID = 0;
+        selectKey(masterKeyID, userKeyID);
+        String pan = "1234567890123456789";
+        byte[] configData = new byte[1];
+        configData[0] = 0x01;
+        byte[] arryPINblock = new byte[18];
+        try {
+            int result = PINPadInterface.setGUIConfiguration(0, configData, configData.length);
+
+            if (result >= 0) {
+                result = PINPadInterface.calculatePINBlock(pan.getBytes(), pan.length(),
+                        arryPINblock, -1, 0);
+                if (result < 0) {
+                    mCallback.sendFailedMsg(mContext.getResources().getString(R.string.operation_with_error) + result);
+                } else {
+                    mCallback.sendSuccessMsg("setGuiConfiguration PIN Block = " + StringUtility.ByteArrayToString(arryPINblock, result));
+                }
+            } else {
+                mCallback.sendSuccessMsg("setGuiConfiguration fail ," + result);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+            mCallback.sendFailedMsg(mContext.getResources().getString(R.string.operation_failed));
+        }
+    }
+
     public void calculatePINBlock(Map<String, Object> param, ActionCallbackImpl callback) {
         setParams(param, callback);
         PINBlockThread thread = new PINBlockThread();
         thread.start();
     }
-    
-    public void getSerialNumber(Map<String, Object> param, ActionCallbackImpl callback){
+
+    public void getSerialNumber(Map<String, Object> param, ActionCallbackImpl callback) {
         setParams(param, callback);
         byte[] arrySerialNo = new byte[128];
         int result = PINPadInterface.getSerialNo(arrySerialNo);
-        Log.e(TAG, ""+StringUtility.ByteArrayToString(arrySerialNo, arrySerialNo.length));
+        Log.e(TAG, "" + StringUtility.ByteArrayToString(arrySerialNo, arrySerialNo.length));
     }
-    
-    
+
 
     class PINBlockThread extends Thread {
 

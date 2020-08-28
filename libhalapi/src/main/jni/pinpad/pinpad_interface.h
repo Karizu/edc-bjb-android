@@ -41,7 +41,7 @@ typedef int (*pinpad_close)();
  *
  */
 typedef int (*pinpad_show_text)(int nLineIndex, char* strText, int nLength,
-		int nFlagSound);
+                                int nFlagSound);
 /*
  * select master key and user key
  * @param[in] : int nKeyType : 0 : dukpt, 1: Tdukpt, 2 : master key, 3 : public key, 4 : fix key
@@ -53,7 +53,7 @@ typedef int (*pinpad_show_text)(int nLineIndex, char* strText, int nLength,
  * 				  >= 0 : success
  */
 typedef int (*pinpad_select_key)(int nKeyType, int nMasterKeyID, int nUserKeyID,
-		int nAlgorith);
+                                 int nAlgorith);
 
 /*
  * encrypt string using user key
@@ -65,7 +65,7 @@ typedef int (*pinpad_select_key)(int nKeyType, int nMasterKeyID, int nUserKeyID,
  * 				  >= 0 : success, length of cipher text length
  */
 typedef int (*pinpad_encrypt_string)(unsigned char* pPlainText, int nTextLength,
-		unsigned char* pCipherTextBuffer, int nCipherTextBufferLength);
+                                     unsigned char* pCipherTextBuffer, int nCipherTextBufferLength);
 
 /*
  * calculate pin block
@@ -79,8 +79,8 @@ typedef int (*pinpad_encrypt_string)(unsigned char* pPlainText, int nTextLength,
  * 			      >= 0 : success, length of pin block
  */
 typedef int (*pinpad_calculate_pin_block)(unsigned char* pASCIICardNumber,
-		int nCardNumberLength, unsigned char* pPinBlockBuffer,
-		int nPinBlockBufferLength, int nTimeout_MS, int nFlagSound);
+                                          int nCardNumberLength, unsigned char* pPinBlockBuffer,
+                                          int nPinBlockBufferLength, int nTimeout_MS, int nFlagSound);
 
 /*
  * calculate the MAC using current user key
@@ -94,7 +94,7 @@ typedef int (*pinpad_calculate_pin_block)(unsigned char* pASCIICardNumber,
  *
  */
 typedef int (*pinpad_calculate_mac)(unsigned char* pData, int nDataLength,
-		int nMACFlag, unsigned char* pMACOutBuffer, int nMACOutBufferLength);
+                                    int nMACFlag, unsigned char* pMACOutBuffer, int nMACOutBufferLength);
 
 /*
  * update the user key
@@ -106,7 +106,7 @@ typedef int (*pinpad_calculate_mac)(unsigned char* pData, int nDataLength,
  * 				  >= 0 : success
  */
 typedef int (*pinpad_update_user_key)(int nMasterKeyID, int nUserKeyID,
-		unsigned char* pCipherNewUserKey, int nCipherNewUserKeyLength);
+                                      unsigned char* pCipherNewUserKey, int nCipherNewUserKeyLength);
 
 /*
  * update the user key
@@ -125,9 +125,9 @@ typedef int (*pinpad_update_user_key)(int nMasterKeyID, int nUserKeyID,
 //		int nCipherNewUserKeyLength, SESSION_KEY_USAGE nKeyUsge,
 //		unsigned char *pCheckValue, int nCheckValueLen);
 typedef int (*pinpad_update_user_key_with_check)(int nMasterKeyID,
-		int nUserKeyID, unsigned char *pCipherUserKey,
-		int nCipherNewUserKeyLenght, int nKeyUsge, unsigned char *pCheckValue,
-		int nCheckValueLen);
+                                                 int nUserKeyID, unsigned char *pCipherUserKey,
+                                                 int nCipherNewUserKeyLenght, int nKeyUsge, unsigned char *pCheckValue,
+                                                 int nCheckValueLen);
 
 /*
  * update the master key
@@ -140,8 +140,8 @@ typedef int (*pinpad_update_user_key_with_check)(int nMasterKeyID,
  * 				  >= 0 : success
  */
 typedef int (*pinpad_update_master_key)(int nMasterKeyID,
-		unsigned char* pOldKey, int nOldKeyLength, unsigned char* pNewKey,
-		int nNewKeyLength);
+                                        unsigned char* pOldKey, int nOldKeyLength, unsigned char* pNewKey,
+                                        int nNewKeyLength);
 
 /*
  * set the max length of pin
@@ -161,32 +161,107 @@ typedef int (*pinpad_set_pin_length)(int nLength, int nFlag);
  * 				  >= 0 : success, length of serial number
  */
 typedef int (*pinpad_get_serial_number)(unsigned char* pData,
-		unsigned int nBufferLength);
+                                        unsigned int nBufferLength);
 
-// 输入字符数回调接口
+// input character callback api
 typedef void (*KEYEVENT_NOTIFIER)(int nCount, int nExtra);
 
 typedef int (*pinpad_set_pinblock_callback)(KEYEVENT_NOTIFIER);
 
 typedef int (*pinpad_update_cipher_master_key)(int nMasterKeyID,
-		unsigned char* pCipherMasterKey, int nCipherMasterKeyLen,
-		unsigned char *pCheckValue, int nCheckValueLen);
+                                               unsigned char* pCipherMasterKey, int nCipherMasterKeyLen,
+                                               unsigned char *pCheckValue, int nCheckValueLen);
 
 typedef int (*pinpad_update_user_key_with_check_E)(int nMasterKeyID, int nUserKeyID,
-		unsigned char *pCipherNewUserKey, int nCipherNewUserKeyLength,
-		int nKeyUsge, unsigned char *pCheckValue, int nCheckValueLen,
-		int algoCheckValue);
+                                                   unsigned char *pCipherNewUserKey, int nCipherNewUserKeyLength,
+                                                   int nKeyUsge, unsigned char *pCheckValue, int nCheckValueLen,
+                                                   int algoCheckValue);
 typedef int (*pinpad_update_cipher_master_key_E)(int nMasterKeyID,
-		unsigned char *pCipherMasterKey, int nCipherMasterKeyLen,
-		unsigned char *pCheckValue, int nCheckValueLen,
-		int algoCheckValue);
+                                                 unsigned char *pCipherMasterKey, int nCipherMasterKeyLen,
+                                                 unsigned char *pCheckValue, int nCheckValueLen,
+                                                 int algoCheckValue);
 /**
- * nFlag : 1 : 允许 （缺省值）
-   nFlag : 0 : 不允许
+ * nFlag 1: allow(default)
+   nFlag 0: not allow
  */
 typedef int (*pinpad_set_flag_allow_bypass_pin)(unsigned int nFlag);
 
+/*
+ * encrypt string using user key
+ * @param[in] : unsigned char* pPlainText : plain text
+ * @param[in] : int nTextLength : length of plain text
+ * @param[out] : unsigned char* pCipherTextBuffer : buffer for saving cipher text
+ * @param[in] : int CipherTextBufferLength : length of cipher text buffer
+ * @param[in] : unsigned int nMode :
+ *                    PINPAD_ENCRYPT_STRING_MODE_EBC  0
+ *                    PINPAD_ENCRYPT_STRING_MODE_CBC    1
+ *                    PINPAD_ENCRYPT_STRING_MODE_CFB    2
+ *                    PINPAD_ENCRYPT_STRING_MODE_OFB    3
+ * @param[in] : unsigned char* PIV : initial vector, only for CBC, CFB, OFB mode
+ * @param[in] : unsigned int nIVLen : length of IV, must be equal to block length according to the algorithm
+ * return value : < 0 : error code
+ *                   >= 0 : success, length of cipher text length
+ */
+typedef int (*pinpad_encrypt_string_with_mode)(unsigned char* pPlainText, int nTextLength, unsigned char* pCipherTextBuffer, int nCipherTextBufferLength,
+                                               unsigned int nMode, unsigned char* pIV, unsigned int nIVLen);
 
+typedef int (*pinpad_get_hwserialno)(unsigned char* pData, unsigned int nBufferLength);
+
+typedef int (*pinpad_get_mac_for_snk)(unsigned char* pData, unsigned int nBufferLength, unsigned char* pRandomData, unsigned int nRandomDataLength, unsigned char* pMAB, unsigned int nMABLength);
+
+/*
+ * update the master key after whit the specified master key decryption.
+ * @param[in] : int nDecryptMasterKeyID : decryption master key ID
+ * @param[in] : int nMasterKeyID : update master key ID
+ * @param[in] : unsigned char* pCipherMK : cipher master key to be saved
+ * @param[in] : int nNewLeyLength : length cipher master key
+ * @param[in] : pCheckValue : check value, you can set it to NULL
+ * @param[in] : unsigned int nCheckValueLen, if pCheckValue is NULL, you should set it to zero
+ * @param[in] : unsigned int algoCheckValue : 0 : default, 1 : se919, if there is no check value, this parameter does not make sense.
+ * return value : < 0 : error code
+ *                >= 0 : success
+ **/
+typedef int (*pinpad_update_specified_master_key)(int nDecryptMasterKeyID, int nMasterKeyID, unsigned char* pCipherMK, unsigned int nCipherMKLen, unsigned char* pCheckValue, unsigned int nCheckValueLen, int algoCheckValue);
+
+/* added by maobiao.yao@wizarpos.com, 2019/02/22 */
+/* calcualte check value using specified master key, only allowed when the TK is existence.
+ * @param[in] : unsigned int nMKID : master key ID;
+ * @param[in] : unsigned int nCheckValueType : now only support the default format, must be specified with 0
+ * @param[out] : unsigned char* pCheckValueBuf : buffer for the final result
+ * @param[in] : unsigned int nCheckValueBufLen : length of buffer, must be greater than or equal to 4
+ * return value : < 0 : error code
+ *                > 0 : length of check value
+ *                never return 0;
+ * */
+typedef int (*pinpad_get_mk_checkvalue)(unsigned int nMKID, unsigned int nAlgo, unsigned char* pCheckValueBuf, unsigned int nCheckValueBufLen);
+
+/* added by maobiao.yao@wizarpos.com, 2019/02/22 */
+/*
+ * calculate check value using specified session key. make sure that you have updated the session key in this slot
+ * @param[in] : unsigned int nMKID : master key ID;
+ * @param[in] : unsigned int nSKID : session key ID;
+ * @param[in] : unsigned int nCheckValueType : now only support the default format, must be specified with 0
+ * @param[out] : unsigned char* pCheckValueBuf : buffer for the final result
+ * @param[in] : unsigned int nCheckValueBufLen : length of buffer, must be greater than or equal to 4
+ * @param[in] : unsigned int nCheckValueBufLen : length of buffer, must be greater than or equal to 4
+ * return value : < 0 : error code
+ *                > 0 : length of check value
+ *                never return 0;
+ */
+typedef int (*pinpad_get_sk_checkvalue)(unsigned int nMKID, unsigned int nSKID,  unsigned int nAlgo, unsigned char* pCheckValueBuf, unsigned int nCheckValueBufLen);
+
+/*
+ * Verify the MAC
+ * @param[in] : unsigned char* pData : data
+ * @param[in] : unsigned int nDataLen : data length
+ * @param[in] : unsigned int nMACFlag : 0: X99, 1 : ECB, 2 : SE919, 3 : Union pay ECB
+ * @param[in] : unsigned char* pMacData : mac data
+ * @param[in] : unsigned int nMacDataLen : mac data length, >=4 && <=8
+ * @param[in] : unsigned int nDirection : must be 0, reserved for future
+ */
+typedef int (*pinpad_verify_response_mac)(unsigned char* pData, unsigned int nDataLen, unsigned int nMacFlag, unsigned char* pMacData, unsigned int nMacDataLen, unsigned int nDirection);
+
+typedef int (*pinpad_set_gui_configuration)(unsigned int nMacFlag, unsigned char* pMacData, unsigned int nMacDataLen);
 #ifdef __cplusplus
 }
 #endif

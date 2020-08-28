@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import id.co.tornado.billiton.TestActivity;
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.common.FileControlInfo;
 import id.co.tornado.billiton.common.NsiccsData;
@@ -112,9 +111,6 @@ public class SwipeOrInsert extends com.rey.material.widget.EditText {
                 writeLog("handler Error : " + e.getMessage());
                 if (isOpen) {
                     closeDriver();
-                }
-                if (logOutput!=null) {
-                    ((TestActivity) logOutput).hideFab();
                 }
             }
         }

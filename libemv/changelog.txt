@@ -1,0 +1,53 @@
+20180428:
+1. Update loadEMVKernel Function
+   jni\emv_kernal_jni_interface.cpp
+   com\wizarpos\emvsample\activity\FuncActivity.java
+   
+   Warning: Must define actual emvkernel JNI Java implementation class to g_pJNIREG_CLASS
+   eg: g_pJNIREG_CLASS = "com/wizarpos/emvsample/activity/FuncActivity";
+   
+2. AID table Add columns for mastercard contactless
+   com\wizarpos\emvsample\db\DatabaseOpenHelper.java
+   com\wizarpos\emvsample\db\AIDTable.java
+   com\wizarpos\emvsample\db\AIDService.java
+----------------------------------------------------------------
+20180504：
+1. Add Function:
+ 	/**
+	 * @param enable
+	 *    0 - don't detach card when close contactless reader；
+	 *    1 - waiting detach card when close contactless reader
+	 *    2 - do not control
+	 * */
+ 	public native static void set_contactless_detach_enable(int enable);
+	
+	Changed files:
+	jni\emv_kernal_jni_interface.cpp
+	jni\emv_kernal_interface.h
+	com\wizarpos\emvsample\activity\FuncActivity.java
+----------------------------------------------------------------
+20180511:
+	update NDK configurations for new version of Android Studio and Gradle.
+	build.gradle: 
+		chagnge abiFilters 'armeabi' to 'armeabi-v7a'
+	Application.mk: 
+		APP_STL := c++_static
+		APP_ABI := armeabi-v7a
+	jni/armeabi -> jni/armeabi-v7a
+----------------------------------------------------------------
+20180517:
+	fix memory leak about Handler.
+	update database version 1->2
+----------------------------------------------------------------
+20180524:
+	add pinpad native methods:
+	public native static int getHwserialno(byte[] arrayResult);
+    public native static int getMacForSnk(byte[] arrayUniqueSN, byte[] arrayRandom, byte[] arrayResult);
+	public native static int getAuthInfo(byte[] authInfo);
+	public native static int importTMK(byte[] tmkInfo);
+----------------------------------------------------------------
+20180525:
+	activities launch mode changed.
+----------------------------------------------------------------
+20180730:
+	add function "emv_set_currency_symbol" for offline PIN promot.

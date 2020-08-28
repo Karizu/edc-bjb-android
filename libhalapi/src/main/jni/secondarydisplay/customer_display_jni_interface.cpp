@@ -12,6 +12,7 @@
 #include "hal_sys_log.h"
 #include "customer_display_jni_interface.h"
 #include "customer_display_interface.h"
+#include "pthread.h"
 
 const char* g_pJNIREG_CLASS =
 		"com/cloudpos/jniinterface/SecondaryDisplayInterface";
@@ -39,12 +40,14 @@ static int ERR_NO_IMPLEMENT = -253;
 static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 
+pthread_mutex_t pthread_mute;
+
 int native_customer_display_open(JNIEnv* env, jclass obj) {
 	void* pCusHandle = NULL;
 	int nErrorCode = ERR_HAS_OPENED;
 	hal_sys_info("+ native_customer_display_open_ex()");
 	if (g_pCusDisplayInstance == NULL) {
-		void* pHandle = dlopen("libwizarposHAL.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposHAL.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return ERR_NORMAL;
@@ -66,12 +69,12 @@ int native_customer_display_open(JNIEnv* env, jclass obj) {
 		pCusHandle = g_pCusDisplayInstance->open_ex(&nErrorCode);
 
 		hal_sys_info("native_customer_display_open_ex, result = %d",
-				(int) pCusHandle);
+				(long) pCusHandle);
 		if (pCusHandle == NULL) {
 //			hal_sys_info("- native_customer_display_open_ex, errorCode = %d", nErrorCode);
 			goto customer_display_init_clean;
 		}
-		g_pCusDisplayInstance->portHandle = (int) pCusHandle;
+		g_pCusDisplayInstance->portHandle = (long) pCusHandle;
 	}
 	hal_sys_info("- native_customer_display_open_ex, errorCode = %d",
 			nErrorCode);
@@ -90,15 +93,21 @@ int native_customer_display_open(JNIEnv* env, jclass obj) {
 
 int native_customer_display_close(JNIEnv* env, jclass obj) {
 	hal_sys_info("+ native_customer_display_close()");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pCusDisplayInstance == NULL)
+	if (g_pCusDisplayInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
-	if(g_pCusDisplayInstance->close == NULL)
+	}
+	if(g_pCusDisplayInstance->close == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NO_IMPLEMENT;
+	}
 	nResult = g_pCusDisplayInstance->close(g_pCusDisplayInstance->portHandle);
 	dlclose(g_pCusDisplayInstance->pSoHandle);
 	delete g_pCusDisplayInstance;
 	g_pCusDisplayInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_customer_display_close(),result = %d", nResult);
 	return nResult;
 }

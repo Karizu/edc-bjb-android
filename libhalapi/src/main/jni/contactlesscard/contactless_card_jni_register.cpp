@@ -34,6 +34,7 @@ static JNINativeMethod g_Methods[] =
 	{"attach",					"([B)I",				(void*)native_contactless_card_attach_target},
 	{"detach",					"()I",					(void*)native_contactless_card_detach_target},
 	{"transmit",				"([BI[B)I",				(void*)native_contactless_card_transmit},
+	{"transmit_level3",			"([BI[BI)I",			(void*)native_contactless_card_transmit_level3},
 	{"sendControlCommand",		"(I[BI)I",				(void*)native_contactless_card_send_control_command},
 	{"verify",					"(II[BI)I",				(void*)native_contactless_card_mc_verify_pin},
 	{"read",					"(II[BI)I",				(void*)native_contactless_card_mc_read},
@@ -46,6 +47,8 @@ static JNINativeMethod g_Methods[] =
 	{"transfer",				"(II)I",				(void*)native_contactless_card_mc_transfer},
 	{"restore",					"(II)I",				(void*)native_contactless_card_mc_restore},
 	{"touch",					"()I",					(void*)native_contactless_card_final_touch_card},
+	{"isOpened", 				"()Z",					(void*)native_contactless_card_is_opened },
+//	{"getHandle", 				"()I",					(void*)native_contactless_card_get_handle },
 };
 
 /*

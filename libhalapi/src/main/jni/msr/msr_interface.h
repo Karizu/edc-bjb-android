@@ -17,7 +17,7 @@ typedef void (*msr_notifier)(void* pUserData);
 
 typedef int (*msr_open)(void);
 typedef int (*msr_close)(void);
-typedef int (*msr_register_notifier)(msr_notifier notifier, void* pUserData);
+typedef int (*msr_register_notifier)(msr_notifier , void* pUserData);
 typedef int (*msr_unregister_notifier)();
 typedef int (*msr_get_track_error)(int nTrackIndex);
 typedef int (*msr_get_track_data_length)(int nTrackIndex);

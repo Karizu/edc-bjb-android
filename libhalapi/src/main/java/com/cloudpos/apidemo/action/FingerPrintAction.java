@@ -6,6 +6,7 @@ import java.util.Map;
 import com.cloudpos.apidemo.activity.R;
 import com.cloudpos.apidemo.function.ActionCallbackImpl;
 import com.cloudpos.jniinterface.FingerPrintInterface;
+import com.cloudpos.jniinterface.IsoFingerPrintInterface;
 
 public class FingerPrintAction extends ConstantAction {
     

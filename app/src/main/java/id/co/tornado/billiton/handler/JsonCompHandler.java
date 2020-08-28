@@ -311,6 +311,9 @@ public class JsonCompHandler {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return respJsonObject;
     }
 

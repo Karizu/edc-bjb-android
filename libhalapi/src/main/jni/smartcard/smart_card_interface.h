@@ -222,6 +222,7 @@ typedef int (*smart_card_transmit)(int Handle, unsigned char* pAPDU, unsigned in
  * 					  >= 0 : data length
  */
 typedef int (*smart_card_mc_read)(int Handle, unsigned int nAreaType, unsigned char* pDataBuffer, unsigned int nDataLength, unsigned char cStartAddress);
+typedef int (*smart_card_mc_read_E)(int Handle, unsigned int nAreaType, unsigned char* pDataBuffer, unsigned int nDataLength, unsigned int cStartAddress);
 
 /*
  * This function is responsible for writing data to memory card
@@ -237,6 +238,7 @@ typedef int (*smart_card_mc_read)(int Handle, unsigned int nAreaType, unsigned c
  * 					  >= 0 : data length
  */
 typedef int (*smart_card_mc_write)(int Handle, unsigned int nAreaType, unsigned char* pData, unsigned int nDataLength, unsigned char cStartAddress);
+typedef int (*smart_card_mc_write_E)(int Handle, unsigned int nAreaType, unsigned char* pData, unsigned int nDataLength, unsigned int cStartAddress);
 /*
  * Verification of data
  * @param[in]		: int Handle, return from method of open
@@ -247,6 +249,8 @@ typedef int (*smart_card_mc_write)(int Handle, unsigned int nAreaType, unsigned 
  * 					  > 0 : success
  */
 typedef int (*smart_card_mc_verify_data)(int Handle, unsigned char* pData, unsigned int nDataLength);
+
+typedef int (*smart_card_mc_verify_data_E)(int Handle, unsigned char* pData, unsigned int nDataLength, unsigned int nAddress);
 
 
 typedef int (*smart_card_touch)(int Handle);

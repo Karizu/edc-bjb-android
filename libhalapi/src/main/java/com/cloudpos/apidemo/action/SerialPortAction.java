@@ -10,9 +10,8 @@ import com.cloudpos.jniinterface.SerialPortInterface;
 
 public class SerialPortAction extends ConstantAction {
 
-    private int baudrate = 115200;
+    private int baudrate = 38400;
     private String testString = "wizarpos";
-    private static String deviceName = "";
 
     private void setParams(Map<String, Object> param, ActionCallbackImpl callback) {
         this.mCallback = callback;
@@ -24,7 +23,7 @@ public class SerialPortAction extends ConstantAction {
             mCallback.sendFailedMsg(mContext.getResources().getString(R.string.device_opened));
         } else {
             try {
-                int result = SerialPortInterface.open(getModelName());
+                int result = SerialPortInterface.open(getModelName(Mode.SLAVE));
                 if (result < 0) {
                     mCallback.sendFailedMsg("open "
                             + mContext.getResources().getString(R.string.operation_with_error)
@@ -34,6 +33,18 @@ public class SerialPortAction extends ConstantAction {
                     mCallback.sendSuccessMsg("open "
                             + mContext.getResources().getString(R.string.operation_successful));
                 }
+
+//                38400
+//                result = SerialPortInterface.setBaudrate(38400);
+//                if (result < 0) {
+//                    mCallback.sendFailedMsg("setBaudrate "
+//                            + mContext.getResources().getString(R.string.operation_with_error)
+//                            + result);
+//                } else {
+//                    isOpened = true;
+//                    mCallback.sendSuccessMsg("setBaudrate "
+//                            + mContext.getResources().getString(R.string.operation_successful));
+//                }
             } catch (Throwable e) {
                 e.printStackTrace();
                 mCallback.sendFailedMsg("open "
@@ -108,13 +119,27 @@ public class SerialPortAction extends ConstantAction {
         });
     }
 
-    private String getModelName() {
-        String deviceName = "/dev/s3c2410_serial2";
-        String model = SystemProperties.getSystemPropertie("ro.product.model").trim();
-        model = model.replace(" ", "_");
-        model = model.toUpperCase();
-        if (model.equals("WIZARHAND_Q1") || model.equals("MSM8610") || model.equals("WIZARHAND_Q0")) {
-            deviceName = "WIZARHANDQ1";
+    private enum Mode {SLAVE, HOST}
+
+    ;
+
+    private String getModelName(Mode mode) {
+//    	"USB_SLAVE_SERIAL" : slave mode,(USB)  
+//    	"USB_HOST_SERIAL" : host mode(OTG)
+        String deviceName;
+        String model = SystemProperties.getSystemPropertie("ro.wp.product.model").trim().replace(" ", "_");
+        if (mode.equals(Mode.SLAVE)) {
+            deviceName = "USB_SLAVE_SERIAL";
+            if (model.equalsIgnoreCase("W1") || model.equalsIgnoreCase("W1V2")) {
+                deviceName = "DB9";
+            } else if (model.equalsIgnoreCase("Q1")) {
+                deviceName = "WIZARHANDQ1";
+            }
+        } else {
+            deviceName = "USB_SERIAL";
+            if (model.equalsIgnoreCase("W1") || model.equalsIgnoreCase("W1V2")) {
+                deviceName = "GS0_Q1";
+            }
         }
         return deviceName;
     }

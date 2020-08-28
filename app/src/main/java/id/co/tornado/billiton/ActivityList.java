@@ -14,10 +14,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,8 +32,6 @@ import id.co.tornado.billiton.common.NsiccsData;
 import id.co.tornado.billiton.handler.JsonCompHandler;
 import id.co.tornado.billiton.layout.FormMenu;
 import id.co.tornado.billiton.layout.ListMenu;
-import id.co.tornado.billiton.module.TapCard;
-import me.grantland.widget.AutofitTextView;
 
 public class ActivityList extends Activity {
 
@@ -320,9 +316,7 @@ public class ActivityList extends Activity {
 
     private void doSetMenu() {
         try {
-            if(Arrays.asList(TapCard.BRIZZI_MENU).contains(compAct) && !compAct.equals(TapCard.TOPUP_ONLINE)) {
-                setMenu(compAct);
-            } else if (compAct.equals("0A0D0S")) {
+            if (compAct.equals("0A0D0S")) {
                 //prepare settlement
                 JSONObject screen = prepareSettlement();
                 setMenu(screen);

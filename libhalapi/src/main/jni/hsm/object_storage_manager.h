@@ -143,7 +143,108 @@ typedef int (*HSM_OSM_DELETE_OBJECT)(HSM_OBJECT_PROPERTY* pObjectProperty, char*
  */
 typedef int (*HSM_OSM_SAVE_OBJECT)(HSM_OBJECT_PROPERTY* pObjectProperty, unsigned char* pObjectData, unsigned int nDataLength, HSM_OBJECT_DATA_TYPE nDataType);
 
+/*
+ * Update key
+ * @param[in]: unsigned int nKeyID: key index, from 0 to 9.
+ * @param[in]: KEY_TYPE nKeyType: indicate the key type:SM4, DES,3DES or AES.
+ * @param[in]: unsigned char* pKeyBuffer: key data.
+ * @param[in]: unsigned int nBufferLength: key data length.
+ * return value : >= 0 : success
+ *               <  0 : fail
+ */
+typedef int (*HSM_OSM_UPDATE_KEY)(unsigned int nKeyID, unsigned int nProperty, unsigned char* pKeyBuffer, unsigned int nBufferLength);
 
+/*
+ *  Key encrypt
+ * @param[in]: unsigned int nKeyID: key index, from 0 to 9.
+ * @param[in]: KEY_TYPE nKeyType: indicate the key type:SM4, DES, 3DES or AES.
+ * @param[in]: unsigned int nMode: 0: ECB 1: CBC 2:CFB 3:OFB
+ * @param[in][out]: unsigned char* pData: plain text to be encryt.
+ * @param[in]: unsigned int nDataLength: plain text length.
+ * @param[in]: unsigned char* pIV: initialize vector.
+ * @param[in]: unsigned int nIVLength: initialize vector length.
+ * return value : >= 0 : cipher text length
+ *               <  0 : fail
+ */
+typedef int (*HSM_OSM_KEY_ENCRYPT)(unsigned int nKeyID, unsigned int nProperty, unsigned int nMode, unsigned char* pData, unsigned int nDataLength, unsigned char* pIV, unsigned int nIVLength);
+
+/*
+ *  Key decrypt
+ * @param[in]: unsigned int nKeyID: key index, from 0 to 9.
+ * @param[in]: KEY_TYPE nKeyType: indicate the key type:SM4, DES, 3DES or AES.
+ * @param[in]: unsigned int nMode: 0: ECB 1: CBC 2:CFB 3:OFB
+ * @param[in][out]: unsigned char* pData: plain text to be encryt.
+ * @param[in]: unsigned int nDataLength: plain text length.
+ * @param[in]: unsigned char* pIV: initialize vector.
+ * @param[in]: unsigned int nIVLength: initialize vector length.
+ * return value : >= 0 : cipher text length
+ *               <  0 : fail
+ */
+typedef int (*HSM_OSM_KEY_DECRYPT)(unsigned int nKeyID, unsigned int nProperty, unsigned int nMode, unsigned char* pData, unsigned int nDataLength, unsigned char* pIV, unsigned int nIVLength);
+
+
+/*
+ *  Query key whether exist or not
+ * @param[in]: unsigned int nKeyID: key index, from 0 to 9.
+ * @param[in]: KEY_TYPE nKeyType: indicate the key type:SM4, DES, 3DES or AES.
+ * return value : false : not exist
+ *                     true : exist
+ */
+typedef bool (*HSM_OSM_IS_KEY_EXIST)(unsigned int nKeyID, unsigned int nProperty);
+
+
+/*
+ *  get flash id
+ * @param[in][out]: unsigned char* pBuffer: data buffer
+ * @param[int] : unsigned int nBufferLength : length of data buffer
+ * return value : >= 0 : flash id length
+ *               <  0 : fail
+ */
+typedef int(*HSM_OSM_GET_FLASH_ID)(unsigned char* pBuffer, unsigned int nBufferLength);
+
+
+/*
+ * Update sm4 key
+ * @param[in]: unsigned int nKeyID: key index, from 0 to 2.
+ * @param[in]: unsigned char* pKeyBuffer: key data.
+ * @param[in]: unsigned int nBufferLength: key data length.
+ * @param[in]: unsigned char* pSignature,: signature data.
+ * @param[in]: unsigned int nSignatureLen: signature data length.
+ * return value : >= 0 : success
+ *               <  0 : fail
+ */
+typedef int(*HSM_OSM_UPDATE_SM4)(unsigned int nKeyID, unsigned char* pKeyBuffer, unsigned int nBufferLength, unsigned char* pSignature, unsigned int nSignatureLen);
+
+/*
+ *  Save x509 crl
+ * @param[in]: char* pLabel: the label of crl
+ * @param[in]: unsigned char* pData: crl data
+ * @param[in]: unsigned int nDataLength: crl data length
+ * @param[in] : nDataType : data type, currently only support PEM format
+ * return value : >= : success
+ *                     < 0 : fail
+ */
+typedef int(*HSM_OSM_SAVE_CRL)(char* pLabel, unsigned char* pData, unsigned int nDataLength, int nDataType);
+
+/*
+ *  Get x509 crl
+ * @param[in]: char* pLabel: the label of crl
+ * @param[in][out]: unsigned char* pBuffer: buffer to save crl data
+ * @param[in]: unsigned int nBufferLength: buffer length
+ * @param[in] : nDataType : data type, currently only support PEM format
+ * return value : > 0 : success, return crl data length
+ *                     <= 0 : fail
+ */
+typedef int(*HSM_OSM_GET_CRL)(char* pLabel, unsigned char* pBuffer, unsigned int nBufferLength, int nDataType);
+
+/*
+ * query the lable of crl  in the hardware secure module, every label separated by ':'
+ * @param[in][out]: data buffer
+ * @param[in] : length of data buffer
+ * return value :< 0 : error code
+ *                  >= 0 : data length
+ */
+typedef int(*HSM_OSM_QUERY_CRL_LABELS)(unsigned char *pBuffer, unsigned int nBufferLength);
 #ifdef __cplusplus
 }
 #endif

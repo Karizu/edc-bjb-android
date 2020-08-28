@@ -3,33 +3,38 @@
 
     <!-- options -->
     <!-- Main menu -->
-    <string name="WIZARPOS">身份证,非接卡,IC卡1,IC卡2,磁条卡,密码键盘,LED,串口,客显,打印机,钱箱,指纹模块,HDMI,电池</string>
+    <string name="WIZARPOS">身份证,非接卡,IC卡,IC卡102,IC卡4442,PASM卡,磁条卡,密码键盘,LED,串口,客显,打印机,钱箱,指纹模块,Iso指纹模块,HDMI,电池</string>
     <string name="WIZARHAND_Q1">IDCardAction</string>
     <!-- sub menu -->
     <string name="IDCardAction">IDCardAction</string>
-    <string name="RFCardAction">Open,QueryInfo,Verify,Read,Write,Attach,Transmit,Detach,ReadMoneyValue,ReadMoneyValue2,WriteMoneyValue,Increment,Decrement,Transfer,Restore,Touch,Close</string>
-    <string name="SmartCardAction1">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
-    <string name="SmartCardAction2">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
+    <string name="RFCardAction">Open,QueryInfo,Verify,Verify_Level3,Read,Write,write_UltraLightC,Attach,Transmit,Transmit_Level3,Detach,ReadMoneyValue,ReadMoneyValue2,WriteMoneyValue,Increment,Decrement,Transfer,Restore,Touch,Close</string>
+    <string name="SmartCardAction">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
+    <string name="SmartCardAction_102">QueryMaxNumber,QueryPresence,Open,PowerOn,Verify,Write,Read,PowerOff,Close</string>
+    <string name="SmartCardAction_4442">QueryMaxNumber,QueryPresence,Open,PowerOn,Read,Write,Verify,PowerOff,Close</string>
+    <string name="PSAMCardAction">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
     <string name="MSRCardAction">Open,Close</string>
-    <string name="PINPadAction">Open,GetSerialNumber,ShowText,ClearText,SetPINLength,UpdateUserKey,GetSerialNo,SelectKey,EncryptData,CalculateMAC,CalculatePINBlock,UpdateMasterKeyE,UpdateUserKeyE,SetAllowBypassPinFlag,Close</string>
+    <string name="PINPadAction">Open,GetSerialNumber,ShowText,ClearText,SetPINLength,UpdateUserKey,updateUserKeyCheck,updateUserKeyCheckE,UpdateMasterKey,UpdateMasterKeyE,GetSerialNo,GetMKCheckValue,GetSKCheckValue,SelectKey,EncryptData,CalculateMAC,VerifyResponseMac,SetGuiConfiguration,CalculatePINBlock,SetAllowBypassPinFlag,Close</string>
     <string name="LEDAction">Open,TurnOn,TurnOff,GetStatus,Close</string>
     <string name="SerialPortAction">Open,SetBaudrate,Read,Write,FlushIO,Close</string>
     <string name="CustomerDisplayAction">Open,BuzzerBeep,LEDPower,SetBackground,DisplayDefaultScreen,WritePicture,Close</string>
-    <string name="PrinterAction">Open,QueryStatus,Write,Close</string>
-    <string name="PrinterActionWIZARHAND_Q1">查询电压,Open,QueryStatus,Write,Close</string>
+    <string name="PrinterAction">Open,QueryStatus,Write,printHTML,Close</string>
+    <string name="PrinterActionWIZARHAND_Q1">查询电压,Open,QueryStatus,Write,printHTML,Close</string>
     <string name="CashDrawerAction">Open,KickOut,Close</string>
     <string name="FingerPrintAction">Open,GetFea,GetLastImage,Match,Cancel,Close</string>
+    <string name="IsoFingerPrintAction">Open,Enroll,Cancel,VerifyAgainstUserId,VerifyAll,VerifyAgainstFeature,GetUserFeature,StoreFeature,GetId,GetFeaExt,Match,GetImage,ConvertFormat,ListAllFingersStatus,DelFinger,DelAllFingers,Close</string>
     <string name="CloneScreenAction">Open,Show,Close</string>
     <string name="BatteryAction">Open,QueryInfo,Close</string>
 
     <!-- 按钮 -->
+    <string name="app_name">APIDemoCloudPos3</string>
+    <string name="action_settings">设置</string>
     <string name="clearlog">清除日志</string>
     <string name="uninstall">卸载应用</string>
     <string name="back">返回</string>
     <string name="welcome">欢迎来到</string>
     <string name="testEnd">测试结束</string>
     <string name="jianjie">测试简介</string>
-    <string name="version">版本: 0.0.1</string>
+    <string name="version">版本: %s</string>
 
     <!-- nromal displays -->
     <string name="device_not_open">设备未打开</string>
@@ -37,6 +42,9 @@
     <string name="operation_failed"> 失败</string>
     <string name="operation_with_error">失败,错误码 = </string>
     <string name="operation_successful">成功</string>
+
+    <!-- IsoFingerPrintAction -->
+    <string name="isofinger_press">请按手指</string>
 
     <!-- IDCardAction -->
     <string name="txt_name">姓  名：</string>
@@ -50,7 +58,10 @@
     <string name="txt_userlifeend">有效期限(结束)：</string>
     <string name="btn_begin_scanning">开始扫描</string>
     <string name="btn_end_scanning">结束扫描</string>
-    <string name="action_package_name">com.cloudpos.apidemo.action.</string>
-    <string name="jniinterface_package_name">com.unionpay.cloudpos.jniinterface.</string>
 
+    <!-- PrinterAction -->
+    <string name="print_QR_code">这是一张二维码!qrcode</string>
+    <string name="printhtml_successful">打印html成功</string>
+    <string name="printhtml_failed">打印html失败</string>
+    <string name="printing_wait">加载打印中,请稍候</string>
 </resources>

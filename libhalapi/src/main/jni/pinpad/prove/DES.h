@@ -2,14 +2,14 @@
  * DES.h
  *
  *  Created on: 2012-7-26
- *      Author: ¿Ó√Ù
+ *      Author: Michael
  */
 
 #ifndef DES_H_
 #define DES_H_
 
-#define ENCRYPT   0 //º”√‹
-#define DECRYPT   1 //Ω‚√‹
+#define ENCRYPT   0 //encrypt
+#define DECRYPT   1 //decrypt
 
 static unsigned char Shift[16]=
 {

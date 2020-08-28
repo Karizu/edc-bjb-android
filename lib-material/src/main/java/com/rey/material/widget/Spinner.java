@@ -1,5 +1,6 @@
 package com.rey.material.widget;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -11,7 +12,6 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.TintManager;
 import android.support.v7.widget.TintTypedArray;
 import android.support.v7.widget.ViewUtils;
 import android.text.TextUtils;
@@ -108,7 +108,7 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
 	
 	private SpinnerDataSetObserver mDataSetObserver = new SpinnerDataSetObserver();
 
-	private TintManager mTintManager;
+//	private TintManager mTintManager;
 
 	private RippleManager mRippleManager;
     protected int mStyleId;
@@ -181,6 +181,7 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
         return mLabelView;
     }
 
+    @SuppressLint("RestrictedApi")
     protected void applyStyle(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){
         removeAllViews();
         getRippleManager().onCreate(this, context, attrs, defStyleAttr, defStyleRes);
@@ -352,7 +353,7 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
             mDividerDrawable = null;
         }
 
-        mTintManager = a.getTintManager();
+//        mTintManager = a.getTintManager();
 
         if (mTempAdapter != null) {
             mPopup.setAdapter(mTempAdapter);
@@ -482,9 +483,9 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
      *
      * @attr ref android.R.styleable#Spinner_popupBackground
      */
-    public void setPopupBackgroundResource(int resId) {
-        setPopupBackgroundDrawable(mTintManager.getDrawable(resId));
-    }
+//    public void setPopupBackgroundResource(int resId) {
+//        setPopupBackgroundDrawable(mTintManager.getDrawable(resId));
+//    }
 
     /**
      * Get the background drawable for the spinner's popup window of choices.
@@ -493,9 +494,9 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
      *
      * @attr ref android.R.styleable#Spinner_popupBackground
      */
-    public Drawable getPopupBackground() {
-        return mPopup.getBackground();
-    }
+//    public Drawable getPopupBackground() {
+//        return mPopup.getBackground();
+//    }
 
     /**
      * Set a vertical offset in pixels for the spinner's popup window of choices.
@@ -1282,6 +1283,7 @@ public class Spinner extends FrameLayout implements ThemeManager.OnThemeChangedL
             mHintText = hintText;
         }
 
+        @SuppressLint("RestrictedApi")
         void computeContentWidth() {
             final Drawable background = getBackground();
             int hOffset = 0;

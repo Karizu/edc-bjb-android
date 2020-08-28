@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion '25.0.0'
 
     defaultConfig {
 
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 25
 
         ndk {
             moduleName "jni_wizarpos_printer"
@@ -23,6 +23,6 @@ android {
     }
 }
 dependencies {
-    compile project(path: ':libhalapi')
+    implementation project(path: ':libhalapi')
 }
 

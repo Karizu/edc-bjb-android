@@ -1,0 +1,20 @@
+Executable : /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build
+arguments : 
+NDK_PROJECT_PATH=null
+APP_BUILD_SCRIPT=/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk
+NDK_APPLICATION_MK=/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk
+APP_ABI=armeabi-v7a
+NDK_ALL_ABIS=armeabi-v7a
+NDK_DEBUG=1
+APP_PLATFORM=android-16
+NDK_OUT=/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/debug/obj
+NDK_LIBS_OUT=/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/debug/lib
+APP_CPPFLAGS+=
+wizarpos_contact_ic_card
+wizarpos_contactless_ic_card
+wizarpos_emv_kernel
+wizarpos_magnetic_stripe_reader
+wizarpos_pinpad
+wizarpos_printer
+jvmArgs : 
+

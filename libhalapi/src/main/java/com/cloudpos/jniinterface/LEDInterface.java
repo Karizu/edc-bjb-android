@@ -5,17 +5,35 @@ public class LEDInterface {
 		String fileName = "jni_cloudpos_led";
 		JNILoad.jniLoad(fileName);
 	}
+	/**
+     * Open the LED device.
+     * @return value >= 0, success; value < 0, error code
+     */
     public synchronized native static int open();
-    public synchronized native static int close();
+    /**
+     * Close the LED device.
+     * @return value >= 0, success; value < 0, error code
+     */
+    public native static int close();
+    /**
+     * Turn on the LED device.
+     * @param index: index of LED, >=0 && <=3
+     * @return value >= 0, success; value < 0, error code
+     */
     public synchronized native static int turnOn(int index);
+    /**
+     * Turn off the LED device.
+     * @param index: index of LED, >=0 && <=3
+     * @return value >= 0, success; value < 0, error code
+     */
     public synchronized native static int turnOff(int index);
     /**
      * get the status of led
-     * @param[in] : unsigned int nLedIndex : index of led, >= 0 && < MAX_LED_COUNT
+     * @param index: index of LED, >=0 && <=3
      * @return value : == 0 : turn off
      *                 > 0 : turn on
      *                 < 0 : error code
      */
-    public synchronized native static int getStatus(int index);
+    public native static int getStatus(int index);
 
 }

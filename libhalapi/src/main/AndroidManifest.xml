@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cloudpos.apidemo.activity"
-    android:versionCode="2"
-    android:versionName="1.0.2" >
+    android:versionCode="3"
+    android:versionName="1.1.0" >
     
     <!-- 往sdcard中写入数据的权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 在sdcard中创建/删除文件的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
     
     <!-- HDMI权限 -->
     <uses-permission android:name="android.permission.CLOUDPOS_CLONESCREEN" />
@@ -34,6 +36,14 @@
     <uses-permission android:name="android.permission.CLOUDPOS_PIN_ENCRYPT_DATA"/>
     <uses-permission android:name="android.permission.CLOUDPOS_PIN_UPDATE_USER_KEY"/>
     <uses-permission android:name="android.permission.CLOUDPOS_PIN_UPDATE_MASTER_KEY"/>
+    <uses-permission android:name="android.permission.CLOUDPOS_PIN_LOAD_KEY"/>
+
+    <uses-permission android:name="android.permission.WIZARPOS_PIN_GET_PIN_BLOCK"/>
+    <uses-permission android:name="android.permission.WIZARPOS_PIN_MAC" />
+    <uses-permission android:name="android.permission.WIZARPOS_PIN_ENCRYPT_DATA"/>
+    <uses-permission android:name="android.permission.WIZARPOS_PIN_UPDATE_USER_KEY"/>
+    <uses-permission android:name="android.permission.WIZARPOS_PIN_UPDATE_MASTER_KEY"/>
+    <uses-permission android:name="android.permission.WIZARPOS_PIN_LOAD_KEY"/>
     
     <!-- 身份证权限 -->
     <uses-permission android:name="android.permission.CLOUDPOS_IDCard"/>
@@ -47,5 +57,7 @@
     <!-- 指纹模块 -->
     <uses-permission android:name="android.permission.CLOUDPOS_FINGERPRINT"/>
 
+    <!--alert dialog-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
 </manifest>

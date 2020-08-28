@@ -12,6 +12,7 @@
 #include "hal_sys_log.h"
 #include "moneybox_interface.h"
 #include "moneybox_jni_interface.h"
+#include <pthread.h>
 
 //com.cloudpos.apidemo.jniinterface
 const char* g_pJNIREG_CLASS = "com/cloudpos/jniinterface/CashDrawerInterface";
@@ -29,11 +30,13 @@ typedef struct moneybox_hal_interface {
 
 static MONEY_BOX_HAL_INSTANCE* g_pInstance = NULL;
 
+pthread_mutex_t pthread_mute;
+
 int native_moneybox_open(JNIEnv* env, jclass obj) {
 	hal_sys_info("+ native_moneybox_open");
 	int nResult = -1;
 	if (g_pInstance == NULL) {
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return -1;
@@ -77,10 +80,11 @@ int native_moneybox_open(JNIEnv* env, jclass obj) {
 
 int native_moneybox_close(JNIEnv* env, jclass obj) {
 	hal_sys_info("+ native_moneybox_close");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = -1;
 	if (g_pInstance == NULL) {
-		hal_sys_info(
-				"Leave native_moneybox_close()...g_pIDCardInstance == NULL!\n");
+		pthread_mutex_unlock(&pthread_mute);
+		hal_sys_info("Leave native_moneybox_close()...g_pIDCardInstance == NULL!\n");
 		return -1;
 	}
 	nResult = g_pInstance->close();
@@ -88,6 +92,7 @@ int native_moneybox_close(JNIEnv* env, jclass obj) {
 	dlclose(g_pInstance->pSoHandle);
 	delete g_pInstance;
 	g_pInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_moneybox_close,result =%d", nResult);
 	return nResult;
 }

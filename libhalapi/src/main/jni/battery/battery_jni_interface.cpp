@@ -35,11 +35,13 @@ static int ERR_NO_IMPLEMENT = -253;
 static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 
+pthread_mutex_t pthread_mute;
+
 int native_battery_open(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_battery_open");
 	int nResult = ERR_HAS_OPENED;
 	if (g_pBatteryInstance == NULL) {
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return ERR_NORMAL;
@@ -63,13 +65,17 @@ int native_battery_open(JNIEnv * env, jclass obj) {
 
 int native_battery_close(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_battery_close");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pBatteryInstance == NULL)
+	if (g_pBatteryInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
+	}
 	nResult = g_pBatteryInstance->close();
 	dlclose(g_pBatteryInstance->pHandle);
 	delete g_pBatteryInstance;
 	g_pBatteryInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_battery_close, result = %d", nResult);
 	return nResult;
 }

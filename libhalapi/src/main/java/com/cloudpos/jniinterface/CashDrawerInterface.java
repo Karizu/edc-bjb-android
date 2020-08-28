@@ -5,21 +5,21 @@ public class CashDrawerInterface {
 		String fileName = "jni_cloudpos_cashdrawer";
 		JNILoad.jniLoad(fileName);
 	}
-	/*
-	 * open the money box device
+	/**
+	 * Open the money box device
 	 * @return value : < 0 : error code
 	 * 				   >= 0 : success;	
 	 */
 	public synchronized native static int open();
-	/*
-	 * close the money box device
+	/**
+	 * Close the money box device
 	 * @return value : < 0 : error code
 	 * 				   >= 0 : success;
 	 */
 	
 	public synchronized native static int close();
-	/*
-	 * open money box
+	/**
+	 * Kick out money box
 	 * @return value : < 0 : error code;
 	 *                 >= 0 : success
 	 */

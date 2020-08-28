@@ -334,17 +334,17 @@ public class CloneScreenAction extends ConstantAction {
     }
 
     private void show6() {
-//        final Bitmap bitmap6 = BitmapFactory.decodeResource(mContext.getResources(),
-//                R.drawable.img_006);
-//        final int[] arryBitmapData6 = BitmapConvert.bitmap2Ints(bitmap6);
-//        checkOpenedAndGetData(new DataAction() {
-//
-//            @Override
-//            public int getResult() {
-//                int result = CloneScreenInterface.show(arryBitmapData6, arryBitmapData6.length,
-//                        bitmap6.getWidth(), bitmap6.getHeight());
-//                return result;
-//            }
-//        });
+        final Bitmap bitmap6 = BitmapFactory.decodeResource(mContext.getResources(),
+                R.drawable.img_006);
+        final int[] arryBitmapData6 = BitmapConvert.bitmap2Ints(bitmap6);
+        checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                int result = CloneScreenInterface.show(arryBitmapData6, arryBitmapData6.length,
+                        bitmap6.getWidth(), bitmap6.getHeight());
+                return result;
+            }
+        });
     }
 }

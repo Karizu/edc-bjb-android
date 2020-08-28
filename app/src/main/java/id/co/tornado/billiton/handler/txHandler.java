@@ -14,9 +14,9 @@ import android.util.Log;
 
 import com.wizarpos.apidemo.printer.FontSize;
 import com.wizarpos.apidemo.printer.PrintSize;
-import com.wizarpos.apidemo.smartcard.NeoSmartCardController;
+
 //import com.wizarpos.apidemo.smartcard.SmartCardController;
-import com.wizarpos.jni.PINPadInterface;
+//import com.wizarpos.jni.PinPadInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +63,6 @@ public class txHandler {
     private JSONObject jroot;
     private Date date = new Date();
     private int msgSequence = 0;
-    private NeoSmartCardController smc;
     private ChannelClient cNio = null;
     private String stanvoid = "";
     String hsToHost;
@@ -143,9 +142,6 @@ public class txHandler {
         }
         writeDebugLog("STAN : ", msgSequence+"");
 
-        if (isInitBrizzi) {
-            return doInitBrizzi(context);
-        }
         if (isBrizziSettlement) {
             writeDebugLog("EDCLOG", "read (163)");
             String qry = "select * from edc_log where service_id like 'A24%' " +
@@ -1549,7 +1545,7 @@ public class txHandler {
                 if (isLogon) {
                     //save key here
 //                    try {
-//                        PINPadInterface.open();
+//                        PinPadInterface.open();
 //                        String wk = (String) replyJSON.getString("work_key");
 //                        //override wk
 ////                        wk = "376EB729FB11373BC0F097ECE49F6A25";
@@ -1558,13 +1554,13 @@ public class txHandler {
 //                        }
 //                        writeDebugLog("LOGON", wk);
 //                        byte[] newKey = ISO8583Parser.hexStringToByteArray(wk);
-//                        int ret = PINPadInterface.updateUserKey(0,0, newKey, newKey.length);
+//                        int ret = PinPadInterface.updateUserKey(0,0, newKey, newKey.length);
 //                        writeDebugLog("LOGON", "Status : "+String.valueOf(ret));
 //                    } catch (Exception e) {
 //                        //teu bisa update
 //                        Log.e("LOGON", e.getMessage());
 //                    } finally {
-//                        PINPadInterface.close();
+//                        PinPadInterface.close();
 //                    }
                     return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Logon Succesfull\",\n" +
                             "\"value\":\"Logon Succesfull\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"F0003\",\"seq\":0}]},\"id\":\"F000002\",\n" +
@@ -1841,38 +1837,7 @@ public class txHandler {
         return respBytes;
     }
 
-    private JSONObject doInitBrizzi(Context context) throws JSONException {
-        boolean openDevice = false;
-        try {
-            smc = new NeoSmartCardController(context);
-            openDevice = smc.starting(1);
-            writeDebugLog("SAM", String.valueOf(openDevice));
-            if (!openDevice) {
-                throw new Exception("No SAM Card");
-            }
-            //2. Card � Select AID 1
-            String aid = smc.sendCmd(ISO8583Parser.hexStringToByteArray("00A4040C09A00000000000000011"));
-//            String aid = smc.sendCmd(ISO8583Parser.hexStringToByteArray("0084000008"));
-            if (aid.startsWith("9000")) {
-                smc.closedevice();
-                return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Proses Init Sukses\",\n" +
-                        "\"value\":\"Proses Init Sukses\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"I00001\",\"seq\":0}]},\"id\":\"000000E\",\n" +
-                        "\"type\":\"2\",\"title\":\"Sukses\"}}");
-            } else {
-                smc.closedevice();
-                return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Proses Init Gagal\",\n" +
-                        "\"value\":\"Proses Init Gagal\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"I00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
-            }
-        } catch (Exception e) {
-            if (openDevice) {
-                smc.closedevice();
-            }
-            return new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Proses Init Gagal\",\n" +
-                    "\"value\":\"Proses Init Gagal\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"I00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
-        }
-    }
+
 
 
     class MyWrapper extends PushbackInputStream {

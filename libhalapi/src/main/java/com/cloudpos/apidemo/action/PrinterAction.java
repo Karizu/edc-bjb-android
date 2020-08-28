@@ -1,20 +1,25 @@
 
 package com.cloudpos.apidemo.action;
 
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.cloudpos.apidemo.activity.R;
 import com.cloudpos.apidemo.function.ActionCallbackImpl;
-import com.cloudpos.apidemo.function.printer.PrinterBitmapUtil;
 import com.cloudpos.apidemo.function.printer.PrinterCommand;
 import com.cloudpos.apidemo.util.StringUtility;
 import com.cloudpos.jniinterface.PrinterInterface;
+import com.wizarpos.htmllibrary.PrintHtmlInterface;
+import com.wizarpos.htmllibrary.PrinterBitmapUtil;
+import com.wizarpos.htmllibrary.PrinterHtmlListener;
+import com.wizarpos.htmllibrary.PrinterHtmlUtil;
 
 public class PrinterAction extends ConstantAction {
 
@@ -41,6 +46,45 @@ public class PrinterAction extends ConstantAction {
             mCallback.sendSuccessMsg("pCapacity = " + pCapacity[0] + ", Battery Voltage : "
                     + pVoltage[0]);
         }
+    }
+
+    public void printHTML(Map<String, Object> param, final ActionCallbackImpl callback) {
+        setParams(param, callback);
+        checkOpenedAndGetData(new DataAction() {
+            @Override
+            public int getResult() {
+                Activity activity = (Activity) mContext;
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            callback.sendSuccessMsg(mContext.getResources().getString(R.string.printing_wait));
+                            InputStream inStream = mContext.getAssets().open("template.html");
+                            String htmlContent = inputStream2String(inStream);
+                            PrintHtmlInterface printHtmlInterface = new PrinterHtmlUtil();
+                            printHtmlInterface.printHTML(mContext.getApplicationContext(), htmlContent, new PrinterHtmlListener() {
+                                @Override
+                                public void onGet(Bitmap bitmap, int errorCode) {
+
+                                }
+
+                                @Override
+                                public void onFinishPrinting(int errorCode) {
+                                    if (errorCode == PRINT_SUCCESS) {
+                                        callback.sendSuccessMsg(mContext.getResources().getString(R.string.printhtml_successful));
+                                    } else {
+                                        callback.sendFailedMsg(mContext.getResources().getString(R.string.printhtml_failed));
+                                    }
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                return 0;
+            }
+        });
     }
 
     public void open(Map<String, Object> param, ActionCallbackImpl callback) {
@@ -128,14 +172,13 @@ public class PrinterAction extends ConstantAction {
 //            bitmap = BitmapFactory.decodeStream(mContext.getResources().getAssets()
 //                    .open("printer_barcode_low.png"));
 //        } catch (IOException e1) {
-//            // TODO Auto-generated catch block
 //            e1.printStackTrace();
 //        }
 
         byte[] arryBeginText = null;
         byte[] arryEndText = null;
         try {
-//            arryBeginText = mContext.getResources().getString(R.string.print_QR_code).getBytes("GB2312");
+            arryBeginText = mContext.getResources().getString(R.string.print_QR_code).getBytes("GB2312");
             arryEndText = "This is a Bitmap of Barcode".getBytes("GB2312");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -193,7 +236,7 @@ public class PrinterAction extends ConstantAction {
             }
         });
     }
-    
+
     private byte[] getCmdBarcode(int m) {
         return new byte[] {
                 (byte) 0x1d, (byte) 0x6b, (byte) m, (byte) 1, (byte) 2, (byte) 3, (byte) 4,
@@ -201,4 +244,19 @@ public class PrinterAction extends ConstantAction {
         };
     }
 
+    private String inputStream2String(InputStream inStream) {
+        InputStreamReader reader = new InputStreamReader(inStream);
+        StringBuilder sb = new StringBuilder();
+        try {
+            char[] cs = new char[1024];
+            int len = -1;
+            while ((len = reader.read(cs)) != -1) {
+                sb.append(cs, 0, len);
+            }
+            reader.close();
+        } catch (Exception e) {
+
+        }
+        return sb.toString();
+    }
 }

@@ -10,12 +10,12 @@ public class MSRInterface
 		JNILoad.jniLoad(fileName);
     }
     
-    public static int CONTACTLESS_CARD_EVENT_FOUND_CARD = 0;
-    public static int CONTACTLESS_CARD_EVENT_USER_CANCEL = 3;
+    public static int MSR_CARD_EVENT_FOUND_CARD = 0;
+    public static int MSR_CARD_EVENT_USER_CANCEL = 3;
     public static int TRACK_COUNT = 3;
 
     /**
-     * open the device
+     * Open the device
      * 
      * @return value >= 0, success in starting the process; value < 0, error
      *         code
@@ -23,14 +23,15 @@ public class MSRInterface
     public synchronized native static int open();
 
     /**
-     * close the device
+     * Close the device
      * 
      * @return value >= 0, success in starting the process; value < 0, error
      *         code
      */
-    public synchronized native static int close();
+    public native static int close();
 
     /**
+     * @deprecated
      * @param nTimeout_MS : time out in milliseconds. if nTimeout_MS is less
      *            then zero, the searching process is infinite.
      * @return value >= 0, success in starting the process; value < 0, error
@@ -39,25 +40,25 @@ public class MSRInterface
     public synchronized native static int poll(int nTimeout_MS);
 
     /**
-     * get track error
+     *Get track error
      * 
      * @param nTrackIndex : Track index
      * @return value >= 0, success in starting the process; value < 0, error
      *         code
      */
-    public synchronized native static int getTrackError(int nTrackIndex);
+    public native static int getTrackError(int nTrackIndex);
 
     /**
-     * get length of track data
+     * Get length of track data
      * 
      * @param nTrackIndex : Track index
      * @return value >= 0, success in starting the process; value < 0, error
      *         code
      */
-    public synchronized native static int getTrackDataLength(int nTrackIndex);
+    public native static int getTrackDataLength(int nTrackIndex);
 
     /**
-     * get track data.
+     * Get track data.
      * 
      * @param nTrackIndex : Track index
      * @param byteArry : Track data
@@ -65,7 +66,7 @@ public class MSRInterface
      * @return value >= 0, success in starting the process; value < 0, error
      *         code
      */
-    public synchronized native static int getTrackData(int nTrackIndex, byte byteArry[], int nLength);
+    public native static int getTrackData(int nTrackIndex, byte byteArry[], int nLength);
 
 //    public static Object object = new Object();
 //    public static int eventID = -4;
@@ -77,10 +78,18 @@ public class MSRInterface
 //            object.notifyAll();
 //        }
 //    }
-    private static final int EVENT_NONE = -1;
+    public static final int EVENT_NONE = -1;
+    /**
+     * 不推荐自己使用object.wait， 建议使用{@link #waitForSwipe(int)}
+     */
+    @Deprecated
     public static Object object = new Object();
     public static int eventID = EVENT_NONE;
-
+    /**
+     * Call back method, when swipe card, the driver will call back this method.
+     * 
+     * @param nEventID : event id from the driver
+     */
     public static void callBack(int nEventID) {
         synchronized (object) {
             Log.i("MSRCard", "notify");
@@ -89,7 +98,8 @@ public class MSRInterface
         }
     }
 
-    public static void waitForSwip(int timeout) throws InterruptedException {
+    public static void waitForSwipe(int timeout) throws InterruptedException {
+    	clear();
         synchronized (object) {
             object.wait(timeout);
         }
@@ -98,7 +108,7 @@ public class MSRInterface
     public static void cancelWait() {
         synchronized (object) {
             object.notifyAll();
-            eventID = CONTACTLESS_CARD_EVENT_USER_CANCEL;
+            eventID = MSR_CARD_EVENT_USER_CANCEL;
         }
     }
 

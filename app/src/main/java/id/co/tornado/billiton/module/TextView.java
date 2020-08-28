@@ -71,9 +71,7 @@ public class TextView extends LinearLayout {
 //                Log.d("TEXT_VIEW",val.toString());
 //                Log.d("TEXT_VIEW", value);
                 String tmp = value; //val.getString("value");
-                if(tmp.equals("aa") || tmp.equals("cl")){
-                    tmp = tmp.equals(TapCard.AKTIF_STATUS) ? "AKTIF" : "NON AKTIF";
-                }
+
                 txtValues.setText(tmp);
             }
             if (comp.getBoolean("visible")

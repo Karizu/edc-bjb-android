@@ -35,20 +35,6 @@ public class PrinterCommand
     }
 
     /**
-     * 打印缓冲区里的数据,如果有黑标功能,打印后进纸到下一个黑标位置
-     * 
-     * Print the data in the printer buffer. If it has black label function, feed paper for next black label position after print.
-     * 
-     * @return
-     */
-    static public byte[] getCmdFf()
-    {
-        return new byte[] {
-                (byte) 0x0c
-        };
-    }
-
-    /**
      * 打印行缓冲区里的内容,并向前走纸 n 点行。 该命令只对本行有效,不改变 ESC 2,ESC 3 命令设置的行间距值。
      * 
      * Print the data in the printer buffer and feed paper for n dots.

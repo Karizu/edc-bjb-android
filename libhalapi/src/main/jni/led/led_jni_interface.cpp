@@ -37,11 +37,13 @@ static int ERR_NO_IMPLEMENT = -253;
 static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 
+pthread_mutex_t pthread_mute;
+
 int native_led_open(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_led_open");
 	int nResult = ERR_HAS_OPENED;
 	if (g_pLEDInstance == NULL) {
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return ERR_NORMAL;
@@ -79,13 +81,17 @@ int native_led_open(JNIEnv * env, jclass obj) {
 
 int native_led_close(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_led_close");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pLEDInstance == NULL)
+	if (g_pLEDInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
+	}
 	nResult = g_pLEDInstance->close();
 	dlclose(g_pLEDInstance->pHandle);
 	delete g_pLEDInstance;
 	g_pLEDInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_led_close, result = %d", nResult);
 	return nResult;
 }

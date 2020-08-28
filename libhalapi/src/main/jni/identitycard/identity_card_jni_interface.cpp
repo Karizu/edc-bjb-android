@@ -6,6 +6,7 @@
 #include <semaphore.h>
 #include <unistd.h>
 #include <errno.h>
+#include "pthread.h"
 
 #include <jni.h>
 
@@ -34,12 +35,14 @@ static int ERR_NO_IMPLEMENT = -253;
 static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 
+pthread_mutex_t pthread_mute;
+
 int native_identity_card_open(JNIEnv* env, jclass obj) {
 	hal_sys_info("+ native_identity_card_open()");
 	int nResult = ERR_HAS_OPENED;
 	void* pCusHandle = NULL;
 	if (g_pIDCardInstance == NULL) {
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return -1;
@@ -47,7 +50,7 @@ int native_identity_card_open(JNIEnv* env, jclass obj) {
 
 		g_pIDCardInstance = new IDENTITY_CARD_HAL_INSTANCE();
 		g_pIDCardInstance->pHandle = pHandle;
-		char * methodName;
+		const char *methodName;
 		if (NULL == (g_pIDCardInstance->open = (idcard_open) dlsym(pHandle, methodName = "idcard_open"))
 				|| NULL == (g_pIDCardInstance->open_ex = (idcard_open_ex) dlsym(pHandle, methodName = "idcard_open_ex"))
 				|| NULL == (g_pIDCardInstance->close = (idcard_close) dlsym(pHandle, methodName = "idcard_close"))
@@ -60,11 +63,11 @@ int native_identity_card_open(JNIEnv* env, jclass obj) {
 		}
 
 		pCusHandle = g_pIDCardInstance->open_ex(&nResult);
-		hal_sys_info("native_identity_card_open_ex, result = %d\n", (int) pCusHandle);
-		if ((int) pCusHandle == 0) {
+		hal_sys_info("native_identity_card_open_ex, result = %d\n", (long) pCusHandle);
+		if ((long) pCusHandle == 0) {
 			goto identity_card_init_clean;
 		} else {
-			g_pIDCardInstance->portHandle = (int) pCusHandle;
+			g_pIDCardInstance->portHandle = (long) pCusHandle;
 		}
 	}
 	hal_sys_info("- native_identity_card_open, result = %d", nResult);
@@ -80,13 +83,17 @@ int native_identity_card_open(JNIEnv* env, jclass obj) {
 
 int native_identity_card_close(JNIEnv* env, jclass obj) {
 	hal_sys_info("+ native_identity_card_close()");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pIDCardInstance == NULL)
+	if (g_pIDCardInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
+	}
 	nResult = g_pIDCardInstance->close(g_pIDCardInstance->portHandle);
 	dlclose(g_pIDCardInstance->pHandle);
 	delete g_pIDCardInstance;
 	g_pIDCardInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_identity_card_close(), result = %d", nResult);
 	return nResult;
 }

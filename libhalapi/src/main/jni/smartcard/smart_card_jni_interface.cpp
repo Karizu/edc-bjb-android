@@ -30,6 +30,8 @@ static jclass mcls;
 static jmethodID mmid;
 static JavaVM *g_jvm = NULL;
 
+pthread_mutex_t pthread_mute;
+
 typedef struct smart_card_hal_interface {
 	smart_card_query_max_number query_max_number;
 	smart_card_query_presence query_presence;
@@ -41,8 +43,11 @@ typedef struct smart_card_hal_interface {
 	smart_card_set_slot_info set_slot_info;
 	smart_card_transmit transmit;
 	smart_card_mc_read mc_read;
+	smart_card_mc_read_E mc_read_E;
 	smart_card_mc_write mc_write;
+	smart_card_mc_write_E mc_write_E;
 	smart_card_mc_verify_data mc_verify_data;
+	smart_card_mc_verify_data_E mc_verify_data_E;
 	smart_card_touch touch;
 	void* pSoHandle;
 } SMART_CARD_HAL_INSTANCE;
@@ -55,6 +60,9 @@ static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 static int COUNTS = 0;
 
+int method_read = 0;
+int method_write = 0;
+
 jint JNICALL native_smart_card_query_max_number(JNIEnv* env, jclass obj) {
 	hal_sys_info("+ native_smart_card_query_max_number");
 	int nResult = ERR_NORMAL;
@@ -64,7 +72,7 @@ jint JNICALL native_smart_card_query_max_number(JNIEnv* env, jclass obj) {
 		isCreate = 1;
 	}
 
-	void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+	void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 	if (!pHandle) {
 		hal_sys_error("%s\n", dlerror());
 		if (isCreate == 1) {
@@ -105,7 +113,7 @@ jint JNICALL native_smart_card_query_presence(JNIEnv* env, jclass obj, jint nSlo
 		isCreate = 1;
 	}
 
-	void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+	void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 	if (!pHandle) {
 		hal_sys_error("%s\n", dlerror());
 		if (isCreate == 1) {
@@ -168,7 +176,7 @@ jint JNICALL native_smart_card_open(JNIEnv* env, jclass obj, jint nSlotIndex) {
 	env->GetJavaVM(&g_jvm);
 
 	if (g_pSmartCardInstance == NULL) {
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return ERR_NORMAL; //-257错误是没有生成对应的handle
@@ -177,15 +185,13 @@ jint JNICALL native_smart_card_open(JNIEnv* env, jclass obj, jint nSlotIndex) {
 		g_pSmartCardInstance = new SMART_CARD_HAL_INSTANCE();
 		g_pSmartCardInstance->pSoHandle = pHandle;
 
-		char * methodName;
+		const char *methodName;
 		if(NULL == (g_pSmartCardInstance->open = (smart_card_open) dlsym(pHandle, methodName = "smart_card_open"))
 				|| NULL == (g_pSmartCardInstance->close = (smart_card_close) dlsym(pHandle, methodName = "smart_card_close"))
 				|| NULL == (g_pSmartCardInstance->power_on = (smart_card_power_on) dlsym(pHandle, methodName = "smart_card_power_on"))
 				|| NULL == (g_pSmartCardInstance->power_off = (smart_card_power_off) dlsym(pHandle, methodName = "smart_card_power_off"))
 				|| NULL == (g_pSmartCardInstance->set_slot_info = (smart_card_set_slot_info) dlsym(pHandle, methodName = "smart_card_set_slot_info"))
 				|| NULL == (g_pSmartCardInstance->transmit = (smart_card_transmit) dlsym(pHandle, methodName = "smart_card_transmit"))
-				|| NULL == (g_pSmartCardInstance->mc_read = (smart_card_mc_read) dlsym(pHandle, methodName = "smart_card_mc_read"))
-				|| NULL == (g_pSmartCardInstance->mc_write = (smart_card_mc_write) dlsym(pHandle, methodName = "smart_card_mc_write"))
 				|| NULL == (g_pSmartCardInstance->mc_verify_data = (smart_card_mc_verify_data) dlsym(pHandle, methodName = "smart_card_mc_verify_data")))
 		{
 			hal_sys_error("can't find %s", methodName);
@@ -193,11 +199,49 @@ jint JNICALL native_smart_card_open(JNIEnv* env, jclass obj, jint nSlotIndex) {
 			goto smart_card_open_clean;
 		}
 
-		if(NULL == (g_pSmartCardInstance->set_card_info = (smart_card_set_card_info) dlsym(pHandle, methodName = "smart_card_set_card_info"))
-				|| NULL == (g_pSmartCardInstance->touch = (smart_card_touch) dlsym(pHandle, methodName = "smart_card_touch")))
+		if (NULL == (g_pSmartCardInstance->mc_read_E = (smart_card_mc_read_E) dlsym(pHandle, methodName = "smart_card_mc_read_E"))) {
+			hal_sys_error("can't find %s", methodName);
+			if (NULL == (g_pSmartCardInstance->mc_read = (smart_card_mc_read) dlsym(pHandle, methodName = "smart_card_mc_read"))) {
+				hal_sys_error("can't find %s", methodName);
+				nResult = ERR_NO_IMPLEMENT;
+				goto smart_card_open_clean;
+			} else {
+				method_read = 0;
+			}
+		} else {
+			//使用新的read方法
+			method_read = 1;
+		}
+
+		if (NULL == (g_pSmartCardInstance->mc_write_E = (smart_card_mc_write_E) dlsym(pHandle, methodName = "smart_card_mc_write_E"))) {
+			hal_sys_error("can't find %s", methodName);
+			if (NULL == (g_pSmartCardInstance->mc_write = (smart_card_mc_write) dlsym(pHandle, methodName = "smart_card_mc_write"))) {
+				hal_sys_error("can't find %s", methodName);
+				nResult = ERR_NO_IMPLEMENT;
+				goto smart_card_open_clean;
+			} else {
+				method_write = 0;
+			}
+		} else {
+			//使用新的wirte方法
+			method_write = 1;
+		}
+
+		if(NULL == (g_pSmartCardInstance->set_card_info = (smart_card_set_card_info) dlsym(pHandle, methodName = "smart_card_set_card_info")))
 		{
 			hal_sys_error("can't find %s", methodName);
 		}
+
+		if(NULL == (g_pSmartCardInstance->touch = (smart_card_touch) dlsym(pHandle, methodName = "smart_card_touch")))
+		{
+			hal_sys_error("can't find %s", methodName);
+		}
+
+		if(NULL == (g_pSmartCardInstance->mc_verify_data_E = (smart_card_mc_verify_data_E) dlsym(pHandle, methodName = "smart_card_mc_verify_data_E")))
+		{
+			hal_sys_error("can't find %s", methodName);
+		}
+
 
 		jclass tmp = env->FindClass(g_pJNIREG_CLASS);
 		//		+ add by pengli
@@ -238,12 +282,17 @@ jint JNICALL native_smart_card_open(JNIEnv* env, jclass obj, jint nSlotIndex) {
 }
 
 jint JNICALL native_smart_card_close(JNIEnv* env, jclass obj, jint nHandle) {
-	hal_sys_info("+ native_smart_card_close");
+	hal_sys_info("+ native_smart_card_close, handle = %d", nHandle);
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pSmartCardInstance == NULL)
+	if (g_pSmartCardInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
-	if(g_pSmartCardInstance->close == NULL)
+	}
+	if(g_pSmartCardInstance->close == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NO_IMPLEMENT;
+	}
 
 	nResult = g_pSmartCardInstance->close(nHandle);
 	COUNTS--;
@@ -254,13 +303,14 @@ jint JNICALL native_smart_card_close(JNIEnv* env, jclass obj, jint nHandle) {
 		delete g_pSmartCardInstance;
 		g_pSmartCardInstance = NULL;
 	}
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_smart_card_close, result= %d", nResult);
 	return nResult;
 }
 
 jint JNICALL native_smart_card_set_card_info(JNIEnv* env, jclass obj,
 		jint nHandle, jint nBuadrate, jint nVoltage) {
-	hal_sys_info("+ native_smart_card_set_card_info");
+	hal_sys_info("+ native_smart_card_set_card_info, handle = %d", nHandle);
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
 		return ERR_NOT_OPENED;
@@ -283,7 +333,7 @@ static const char* strSlotField_Long[] = { "cwt", "bwt", "nSlotInfoItem", };
 
 jint JNICALL native_smart_card_power_on(JNIEnv* env, jclass obj, jint nHandle,
 		jbyteArray byteArrayATR, jobject objSlotInfo) {
-	hal_sys_info("+ native_smart_card_power_on");
+	hal_sys_info("+ native_smart_card_power_on, handle = %d", nHandle);
 	jint i = 0;
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
@@ -329,7 +379,7 @@ jint JNICALL native_smart_card_power_on(JNIEnv* env, jclass obj, jint nHandle,
 
 jint JNICALL native_smart_card_power_off(JNIEnv* env, jclass obj,
 		jint nHandle) {
-	hal_sys_info("+ native_smart_card_power_off");
+	hal_sys_info("+ native_smart_card_power_off, handle = %d", nHandle);
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
 		return ERR_NOT_OPENED;
@@ -342,7 +392,7 @@ jint JNICALL native_smart_card_power_off(JNIEnv* env, jclass obj,
 
 jint JNICALL native_smart_card_set_slot_info(JNIEnv* env, jclass obj,
 		jint nHandle, jobject objSlotInfo) {
-	hal_sys_info("+ native_smart_card_set_slot_info");
+	hal_sys_info("+ native_smart_card_set_slot_info, handle = %d", nHandle);
 	jint i = 0;
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
@@ -381,7 +431,7 @@ jint JNICALL native_smart_card_set_slot_info(JNIEnv* env, jclass obj,
  */
 jint JNICALL native_smart_card_transmit(JNIEnv* env, jclass obj, jint nHandle,
 		jbyteArray byteArrayAPDU, jbyteArray byteArrayResponse) {
-	hal_sys_info("+ native_smart_card_transmit");
+	hal_sys_info("+ native_smart_card_transmit, handle = %d", nHandle);
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
 		return ERR_NOT_OPENED;
@@ -403,16 +453,21 @@ jint JNICALL native_smart_card_transmit(JNIEnv* env, jclass obj, jint nHandle,
 
 jint JNICALL native_smart_card_mc_read(JNIEnv* env, jclass obj, jint nHandle,
 		jint nAreaType, jbyteArray byteArryData, jint nStartAddress) {
-	hal_sys_info("+ native_smart_card_mc_read()");
+	hal_sys_info("+ native_smart_card_mc_read(), handle = %d", nHandle);
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
 		return ERR_NOT_OPENED;
-	if(g_pSmartCardInstance->mc_read == NULL)
+	if(g_pSmartCardInstance->mc_read == NULL && g_pSmartCardInstance->mc_read_E == NULL)
 		return ERR_NO_IMPLEMENT;
 	jbyte* pDataBuffer = env->GetByteArrayElements(byteArryData, 0);
 	unsigned int nDataLength = (unsigned int) env->GetArrayLength(byteArryData);
-	nResult = g_pSmartCardInstance->mc_read(nHandle, nAreaType,
-			(unsigned char*) pDataBuffer, nDataLength, (unsigned char) nStartAddress);
+	if (method_read == 0) {
+		nResult = g_pSmartCardInstance->mc_read(nHandle, nAreaType,
+				(unsigned char*) pDataBuffer, nDataLength, (unsigned char) nStartAddress);
+	} else if (method_read == 1) {
+		nResult = g_pSmartCardInstance->mc_read_E(nHandle, nAreaType,
+				(unsigned char*) pDataBuffer, nDataLength, nStartAddress);
+	}
 	env->ReleaseByteArrayElements(byteArryData, pDataBuffer, 0);
 	hal_sys_info("- native_smart_card_mc_read(), result = %d", nResult);
 	return nResult;
@@ -420,17 +475,22 @@ jint JNICALL native_smart_card_mc_read(JNIEnv* env, jclass obj, jint nHandle,
 
 jint JNICALL native_smart_card_mc_write(JNIEnv* env, jclass obj, jint nHandle,
 		jint nAreaType, jbyteArray byteArryData, jint nStartAddress) {
-	hal_sys_info("+ native_smart_card_mc_write()");
+	hal_sys_info("+ native_smart_card_mc_write(), handle = %d", nHandle);
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
 		return ERR_NOT_OPENED;
-	if(g_pSmartCardInstance->mc_write == NULL)
+	if(g_pSmartCardInstance->mc_write == NULL && g_pSmartCardInstance->mc_write_E == NULL)
 		return ERR_NO_IMPLEMENT;
 	jbyte* pDataBuffer = env->GetByteArrayElements(byteArryData, 0);
 	unsigned int nDataLength = (unsigned int) env->GetArrayLength(byteArryData);
-	nResult = g_pSmartCardInstance->mc_write(nHandle, nAreaType,
-			(unsigned char*) pDataBuffer, nDataLength,
-			(unsigned char) nStartAddress);
+	if (method_write == 0) {
+		nResult = g_pSmartCardInstance->mc_write(nHandle, nAreaType,
+					(unsigned char*) pDataBuffer, nDataLength,
+					(unsigned char) nStartAddress);
+	} else if (method_write == 1) {
+		nResult = g_pSmartCardInstance->mc_write_E(nHandle, nAreaType,
+					(unsigned char*) pDataBuffer, nDataLength, nStartAddress);
+	}
 	env->ReleaseByteArrayElements(byteArryData, pDataBuffer, 0);
 	hal_sys_info("- native_smart_card_mc_write() ,result = %d", nResult);
 	return nResult;
@@ -438,7 +498,7 @@ jint JNICALL native_smart_card_mc_write(JNIEnv* env, jclass obj, jint nHandle,
 
 jint JNICALL native_smart_card_mc_verify_data(JNIEnv* env, jclass obj,
 		jint nHandle, jbyteArray byteArryData) {
-	hal_sys_info("+ native_smart_card_mc_verify_data()");
+	hal_sys_info("+ native_smart_card_mc_verify_data(), handle = %d", nHandle);
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
 		return ERR_NOT_OPENED;
@@ -453,8 +513,25 @@ jint JNICALL native_smart_card_mc_verify_data(JNIEnv* env, jclass obj,
 	return nResult;
 }
 
+jint JNICALL native_smart_card_mc_verify_data_E(JNIEnv* env, jclass obj,
+		jint nHandle, jbyteArray byteArryData, jint nAddress) {
+	hal_sys_info("+ native_smart_card_mc_verify_data_E(), handle = %d", nHandle);
+	int nResult = ERR_NORMAL;
+	if (g_pSmartCardInstance == NULL)
+		return ERR_NOT_OPENED;
+	if(g_pSmartCardInstance->mc_verify_data_E == NULL)
+		return ERR_NO_IMPLEMENT;
+	jbyte* pDataBuffer = env->GetByteArrayElements(byteArryData, 0);
+	unsigned int nDataLength = (unsigned int) env->GetArrayLength(byteArryData);
+	nResult = g_pSmartCardInstance->mc_verify_data_E(nHandle,
+			(unsigned char*) pDataBuffer, nDataLength, nAddress);
+	env->ReleaseByteArrayElements(byteArryData, pDataBuffer, 0);
+	hal_sys_info("- native_smart_card_mc_verify_data_E(),result = %d", nResult);
+	return nResult;
+}
+
 jint JNICALL native_smart_card_touch(JNIEnv* env, jclass obj, jint nHandle) {
-	hal_sys_info("+ native_smart_card_touch()");
+	hal_sys_info("+ native_smart_card_touch(), handle = %d", nHandle);
 	int nResult = ERR_NORMAL;
 	if (g_pSmartCardInstance == NULL)
 		return ERR_NOT_OPENED;
@@ -479,6 +556,7 @@ static JNINativeMethod g_Methods[] = {
 		{ "read", 					"(II[BI)I",					(void*) native_smart_card_mc_read },
 		{ "write", 					"(II[BI)I",					(void*) native_smart_card_mc_write },
 		{ "verify", 				"(I[B)I",					(void*) native_smart_card_mc_verify_data },
+		{ "verify_extend", 			"(I[BI)I",					(void*) native_smart_card_mc_verify_data_E },
 		{ "setCardInfo", 			"(III)I",					(void*) native_smart_card_set_card_info },
 		{ "touch", 					"(I)I",						(void*) native_smart_card_touch },	};
 static JNINativeMethod g_MethodsByInternal[] = {

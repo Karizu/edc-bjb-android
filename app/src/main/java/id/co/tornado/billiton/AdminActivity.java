@@ -20,7 +20,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.wizarpos.jni.PINPadInterface;
+import com.wizarpos.jni.PinPadInterface;
+
+//import com.cloudpos.jniinterface.PinPadInterface;
 
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.common.StringLib;
@@ -180,9 +182,9 @@ public class AdminActivity extends Activity implements View.OnClickListener {
                             bnKey = ByteBuffer.allocate(16).put(tmKey).put(tmKey).array();
                         }
                         try {
-                            PINPadInterface.open();
+                            PinPadInterface.open();
 
-                            int ret = PINPadInterface.updateMasterKey(0, boKey, boKey.length, bnKey, bnKey.length);
+                            int ret = PinPadInterface.updateMasterKey(0, boKey, boKey.length, bnKey, bnKey.length);
 //                            Log.d("PINPAD", "UPD MK STAT : " + String.valueOf(ret));
                             if (ret > -1) {
                                 Toast.makeText(AdminActivity.this, "Master Key successfully updated", Toast.LENGTH_LONG).show();
@@ -192,7 +194,7 @@ public class AdminActivity extends Activity implements View.OnClickListener {
                         } catch (Exception e) {
                             Toast.makeText(AdminActivity.this, "Update Master Key failed", Toast.LENGTH_LONG).show();
                         } finally {
-                            PINPadInterface.close();
+                            PinPadInterface.close();
                         }
 
                         // fetch the old key form database
@@ -234,7 +236,7 @@ public class AdminActivity extends Activity implements View.OnClickListener {
                     public void onClick(View v) {
                         String wks = "failed";
                         try {
-                            PINPadInterface.open();
+                            PinPadInterface.open();
                             String wk = String.valueOf(editWK.getText());
 //                    wk += "FFFFFFFFFFFFFFFF";
 //                    String wk = "56CC09E7CFDC4CEF086F9A1D74C94D4E";
@@ -244,7 +246,7 @@ public class AdminActivity extends Activity implements View.OnClickListener {
                                 wk = wk+wk;
                             }
                             byte[] newKey = StringLib.hexStringToByteArray(wk);
-                            int ret = PINPadInterface.updateUserKey(0,0, newKey, newKey.length);
+                            int ret = PinPadInterface.updateUserKey(0,0, newKey, newKey.length);
                             if (ret >= 0) {
                                 wks = "success (" + ret + ")";
                             } else {
@@ -254,7 +256,7 @@ public class AdminActivity extends Activity implements View.OnClickListener {
                             //teu bisa update
                             Log.e("LOGON", e.getMessage());
                         } finally {
-                            PINPadInterface.close();
+                            PinPadInterface.close();
                             Toast.makeText(AdminActivity.this, "Override working key " + wks, Toast.LENGTH_SHORT).show();
                         }
                         overrideWk.dismiss();

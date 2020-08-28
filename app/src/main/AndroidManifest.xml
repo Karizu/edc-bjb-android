@@ -15,6 +15,9 @@
 
 
     <!-- android.permission.WRITE_SETTINGS -->
+    <uses-permission android:name="android.permission.CLOUDPOS_DEFAULT_LAUNCHER" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.CLOUDPOS_LED" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -104,10 +107,6 @@
         <activity
             android:name=".MainActivity"
             android:uiOptions="splitActionBarWhenNarrow" />
-        <activity
-            android:name=".TestActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@style/Theme.AppTheme" />
         <activity android:name=".ActivityList" />
         <activity
             android:name=".AdminActivity"

@@ -8,6 +8,7 @@
 #include <errno.h>
 
 #include <jni.h>
+#include "pthread.h"
 
 #include "hal_sys_log.h"
 #include "serial_port_jni_interface.h"
@@ -37,6 +38,8 @@ static int ERR_NO_IMPLEMENT = -253;
 static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 
+pthread_mutex_t pthread_mute;
+
 char* jstringToChar(JNIEnv* env, jstring jstr) {
 	char * rtn = NULL;
 	jclass clsstring = env->FindClass("java/lang/String");
@@ -63,7 +66,7 @@ int native_serial_port_open(JNIEnv* env, jclass obj, jstring device_name) {
 	char* SERIAL_DEVICE_NAME = jstringToChar(env, device_name);
 	hal_sys_info("SERIAL_DEVICE_NAME = %s", SERIAL_DEVICE_NAME);
 	if (g_pSerialPortInstance == NULL) {
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return ERR_NORMAL;
@@ -107,14 +110,18 @@ int native_serial_port_open(JNIEnv* env, jclass obj, jstring device_name) {
 
 int native_serial_port_close(JNIEnv* env, jclass obj) {
 	hal_sys_info("+ native_serial_port_close()");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pSerialPortInstance == NULL)
+	if (g_pSerialPortInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
+	}
 
 	nResult = g_pSerialPortInstance->close(g_pSerialPortInstance->portHandle);
 	dlclose(g_pSerialPortInstance->pSoHandle);
 	delete g_pSerialPortInstance;
 	g_pSerialPortInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_serial_port_close (), result = %d", nResult);
 	return nResult;
 }
@@ -170,6 +177,15 @@ int native_serial_port_flush_io(JNIEnv* env, jclass obj) {
 	hal_sys_info("- native_serial_port_flush_io(), result = %d", nResult);
 	return nResult;
 }
+jboolean native_serial_port_is_opened(JNIEnv* env, jclass obj){
+	jboolean isOpened = JNI_FALSE;
+	hal_sys_info("native_serial_port_is_opened() is called\n" );
+	if(g_pSerialPortInstance != NULL){
+		isOpened = JNI_TRUE;
+	}
+	hal_sys_info("native_serial_port_is_opened() end result = %d" , isOpened);
+	return isOpened;
+}
 
 static JNINativeMethod g_Methods[] = {
 		{ "open", 				"(Ljava/lang/String;)I",	(void*) native_serial_port_open },
@@ -177,7 +193,9 @@ static JNINativeMethod g_Methods[] = {
 		{ "read", 				"([BII)I",					(void*) native_serial_port_read },
 		{ "write", 				"([BII)I",					(void*) native_serial_port_write },
 		{ "setBaudrate", 		"(I)I",						(void*) native_serial_port_set_baudrate },
-		{ "flushIO", 			"()I",						(void*) native_serial_port_flush_io }, };
+		{ "flushIO", 			"()I",						(void*) native_serial_port_flush_io },
+		{ "isOpened", 			"()Z",						(void*) native_serial_port_is_opened }
+};
 
 const char* serial_port_get_class_name() {
 	return g_pJNIREG_CLASS;

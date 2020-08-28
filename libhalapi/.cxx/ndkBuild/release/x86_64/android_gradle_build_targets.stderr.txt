@@ -1,0 +1,314 @@
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/battery/battery_jni_interface.cpp:52:86: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                if (NULL == (g_pBatteryInstance->open = (battery_open) dlsym(pHandle, methodName = "printer_open"))
+                                                                                                   ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/battery/battery_jni_interface.cpp:53:89: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pBatteryInstance->close = (battery_close) dlsym(pHandle, methodName = "printer_close"))
+                                                                                                                    ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/battery/battery_jni_interface.cpp:54:99: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pBatteryInstance->query_info = (battery_query_info) dlsym(pHandle, methodName = "printer_query_voltage"))) {
+                                                                                                                              ^
+4 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/clonescreen/clone_screen_jni_interface.cpp:52:99: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                if (NULL == (g_pCloneScreenInstance->enable = (clone_screen_enable) dlsym(pHandle, methodName = "clone_screen_enable"))
+                                                                                                                ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/clonescreen/clone_screen_jni_interface.cpp:53:96: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pCloneScreenInstance->show = (clone_screen_show) dlsym(pHandle, methodName = "clone_screen_show"))) {
+                                                                                                                           ^
+3 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/emv/emv_kernal_jni_interface.cpp:13:10: warning: non-portable path to file '"string.h"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+#include "String.h"
+         ^~~~~~~~~~
+         "string.h"
+2 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_interface.cpp:75:85: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                if (NULL == (g_pFingerPrintInstance->open = (fp_open) dlsym(pHandle, methodName = "fp_open"))
+                                                                                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_interface.cpp:76:88: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pFingerPrintInstance->close = (fp_close) dlsym(pHandle, methodName = "fp_close"))
+                                                                                                                   ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_interface.cpp:77:92: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pFingerPrintInstance->get_fea = (fp_get_fea) dlsym(pHandle, methodName = "fp_get_fea"))
+                                                                                                                       ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_interface.cpp:78:104: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pFingerPrintInstance->get_last_image = (fp_getLastImage) dlsym(pHandle, methodName = "fp_getLastImage"))
+                                                                                                                                   ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_interface.cpp:79:88: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pFingerPrintInstance->match = (fp_match) dlsym(pHandle, methodName = "fp_match"))
+                                                                                                                   ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_interface.cpp:80:90: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pFingerPrintInstance->cancel = (fp_cancel) dlsym(pHandle, methodName = "fp_cancel"))
+                                                                                                                     ^
+7 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:553:70: warning: adding 'jint' (aka 'int') to a string does not append to the string [-Wstring-plus-int]
+        hal_sys_info("native_hsm_osm_save_unionpay_prikey() is called %s\n" + bufLength);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:553:70: note: use array indexing to silence this warning
+        hal_sys_info("native_hsm_osm_save_unionpay_prikey() is called %s\n" + bufLength);
+                                                                            ^
+                     &                                                      [          ]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:566:69: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
+        hal_sys_info("native_hsm_osm_save_unionpay_prikey() end result = " + nResult);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:566:69: note: use array indexing to silence this warning
+        hal_sys_info("native_hsm_osm_save_unionpay_prikey() end result = " + nResult);
+                                                                           ^
+                     &                                                     [        ]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:582:15: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                char* pwd = "wizarpos";
+                            ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:585:68: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
+        hal_sys_info("native_hsm_osm_del_unionpay_prikey() end result = " + nResult);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:585:68: note: use array indexing to silence this warning
+        hal_sys_info("native_hsm_osm_del_unionpay_prikey() end result = " + nResult);
+                                                                          ^
+                     &                                                    [        ]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:646:56: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
+        hal_sys_info("native_hsm_key_decrypt() end result = " + nResult);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:646:56: note: use array indexing to silence this warning
+        hal_sys_info("native_hsm_key_decrypt() end result = " + nResult);
+                                                              ^
+                     &                                        [        ]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:667:56: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
+        hal_sys_info("native_hsm_key_encrypt() end result = " + nResult);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp:667:56: note: use array indexing to silence this warning
+        hal_sys_info("native_hsm_key_encrypt() end result = " + nResult);
+                                                              ^
+                     &                                        [        ]
+7 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:76:33: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(getid, fp_iso_getid, "fp_iso_getid");
+                                ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:77:35: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(enroll, fp_iso_enroll, "fp_iso_enroll");
+                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:78:35: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(cancel, fp_iso_cancel, "fp_iso_cancel");
+                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:79:39: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(getImage, fp_iso_getImage, "fp_iso_getImage");
+                                      ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:80:41: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(delfinger, fp_iso_delfinger, "fp_iso_delfinger");
+                                        ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:81:41: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(verifyall, fp_iso_verifyall, "fp_iso_verifyall");
+                                        ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:82:41: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(get_fea_ext, fp_iso_get_fea, "fp_iso_get_fea");
+                                        ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:83:47: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(storefeature, fp_iso_storefeature, "fp_iso_storefeature");
+                                              ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:84:49: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(convertformat, fp_iso_convertformat, "fp_iso_convertformat");
+                                                ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:85:49: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(delallfingers, fp_iso_delallfingers, "fp_iso_delallfingers");
+                                                ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:86:51: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(listallfingers, fp_iso_listallfingers, "fp_iso_listallfingers");
+                                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:87:51: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(getuserfeature, fp_iso_getuserfeature, "fp_iso_getuserfeature");
+                                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:88:61: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(verifyagainstuserid, fp_iso_verifyagainstuserid, "fp_iso_verifyagainstuserid");
+                                                            ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:89:63: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+    assign(verifyagainstfeature, fp_iso_verifyagainstfeature, "fp_iso_verifyagainstfeature");
+                                                              ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:105:94: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+        if (NULL == (g_pFingerPrintInstance->open = (fp_iso_open) dlsym(pHandle,methodName = "fp_iso_open"))
+                                                                                             ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:106:99: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+            || NULL == (g_pFingerPrintInstance->close = (fp_iso_close) dlsym(pHandle,methodName = "fp_iso_close"))
+                                                                                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp:107:99: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+            || NULL == (g_pFingerPrintInstance->match = (fp_iso_match) dlsym(pHandle,methodName = "fp_iso_match"))) {
+                                                                                                  ^
+18 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/led/led_jni_interface.cpp:55:78: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                if (NULL == (g_pLEDInstance->open = (LED_OPEN) dlsym(pHandle, methodName = "led_open"))
+                                                                                           ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/led/led_jni_interface.cpp:56:81: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pLEDInstance->close = (LED_CLOSE) dlsym(pHandle, methodName = "led_close"))
+                                                                                                            ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/led/led_jni_interface.cpp:57:80: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pLEDInstance->turn_on = (LED_ON) dlsym(pHandle, methodName = "led_on"))
+                                                                                                           ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/led/led_jni_interface.cpp:58:82: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pLEDInstance->turn_off = (LED_OFF) dlsym(pHandle, methodName = "led_off"))
+                                                                                                             ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/led/led_jni_interface.cpp:59:92: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL == (g_pLEDInstance->get_status = (LED_GET_STATUS) dlsym( pHandle, methodName = "led_get_status"))) {
+                                                                                                                       ^
+6 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad/pinpad_jni_interface.cpp:117:38: warning: multiple unsequenced modifications to 'methodName' [-Wunsequenced]
+                          methodName = "pinpad_get_serial_number"))
+                                     ^
+2 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad/prove/DES.cpp:9:10: warning: non-portable path to file '"string.h"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+#include "String.h"
+         ^~~~~~~~~~
+         "string.h"
+2 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp:114:84: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+            (g_pPrinterInstance->open = (printer_open) dlsym(pHandle, methodName = "printer_open"))
+                                                                                   ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp:116:88: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                                                          methodName = "printer_close"))
+                                                                                       ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp:118:88: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                                                          methodName = "printer_begin"))
+                                                                                       ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp:120:85: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+               (g_pPrinterInstance->end = (printer_end) dlsym(pHandle, methodName = "printer_end"))
+                                                                                    ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp:122:88: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                                                          methodName = "printer_write"))) {
+                                                                                       ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp:129:92: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                                                              methodName = "printer_query_status"))) {
+                                                                                           ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp:134:83: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                                                     methodName = "printer_read"))) {
+                                                                                  ^
+8 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay/customer_display_jni_interface.cpp:59:90: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                if (NULL== (g_pCusDisplayInstance->open = (cusdisplay_open) dlsym(pHandle,methodName = "customer_display_open"))
+                                                                                                       ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay/customer_display_jni_interface.cpp:60:97: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL== (g_pCusDisplayInstance->open_ex = (cusdisplay_open_ex) dlsym(pHandle,methodName = "customer_display_open_ex"))
+                                                                                                                            ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay/customer_display_jni_interface.cpp:61:93: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL== (g_pCusDisplayInstance->close = (cusdisplay_close) dlsym(pHandle,methodName = "customer_display_close"))
+                                                                                                                        ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay/customer_display_jni_interface.cpp:62:110: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL== (g_pCusDisplayInstance->write_pic = (cusdisplay_write_picture_data) dlsym(pHandle,methodName = "customer_display_write_picture_data"))
+                                                                                                                                         ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay/customer_display_jni_interface.cpp:63:101: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                || NULL== (g_pCusDisplayInstance->ctrl_devs = (cusdisplay_ctrl_devs) dlsym(pHandle,methodName = "customer_display_ctrl_devs"))){
+                                                                                                                                ^
+6 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_interface.cpp:79:85: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                if (NULL == (g_pSerialPortInstance->open = (esp_open) dlsym(pHandle, methodName = "esp_open"))
+                                                                                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_interface.cpp:80:87: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                ||NULL == (g_pSerialPortInstance->close = (esp_close) dlsym(pHandle, methodName = "esp_close"))
+                                                                                                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_interface.cpp:81:85: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                ||NULL == (g_pSerialPortInstance->read = (esp_read) dlsym(pHandle, methodName = "esp_read"))
+                                                                                                                ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_interface.cpp:82:87: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                ||NULL == (g_pSerialPortInstance->write = (esp_write) dlsym(pHandle, methodName = "esp_write"))
+                                                                                                                  ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_interface.cpp:83:101: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                ||NULL == (g_pSerialPortInstance->set_baudrate = (esp_set_baudrate) dlsym(pHandle, methodName = "esp_set_baudrate"))
+                                                                                                                                ^
+/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_interface.cpp:84:93: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+                                ||NULL == (g_pSerialPortInstance->flush_io = (esp_flush_io) dlsym(pHandle, methodName = "esp_flush_io")))
+                                                                                                                        ^
+7 warnings generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.

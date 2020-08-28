@@ -5,15 +5,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 
-import com.wizarpos.apidemo.jniinterface.PinpadInterface;
 import com.wizarpos.apidemo.util.StringUtility;
+import com.wizarpos.jni.PinPadInterface;
 
 import org.json.JSONObject;
 
 /**
  * Created by indra on 05/01/16.
  */
-public class Pinpad extends android.widget.EditText {
+public class Pinpad extends android.support.v7.widget.AppCompatEditText {
 
     static final int ERR_INPUT = -1;
     static final int RESULT_INPUT = 0;
@@ -40,7 +40,7 @@ public class Pinpad extends android.widget.EditText {
     };
     public void closeDriveItem(){
         if(bOpened)
-            PinpadInterface.PinpadClose();
+            PinPadInterface.close();
     }
 
 
@@ -52,7 +52,8 @@ public class Pinpad extends android.widget.EditText {
                 strInput = "123456789012345678";
                 handle.sendEmptyMessage(ERR_INPUT);
             }
-            int nResult = PinpadInterface.PinpadCalculatePinBlock(strInput.getBytes(), strInput.getBytes().length, arryPinBlockBuffer, -1, 0);
+//            int nResult = PinPadInterface.PinpadCalculatePinBlock(strInput.getBytes(), strInput.getBytes().length, arryPinBlockBuffer, -1, 0);
+            int nResult = PinPadInterface.inputPIN(strInput.getBytes(), strInput.getBytes().length, arryPinBlockBuffer, -1, 0);
 //            Log.d("PINPAD","nResult ="+nResult);
             if(nResult < 0)
                 return;
@@ -81,14 +82,14 @@ public class Pinpad extends android.widget.EditText {
 
 
     public void init() {
-        int nResult = PinpadInterface.PinpadOpen();
+        int nResult = PinPadInterface.open();
 //        Log.d("PINPAD", String.format("PinpadOpen() return value = %d\n", nResult));
         if(nResult >= 0)
         {
             bOpened = true;
-            nResult = PinpadInterface.PinpadSelectKey(PinpadInterface.KEY_TYPE_MASTER, 0, 0, 1);
+            nResult = PinPadInterface.setKey(PinPadInterface.KEY_TYPE_MASTER, 0, 0, 1);
 //            Log.d("PINPAD", String.format("PinpadSelectKey() return value = %d\n", nResult));
-            //PinpadInterface.PinpadClose();
+            //PinPadInterface.PinpadClose();
         }
         new Thread(th).start();
     }

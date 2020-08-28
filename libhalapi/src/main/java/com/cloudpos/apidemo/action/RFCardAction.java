@@ -15,7 +15,8 @@ import com.cloudpos.jniinterface.RFCardInterface;
 public class RFCardAction extends ConstantAction {
     private int sectorIndex = 0;
     private int pinType = 0;
-    private int blockIndex = 1;
+    private int pinType_level3 = 2;
+    private int blockIndex = 1; //1
 
     private void setParams(Map<String, Object> param, ActionCallbackImpl callback) {
         this.mCallback = callback;
@@ -38,8 +39,6 @@ public class RFCardAction extends ConstantAction {
                             R.string.operation_successful));
                     CallBackThread thread = new CallBackThread();
                     thread.start();
-                    Thread.sleep(100);
-                    searchBegin();
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -59,18 +58,6 @@ public class RFCardAction extends ConstantAction {
             public int getResult() {
                 isOpened = false;
                 int result = RFCardInterface.close();
-                return result;
-            }
-        });
-    }
-
-    public void searchBegin() {
-        checkOpenedAndGetData(new DataAction() {
-
-            @Override
-            public int getResult() {
-                int result = RFCardInterface.searchBegin(
-                        RFCardInterface.CONTACTLESS_CARD_MODE_AUTO, 1, -1);
                 return result;
             }
         });
@@ -134,6 +121,22 @@ public class RFCardAction extends ConstantAction {
         });
     }
 
+    public void verify_level3(Map<String, Object> param, ActionCallbackImpl callback) {
+        setParams(param, callback);
+        final byte[] arryKey = {
+                (byte) 0x49, (byte) 0x45, (byte) 0x4D, (byte) 0x4B, (byte) 0x41, (byte) 0x45, (byte) 0x52, (byte) 0x42,
+                (byte) 0x21, (byte) 0x4E, (byte) 0x41, (byte) 0x43, (byte) 0x55, (byte) 0x4F, (byte) 0x59, (byte) 0x46
+        };
+        checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                int result = RFCardInterface.verify(sectorIndex, pinType_level3, arryKey, arryKey.length);
+                return result;
+            }
+        });
+    }
+
     public void read(Map<String, Object> param, ActionCallbackImpl callback) {
         setParams(param, callback);
 
@@ -174,6 +177,28 @@ public class RFCardAction extends ConstantAction {
         }
     }
 
+    public void write_UltraLightC(Map<String, Object> param, ActionCallbackImpl callback) {
+        setParams(param, callback);
+        final byte[] arryData = Common.createMasterKey(4);
+        // final byte[] arryData = new byte[] {
+        // (byte) 0x38, (byte) 0x38, (byte) 0x38, (byte) 0x38
+        // };
+        int result = checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                int result = RFCardInterface.write(sectorIndex, 4, arryData,
+                        arryData.length);
+                return result;
+            }
+        });
+        if (result >= 0) {
+            callback.sendSuccessMsg("Written Data = "
+                    + StringUtility.ByteArrayToString(arryData, result));
+        }
+    }
+
+
     public void attach(Map<String, Object> param, ActionCallbackImpl callback) {
         setParams(param, callback);
         final byte[] arryATR = new byte[255];
@@ -208,7 +233,7 @@ public class RFCardAction extends ConstantAction {
         // 0x00, (byte) 0x84, 0x00, 0x00, (byte) 0x08
         // };
 
-        final byte[] arryAPDU = new byte[] {
+        final byte[] arryAPDU = new byte[]{
                 (byte) 0x00, (byte) 0xA4, (byte) 0x04, (byte) 0x00,
                 (byte) 0x0E, (byte) 0x32, (byte) 0x50, (byte) 0x41,
                 (byte) 0x59, (byte) 0x2E, (byte) 0x53, (byte) 0x59,
@@ -225,10 +250,35 @@ public class RFCardAction extends ConstantAction {
             }
         });
         if (result >= 0) {
-            callback.sendSuccessMsg("APDU Response = "
+            callback.sendSuccessMsg("transmit APDU Response = "
                     + StringUtility.ByteArrayToString(arryAPDUResponse, result));
         }
     }
+
+    public void transmit_level3(Map<String, Object> param, ActionCallbackImpl callback) {
+        setParams(param, callback);
+        // final byte[] arryAPDU = new byte[] {
+        // 0x00, (byte) 0x84, 0x00, 0x00, (byte) 0x08
+        // };
+
+        final byte[] arryAPDU = new byte[]{
+                (byte) 0x30, (byte) 0x00
+        };
+        final byte[] arryAPDUResponse = new byte[255];
+        int result = checkOpenedAndGetData(new DataAction() {
+
+            @Override
+            public int getResult() {
+                int result = RFCardInterface.transmit_level3(arryAPDU, arryAPDU.length, arryAPDUResponse, 0);
+                return result;
+            }
+        });
+        if (result >= 0) {
+            callback.sendSuccessMsg("transmit_level3 APDU Response = "
+                    + StringUtility.ByteArrayToString(arryAPDUResponse, result));
+        }
+    }
+
 
     public void readMoneyValue(Map<String, Object> param, ActionCallbackImpl callback) {
         setParams(param, callback);
@@ -383,30 +433,19 @@ public class RFCardAction extends ConstantAction {
 
         @Override
         public void run() {
-//            synchronized (RFCardInterface.object) {
-//                try {
-//                    RFCardInterface.object.wait();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            if (RFCardInterface.nEventID == RFCardInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
-//                mCallback.sendSuccessMsg("ATS = "
-//                        + StringUtility.ByteArrayToString(RFCardInterface.arryEventData,
-//                                RFCardInterface.arryEventData.length));
-//            }
-        	try {
-				RFCardInterface.waitForCardPresent();
-				if (RFCardInterface.isCallBackCalled &&
-						RFCardInterface.notifyEvent.eventID == RFCardInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
-					mCallback.sendSuccessMsg("ATS = "
-	                        + StringUtility.ByteArrayToString(RFCardInterface.notifyEvent.eventData,
-	                                RFCardInterface.notifyEvent.eventData.length));
-				}
-				
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
+            try {
+                RFCardInterface.waitForCardPresent(RFCardInterface.CONTACTLESS_CARD_MODE_AUTO, 1, -1);
+                if (RFCardInterface.isCallBackCalled &&
+                        RFCardInterface.notifyEvent.eventID == RFCardInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
+                    mCallback.sendSuccessMsg("Message = "
+                            + StringUtility.ByteArrayToString(RFCardInterface.notifyEvent.eventData,
+                            RFCardInterface.notifyEvent.eventData.length));
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

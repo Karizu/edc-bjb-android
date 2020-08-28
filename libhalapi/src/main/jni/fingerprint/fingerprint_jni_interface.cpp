@@ -21,6 +21,7 @@ const char* g_pJNIREG_CLASS_INTERNAL =
 		"com/wizarpos/internal/jniinterface/FingerPrintInterface";
 //	-add by pengli
 
+
 typedef struct fingerprint_interface {
 	fp_open open;
 	fp_close close;
@@ -38,12 +39,32 @@ static int ERR_NO_IMPLEMENT = -253;
 static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 
+pthread_mutex_t pthread_mute;
+
+void throw_exception(JNIEnv* env, const char* method_name){
+	hal_sys_info("invoke throw_exception() method_name = %s" , method_name);
+	char strData[32] = {0};
+	const char* pString = "not found ";
+	hal_sys_info("invoke throw_exception() 0");
+	env->ExceptionDescribe();
+	hal_sys_info("invoke throw_exception() 1");
+	jclass newExcCls = env->FindClass("java/lang/NoSuchMethodException");
+	if(0 != newExcCls){
+		hal_sys_info("invoke throw_exception() 2");
+		sprintf(strData, "%s%s", pString, method_name);
+		env->ThrowNew(newExcCls, strData);
+		hal_sys_info("invoke throw_exception() end");
+	}
+}
+
+#define assign(member, type, name) if (NULL == (g_pFingerPrintInstance->member = (type) dlsym(pHandle, methodName = name))) { hal_sys_error("can't find %s", methodName); }
+
 int native_fingerprint_open(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_fingerprint_open");
 	int nResult = ERR_HAS_OPENED;
 	if (g_pFingerPrintInstance == NULL) {
 		//										  libwizarposDriver.so
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return ERR_NORMAL;
@@ -56,13 +77,13 @@ int native_fingerprint_open(JNIEnv * env, jclass obj) {
 				|| NULL == (g_pFingerPrintInstance->get_fea = (fp_get_fea) dlsym(pHandle, methodName = "fp_get_fea"))
 				|| NULL == (g_pFingerPrintInstance->get_last_image = (fp_getLastImage) dlsym(pHandle, methodName = "fp_getLastImage"))
 				|| NULL == (g_pFingerPrintInstance->match = (fp_match) dlsym(pHandle, methodName = "fp_match"))
-				|| NULL == (g_pFingerPrintInstance->cancel = (fp_cancel) dlsym(pHandle, methodName = "fp_cancel"))) {
+				|| NULL == (g_pFingerPrintInstance->cancel = (fp_cancel) dlsym(pHandle, methodName = "fp_cancel"))
+		) {
 			hal_sys_error("can't find %s", methodName);
 			nResult = ERR_NO_IMPLEMENT;
 			goto fingerprint_init_clean;
 		}
 		nResult = g_pFingerPrintInstance->open();
-
 		if (nResult < 0) {
 			goto fingerprint_init_clean;
 		}
@@ -81,13 +102,17 @@ int native_fingerprint_open(JNIEnv * env, jclass obj) {
 
 int native_fingerprint_close(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_fingerprint_close");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pFingerPrintInstance == NULL)
+	if (g_pFingerPrintInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
+	}
 	nResult = g_pFingerPrintInstance->close();
 	dlclose(g_pFingerPrintInstance->pHandle);
 	delete g_pFingerPrintInstance;
 	g_pFingerPrintInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_fingerprint_close, result = %d", nResult);
 	return nResult;
 }
@@ -98,7 +123,6 @@ int native_fingerprint_get_fea(JNIEnv * env, jclass obj, jbyteArray arryFea,
 	int nResult = ERR_NORMAL;
 	if (g_pFingerPrintInstance == NULL)
 		return ERR_NOT_OPENED;
-
 	jbyte* pFeaBuffer = env->GetByteArrayElements(arryFea, NULL);
 	jint* iRealFeaLength = env->GetIntArrayElements(pRealFeaLength, NULL);
 	nResult = g_pFingerPrintInstance->get_fea((unsigned char*) pFeaBuffer,
@@ -147,7 +171,7 @@ int native_fingerprint_match(JNIEnv * env, jclass obj, jbyteArray pFeaBuffer1,
 	return nResult;
 }
 
-int native_fingerprint_cancel(JNIEnv * env, jclass obj, jint index) {
+int native_fingerprint_cancel(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_fingerprint_cancel");
 	int nResult = ERR_NORMAL;
 	if (g_pFingerPrintInstance == NULL)
@@ -163,7 +187,8 @@ static JNINativeMethod g_Methods[] = {
 		{ "getFea", 			"([BI[II)I",			(void*) native_fingerprint_get_fea },
 		{ "getLastImage", 		"([BI[I[I[I)I",			(void*) native_fingerprint_get_last_image },
 		{ "match", 				"([BI[BI)I",			(void*) native_fingerprint_match },
-		{ "cancel", 			"()I",					(void*) native_fingerprint_cancel }, };
+		{ "cancel", 			"()I",					(void*) native_fingerprint_cancel },
+	};
 
 const char* fingerprint_get_class_name() {
 	return g_pJNIREG_CLASS;

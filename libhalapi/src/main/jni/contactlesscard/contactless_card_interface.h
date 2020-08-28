@@ -13,24 +13,25 @@ extern "C"
 {
 #endif
 
-#define CONTACTLESS_CARD_MODE_AUTO		0
-#define CONTACTLESS_CARD_MODE_TYPE_A	1
-#define CONTACTLESS_CARD_MODE_TYPE_B	2
-#define CONTACTLESS_CARD_MODE_TYPE_C	3
+#define CONTACTLESS_CARD_MODE_AUTO        0
+#define CONTACTLESS_CARD_MODE_TYPE_A    1
+#define CONTACTLESS_CARD_MODE_TYPE_B    2
+#define CONTACTLESS_CARD_MODE_TYPE_C    3
 
-#define CONTACTLESS_CARD_EVENT_FOUND_CARD		0
-#define CONTACTLESS_CARD_EVENT_TIME_OUT			1
-#define CONTACTLESS_CARD_EVENT_COMM_ERROR		2
-#define CONTACTLESS_CARD_EVENT_USER_CANCEL		3
+#define CONTACTLESS_CARD_EVENT_FOUND_CARD        0
+#define CONTACTLESS_CARD_EVENT_TIME_OUT            1
+#define CONTACTLESS_CARD_EVENT_COMM_ERROR        2
+#define CONTACTLESS_CARD_EVENT_USER_CANCEL        3
 /*
  * this is an inner event, user will never receive this event.
  */
-#define CONTACTLESS_CARD_EVENT_NO_CARD			0xFF
+#define CONTACTLESS_CARD_EVENT_NO_CARD            0xFF
 
 /*
  * When we found a card, the event data is ATR.
  */
-typedef void (*CONTACTLESS_CARD_NOTIFIER)(void* pUserData, int nEvent, unsigned char* pEventData, int nDataLength);
+typedef void (*CONTACTLESS_CARD_NOTIFIER)(void *pUserData, int nEvent, unsigned char *pEventData,
+                                          int nDataLength);
 
 /*
  * Initialize the contactless card reader
@@ -40,7 +41,8 @@ typedef void (*CONTACTLESS_CARD_NOTIFIER)(void* pUserData, int nEvent, unsigned 
  * return value : == 0, error
  * 				  != 0 , correct handle
  */
-typedef void* (*contactless_card_open)(CONTACTLESS_CARD_NOTIFIER fNotifier, void* pUserData, int* pErrorCode);
+typedef void *(*contactless_card_open)(CONTACTLESS_CARD_NOTIFIER fNotifier, void *pUserData,
+                                       int *pErrorCode);
 /*
  * Close the contactless card reader
  * @param[in] : int nHandle : handle of this card reader
@@ -67,7 +69,8 @@ typedef int (*contactless_card_close)(int nHandle);
  * return value : >= 0, success in starting the process.
  * 				  < 0 , error code
  */
-typedef int (*contactless_card_search_target_begin)(int nHandle, int nCardMode, int nFlagSearchAll, int nTimeout_MS);
+typedef int (*contactless_card_search_target_begin)(int nHandle, int nCardMode, int nFlagSearchAll,
+                                                    int nTimeout_MS);
 /*
  * Stop the process of searching card.
  * @param[in] : int nHandle : handle of this card reader
@@ -84,7 +87,8 @@ typedef int (*contactless_card_search_target_end)(int nHandle);
  * 				  < 0 , error code
  */
 
-typedef int (*contactless_card_attach_target)(int nHandle, unsigned char* pATRBuffer, unsigned int nATRBufferLength);
+typedef int (*contactless_card_attach_target)(int nHandle, unsigned char *pATRBuffer,
+                                              unsigned int nATRBufferLength);
 /*
  * Detach the target. If you want to send APDU again, you should attach it.
  * @param[in] : int nHandle : handle of this card reader
@@ -104,7 +108,26 @@ typedef int (*contactless_card_detach_target)(int nHandle);
  * 				  < 0 , error code
  */
 
-typedef int (*contactless_card_transmit)(int nHandle, unsigned char* pAPDU, unsigned int nAPDULength, unsigned char* pResponse, unsigned int *pResponseLength);
+typedef int (*contactless_card_transmit)(int nHandle, unsigned char *pAPDU,
+                                         unsigned int nAPDULength, unsigned char *pResponse,
+                                         unsigned int *pResponseLength);
+
+/*
+ * Transmit command of level 3 and get the response
+ * @param[in] : int nHandle : handdle of this card reader
+ * @param[in] : unsigned char* pSend : command level 3
+ * @param[in] : unsigned int nSendLen : command length
+ * @param[out] : unsigned char* pRecvBuf : buffer for response
+ * @param[out] : unsigned int* pRecvBufLen : [in] : the length of buffer,
+ * [out] : length of response
+ * @param[in] : unsigned int nOptionValue : reserved for future, must be set to zero
+ * return vlaue : >=0, sucess
+ * < 0, error code
+ */
+typedef int (*contactless_card_transmit_level3)(int nHandle, unsigned char *pSend,
+                                                unsigned int nSendLen, unsigned char *pRecvBuf,
+                                                unsigned int *pRecvBufLen, unsigned int nOptionValue);
+
 
 /*
  * Send control command.
@@ -118,7 +141,9 @@ typedef int (*contactless_card_transmit)(int nHandle, unsigned char* pAPDU, unsi
  * return value : >= 0, success, response data length if any.
  * 				  < 0 , error code
  */
-typedef int (*contactless_card_send_control_command)(int nHandle, unsigned int nCmdID, unsigned char* pCmdData, unsigned int nDataLength);
+typedef int (*contactless_card_send_control_command)(int nHandle, unsigned int nCmdID,
+                                                     unsigned char *pCmdData,
+                                                     unsigned int nDataLength);
 
 /*
  * Verify pin
@@ -131,7 +156,9 @@ typedef int (*contactless_card_send_control_command)(int nHandle, unsigned int n
  * return value : >= 0 : success
  * 				  < 0 : error code
  */
-typedef int (*contactless_card_mc_verify_pin)(int nHandle, unsigned int nSectorIndex, unsigned int nPinType, unsigned char* strPin, unsigned int nPinLength);
+typedef int (*contactless_card_mc_verify_pin)(int nHandle, unsigned int nSectorIndex,
+                                              unsigned int nPinType, unsigned char *strPin,
+                                              unsigned int nPinLength);
 
 /*
  * Read data
@@ -143,7 +170,9 @@ typedef int (*contactless_card_mc_verify_pin)(int nHandle, unsigned int nSectorI
  * return value : >= 0 : data length
  * 				  < 0 : error code
  */
-typedef int (*contactless_card_mc_read)(int nHandle, unsigned int nSectorIndex, unsigned int nBlockIndex, unsigned char* pDataBuffer, unsigned int nDataBufferLength);
+typedef int (*contactless_card_mc_read)(int nHandle, unsigned int nSectorIndex,
+                                        unsigned int nBlockIndex, unsigned char *pDataBuffer,
+                                        unsigned int nDataBufferLength);
 
 /*
  * Write data
@@ -156,7 +185,9 @@ typedef int (*contactless_card_mc_read)(int nHandle, unsigned int nSectorIndex, 
  *                < 0 : error code
  */
 
-typedef int (*contactless_card_mc_write)(int nHandle, unsigned int nSectorIndex, unsigned int nBlockIndex, unsigned char* pData, unsigned int nDataLength);
+typedef int (*contactless_card_mc_write)(int nHandle, unsigned int nSectorIndex,
+                                         unsigned int nBlockIndex, unsigned char *pData,
+                                         unsigned int nDataLength);
 
 /*
  * @param[in] : int nHandle : handle of this card reader
@@ -179,7 +210,7 @@ typedef int (*contactless_card_mc_write)(int nHandle, unsigned int nSectorIndex,
                                         CONTACTLESS_CARD_TYPE_A_MP_4K_SL2       0x0009
                                         CONTACTLESS_CARD_UNKNOWN                0x00FF
  */
-typedef int (*contactless_card_query_info)(int nHandle, int* pHasMoreCards, int* pCardType);
+typedef int (*contactless_card_query_info)(int nHandle, int *pHasMoreCards, int *pCardType);
 
 /*
  * Read value from a block
@@ -193,7 +224,10 @@ typedef int (*contactless_card_query_info)(int nHandle, int* pHasMoreCards, int*
  * return value : >= 0 : success
  *                < 0 : error code
  */
-typedef int (*contactless_card_mc_read_value)(int nHandle, unsigned int nSectorIndex, unsigned int nBlockIndex, unsigned char* pValue, unsigned int nValueBufLength, unsigned char* pAddrData);
+typedef int (*contactless_card_mc_read_value)(int nHandle, unsigned int nSectorIndex,
+                                              unsigned int nBlockIndex, unsigned char *pValue,
+                                              unsigned int nValueBufLength,
+                                              unsigned char *pAddrData);
 /*
  * Write value to a block
  * @param[in] : int nHandle : handle of this card reader
@@ -206,7 +240,9 @@ typedef int (*contactless_card_mc_read_value)(int nHandle, unsigned int nSectorI
  * return value : >= 0 : success
  *                < 0 : error code
  */
-typedef int (*contactless_card_mc_write_value)(int nHandle, unsigned int nSectorIndex, unsigned int nBlockIndex, unsigned char* pValue, unsigned int nValueLength, unsigned char bAddrData);
+typedef int (*contactless_card_mc_write_value)(int nHandle, unsigned int nSectorIndex,
+                                               unsigned int nBlockIndex, unsigned char *pValue,
+                                               unsigned int nValueLength, unsigned char bAddrData);
 /*
  * Increment value to a block, using it with the API : hal_contactless_card_mc_restore and hal_contactless_card_mc_transfer
  * @param[in] : int nHandle : handle of this card reader
@@ -218,7 +254,9 @@ typedef int (*contactless_card_mc_write_value)(int nHandle, unsigned int nSector
  * return value : >= 0 : success
  *                < 0 : error code
  */
-typedef int (*contactless_card_mc_increment)(int nHandle, unsigned int nSectorIndex, unsigned int nBlockIndex, unsigned char* pValue, unsigned int nValueLength);
+typedef int (*contactless_card_mc_increment)(int nHandle, unsigned int nSectorIndex,
+                                             unsigned int nBlockIndex, unsigned char *pValue,
+                                             unsigned int nValueLength);
 /*
  * Decrement value to a block, using it with the API : hal_contactless_card_mc_restore and hal_contactless_card_mc_transfer
  * @param[in] : int nHandle : handle of this card reader
@@ -230,7 +268,9 @@ typedef int (*contactless_card_mc_increment)(int nHandle, unsigned int nSectorIn
  * return value : >= 0 : success
  *                < 0 : error code
  */
-typedef int (*contactless_card_mc_decrement)(int nHandle, unsigned int nSectorIndex, unsigned int nBlockIndex, unsigned char* pValue, unsigned int nValueLength);
+typedef int (*contactless_card_mc_decrement)(int nHandle, unsigned int nSectorIndex,
+                                             unsigned int nBlockIndex, unsigned char *pValue,
+                                             unsigned int nValueLength);
 
 /*
  * Save the value to the block from temporary buffer
@@ -241,7 +281,8 @@ typedef int (*contactless_card_mc_decrement)(int nHandle, unsigned int nSectorIn
  * return value : >= 0 : success
  *                < 0 : error code
  */
-typedef int (*contactless_card_mc_transfer)(int nHandle, unsigned int nSectorIndex, unsigned int nBlockIndex);
+typedef int (*contactless_card_mc_transfer)(int nHandle, unsigned int nSectorIndex,
+                                            unsigned int nBlockIndex);
 /*
  * Read the value to the temporary from the block
  * @param[in] : int nHandle : handle of this card reader
@@ -251,7 +292,8 @@ typedef int (*contactless_card_mc_transfer)(int nHandle, unsigned int nSectorInd
  * return value : >= 0 : success
  *                < 0 : error code
  */
-typedef int (*contactless_card_mc_restore)(int nHandle,unsigned int nSectorIndex, unsigned int nBlockIndex);
+typedef int (*contactless_card_mc_restore)(int nHandle, unsigned int nSectorIndex,
+                                           unsigned int nBlockIndex);
 
 /**
  * Check whether this is a card on the rfcard reader

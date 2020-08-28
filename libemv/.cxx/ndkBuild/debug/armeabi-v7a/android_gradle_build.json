@@ -1,0 +1,158 @@
+{
+  "buildFiles": [
+    "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk",
+    "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk"
+  ],
+  "cleanCommands": [
+    "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d clean"
+  ],
+  "buildTargetsCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "wizarpos_emv_kernel-debug-armeabi-v7a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_emv_kernel.so",
+      "toolchain": "toolchain-armeabi-v7a",
+      "abi": "armeabi-v7a",
+      "artifactName": "wizarpos_emv_kernel",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/emv_kernal_jni_interface.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/emv_kernal_jni_register.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/hal_sys_log.c",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_emv_kernel.so"
+    },
+    "wizarpos_magnetic_stripe_reader-debug-armeabi-v7a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_magnetic_stripe_reader.so",
+      "toolchain": "toolchain-armeabi-v7a",
+      "abi": "armeabi-v7a",
+      "artifactName": "wizarpos_magnetic_stripe_reader",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/hal_sys_log.c",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/msr_jni_interface.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/msr_jni_register.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_magnetic_stripe_reader.so"
+    },
+    "wizarpos_contactless_ic_card-debug-armeabi-v7a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_contactless_ic_card.so",
+      "toolchain": "toolchain-armeabi-v7a",
+      "abi": "armeabi-v7a",
+      "artifactName": "wizarpos_contactless_ic_card",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/contactless_card_event.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/contactless_jni_interface.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/contactless_jni_register.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/hal_sys_log.c",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_contactless_ic_card.so"
+    },
+    "wizarpos_pinpad-debug-armeabi-v7a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_pinpad.so",
+      "toolchain": "toolchain-armeabi-v7a",
+      "abi": "armeabi-v7a",
+      "artifactName": "wizarpos_pinpad",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/hal_sys_log.c",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/pinpad_jni_interface.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/pinpad_jni_register.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_pinpad.so"
+    },
+    "wizarpos_printer-debug-armeabi-v7a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_printer.so",
+      "toolchain": "toolchain-armeabi-v7a",
+      "abi": "armeabi-v7a",
+      "artifactName": "wizarpos_printer",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/hal_sys_log.c",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/printer_jni_interface.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/printer_jni_register.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_printer.so"
+    },
+    "wizarpos_contact_ic_card-debug-armeabi-v7a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_contact_ic_card.so",
+      "toolchain": "toolchain-armeabi-v7a",
+      "abi": "armeabi-v7a",
+      "artifactName": "wizarpos_contact_ic_card",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/hal_sys_log.c",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/smart_card_event.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/smart_card_jni_interface.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni/smart_card_jni_register.cpp",
+          "flags": "-target armv7-none-linux-androideabi16 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -march\u003darmv7-a -mthumb -Oz -DNDEBUG -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/jni -Wno-error\u003dformat-security -fPIC -DANDROID -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libemv/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libwizarpos_contact_ic_card.so"
+    }
+  },
+  "toolchains": {
+    "toolchain-armeabi-v7a": {
+      "cCompilerExecutable": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+      "cppCompilerExecutable": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

@@ -34,12 +34,14 @@ static int ERR_NO_IMPLEMENT = -253;
 static int ERR_INVALID_ARGUMENT = -252;
 static int ERR_NORMAL = -251;
 
+pthread_mutex_t pthread_mute;
+
 int native_clone_screen_open(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_clone_screen_open");
 	int nResult = ERR_HAS_OPENED;
 	if (g_pCloneScreenInstance == NULL) {
 		//										  libwizarposDriver.so
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_error("%s\n", dlerror());
 			return ERR_NORMAL;
@@ -73,13 +75,17 @@ int native_clone_screen_open(JNIEnv * env, jclass obj) {
 
 int native_clone_screen_close(JNIEnv * env, jclass obj) {
 	hal_sys_info("+ native_clone_screen_close");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pCloneScreenInstance == NULL)
+	if (g_pCloneScreenInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
+	}
 	nResult = g_pCloneScreenInstance->enable(true);
 	dlclose(g_pCloneScreenInstance->pHandle);
 	delete g_pCloneScreenInstance;
 	g_pCloneScreenInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("- native_clone_screen_close, result = %d", nResult);
 	return nResult;
 }

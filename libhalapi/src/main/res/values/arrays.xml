@@ -5,8 +5,10 @@
     <string-array name="WIZARPOS">
         <item>IDCardAction</item>
         <item>RFCardAction</item>
-        <item>SmartCardAction1</item>
-        <item>SmartCardAction2</item>
+        <item>SmartCardAction</item>
+        <item>SmartCardAction_102</item>
+        <item>SmartCardAction_4442</item>
+        <item>PSAMCardAction</item>
         <item>MSRCardAction</item>
         <item>PINPadAction</item>
         <item>LEDAction</item>
@@ -15,8 +17,10 @@
         <item>PrinterAction</item>
         <item>CashDrawerAction</item>
         <item>FingerPrintAction</item>
+        <item>IsoFingerPrintAction</item>
         <item>CloneScreenAction</item>
         <item>BatteryAction</item>
+        <!-- <item>EMVAction</item> -->
     </string-array>
 
     <!-- sub menu -->
@@ -27,10 +31,13 @@
         <item>open</item>
         <item>queryInfo</item>
         <item>verify</item>
+        <item>verify_level3</item>
         <item>read</item>
         <item>write</item>
+        <item>write_UltraLightC</item>
         <item>attach</item>
         <item>transmit</item>
+        <item>transmit_level3</item>
         <item>detach</item>
         <item>readMoneyValue</item>
         <item>readMoneyValue2</item>
@@ -42,7 +49,7 @@
         <item>touch</item>
         <item>close</item>
     </string-array>
-    <string-array name="SmartCardAction1">
+    <string-array name="SmartCardAction">
         <item>queryMaxNumber</item>
         <item>queryPresence</item>
         <item>open</item>
@@ -51,7 +58,29 @@
         <item>powerOff</item>
         <item>close</item>
     </string-array>
-    <string-array name="SmartCardAction2">
+    <string-array name="SmartCardAction_102">
+        <item>queryMaxNumber</item>
+        <item>queryPresence</item>
+        <item>open</item>
+        <item>powerOn</item>
+        <item>verify_102</item>
+        <item>write_102</item>
+        <item>read_102</item>
+        <item>powerOff</item>
+        <item>close</item>
+    </string-array>
+    <string-array name="SmartCardAction_4442">
+        <item>queryMaxNumber</item>
+        <item>queryPresence</item>
+        <item>open</item>
+        <item>powerOn</item>
+        <item>read</item>
+        <item>write</item>
+        <item>verify</item>
+        <item>powerOff</item>
+        <item>close</item>
+    </string-array>
+    <string-array name="PSAMCardAction">
         <item>queryMaxNumber</item>
         <item>queryPresence</item>
         <item>open</item>
@@ -71,13 +100,19 @@
         <item>clearText</item>
         <item>setPINLength</item>
         <item>updateUserKey</item>
+        <item>updateUserKeyWithCheck</item>
+        <item>updateUserKeyWithCheckE</item>
+        <item>updateMasterKey</item>
+        <item>updateMasterKeyE</item>
         <item>getSerialNo</item>
+        <item>getMKCheckValue</item>
+        <item>getSKCheckValue</item>
         <item>selectKey</item>
         <item>encryptData</item>
         <item>calculateMAC</item>
+        <item>verifyResponseMac</item>
+        <item>setGuiConfiguration</item>
         <item>calculatePINBlock</item>
-        <item>updateMasterKeyE</item>
-        <item>updateUserKeyWithCheckE</item>
         <item>setAllowBypassPinFlag</item>
         <item>close</item>
     </string-array>
@@ -109,6 +144,7 @@
         <item>open</item>
         <item>queryStatus</item>
         <item>write</item>
+        <item>printHTML</item>
         <item>close</item>
     </string-array>
     <string-array name="PrinterActionWIZARHAND_Q1">
@@ -116,6 +152,7 @@
         <item>open</item>
         <item>queryStatus</item>
         <item>write</item>
+        <item>printHTML</item>
         <item>close</item>
     </string-array>
     <string-array name="CashDrawerAction">
@@ -131,6 +168,28 @@
         <item>cancel</item>
         <item>close</item>
     </string-array>
+
+    <string-array name="IsoFingerPrintAction">
+        <item>open</item>
+        <item>enroll</item>
+        <item>cancel</item>
+        <item>verifyAgainstUserId</item>
+        <item>verifyAll</item>
+        <item>verifyAgainstFeature</item>
+        <item>getUserFeature</item>
+        <item>storeFeature</item>
+        <item>getId</item>
+        <item>getFeaExt</item>
+        <item>match</item>
+        <item>getImage</item>
+        <item>convertFormat</item>
+        <item>listAllFingersStatus</item>
+        <item>delFinger</item>
+        <item>delAllFingers</item>
+        <item>close</item>
+    </string-array>
+
+
     <string-array name="CloneScreenAction">
         <item>open</item>
         <item>show</item>
@@ -141,5 +200,9 @@
         <item>queryInfo</item>
         <item>close</item>
     </string-array>
+    <!-- <string-array name="EMVAction">
+        <item>open</item>
+        <item>close</item>
+    </string-array> -->
 
 </resources>

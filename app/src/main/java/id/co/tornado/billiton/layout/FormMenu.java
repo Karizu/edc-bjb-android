@@ -1,5 +1,6 @@
 package id.co.tornado.billiton.layout;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,12 +23,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -52,7 +52,7 @@ import com.rey.material.app.ThemeManager;
 import com.wizarpos.apidemo.printer.ESCPOSApi;
 import com.wizarpos.apidemo.printer.FontSize;
 import com.wizarpos.apidemo.printer.PrintSize;
-import com.wizarpos.jni.PINPadInterface;
+import com.wizarpos.jni.PinPadInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -110,7 +110,6 @@ import id.co.tornado.billiton.module.EditText;
 import id.co.tornado.billiton.module.InsertICC;
 import id.co.tornado.billiton.module.MagneticSwipe;
 import id.co.tornado.billiton.module.RadioButton;
-import id.co.tornado.billiton.module.TapCard;
 import id.co.tornado.billiton.module.TextView;
 import id.co.tornado.billiton.module.listener.GPSLocation;
 import id.co.tornado.billiton.module.listener.InputListener;
@@ -290,41 +289,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         this.dettachPrint();
         dummyTrack += "=" + composeCV();
 
-        if (id.equals("REVERSALEFROMSELADA")){
+        if (id.equals("REVERSALEFROMSELADA")) {
             sendReversalAdviceSale(serviceId);
             return;
         }
 
         try {
-            if (Arrays.asList(TapCard.BRIZZI_MENU).contains(id)
-                    // && !id.equals(TapCard.INITIALIZE)
-                    && !id.equals(TapCard.TOPUP_ONLINE)
-                    && !id.equals(TapCard.TOPUP_DEPOSIT)
-                    && !id.equals(TapCard.PEMBAYARAN_DISKON)
-                    && !id.equals(TapCard.PEMBAYARAN_NORMAL)) {
-                comp = new JSONObject();
-                comp.put("id", id);
-                JSONArray compd = new JSONArray();
-                compd.put(new JSONObject("{  \n" +
-                        "               \"visible\":true,\n" +
-                        "               \"comp_values\":{  \n" +
-                        "                  \"comp_value\":[  \n" +
-                        "                     {  \n" +
-                        "                        \"print\":null,\n" +
-                        "                        \"value\":null\n" +
-                        "                     }\n" +
-                        "                  ]\n" +
-                        "               },\n" +
-                        "               \"comp_lbl\":\"Tap Card\",\n" +
-                        "               \"comp_type\":\"10\",\n" +
-                        "               \"comp_id\":\"I0006\",\n" +
-                        "               \"seq\":1\n" +
-                        "            }"));
-                JSONObject comps = new JSONObject();
-                comps.put("comp", compd);
-                comp.put("comps", comps);
-                init();
-            } else if (id.equals("STL0001")) {
+            if (id.equals("STL0001")) {
                 comp = parent.prepareSettlement(); //parent is null
                 comp = parent.prepareSettlement(); //parent is null
                 init();
@@ -561,7 +532,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     for (int i = 0; i < comp_array.length(); i++) {
                         JSONObject comp_obj = comp_array.getJSONObject(i);
 
-                        if (formId.equals("POC0031")){
+                        if (formId.equals("POC0031")) {
                             if (comp_obj != null && comp_obj.getString("comp_type").equals("1") && comp_obj.has("comp_act") && comp_obj.getString("comp_act").equals("sal_total")) {
                                 if (comp_obj.has("comp_values")) {
                                     JSONObject comp_values = comp_obj.getJSONObject("comp_values");
@@ -621,7 +592,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                                     || formId.equals("EP00611") || formId.equals("EP00711")
                                                     || formId.equals("EP00811") || formId.equals("EP00821")
                                                     || formId.equals("EP00911")
-                                                    ) {
+                                            ) {
                                                 amt = "000000000000" + amt + "00";
                                             } else {
                                                 amt = "00000000000000" + amt;
@@ -858,9 +829,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             } catch (Exception e) {
                                 //no dialog
                             }
-                            if (!formId.equals("MA00072")){
-                            alertDialog.dismiss();
-                            JSONObject rps = new JSONObject();
+                            if (!formId.equals("MA00072")) {
+                                alertDialog.dismiss();
+                                JSONObject rps = new JSONObject();
 
                                 try {
                                     rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":" +
@@ -974,15 +945,15 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     }
                 });
             }
-            if (formId.equals("SR10004")){
+            if (formId.equals("SR10004")) {
                 counter += 1;
-                if (counter == 1){
+                if (counter == 1) {
                     alertDialog.show();
                     alertDialog.getWindow().setAttributes(lp);
                 }
             } else if (formId.equals("MA00072")) {
                 counter += 1;
-                if (counter == 2){
+                if (counter == 2) {
                     alertDialog.hide();
                 } else {
                     alertDialog.show();
@@ -1034,571 +1005,322 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         String message = "";
         screenLoader = comp.getString("id");
 
-//        deviceLocation = getDeviceLocation();
-//        Log.i("GPS", deviceLocation);
-        if (hasTapModule) {
-            CardData cardData = new CardData();
-            String id = comp.getString("id");
-            cardData.setWhatToDo(id);
-            cardData.setMsgSI(actionUrl);
-            AlertDialog.Builder alertTap = new AlertDialog.Builder(context);
-            String btnText = "";
-            for (int i = 0; i < baseLayout.getChildCount(); i++) {
-                for (int j = 0; j < baseLayout.getChildCount(); j++) {
-                    View v = baseLayout.getChildAt(i);
-                    try {
-                        int childIndex = Integer.parseInt(v.getTag(R.string.seq_holder).toString());
-                        if (childIndex == j) {
-                            if (v instanceof EditText) {
-                                EditText editText = (EditText) v;
-//                                Log.d("TOPUP_ELE",editText.getText().toString());
-                                if (editText.getText().toString().equals("")) {
-                                    continue;
+
+        String newAct = null;
+        for (int i = 0; i < baseLayout.getChildCount(); i++) {
+            for (int j = 0; j < baseLayout.getChildCount(); j++) {
+                View v = baseLayout.getChildAt(i);
+                try {
+                    int childIndex = Integer.parseInt(v.getTag(R.string.seq_holder).toString());
+                    if (childIndex == j) {
+
+                        if (v instanceof EditText) {
+                            EditText editText = (EditText) v;
+
+                            //HANDEL TRANSFER IF REFERENSI IS EMPTY
+                            if (actionUrl.equals("MA0020") || actionUrl.equals("MA0030") || actionUrl.equals("MA0022") || actionUrl.equals("MA0032")) {
+                                if (editText.comp.getString("comp_id").equals("MA033") || editText.comp.getString("comp_id").equals("MA024")) {
+                                    Log.d("REFERENSI BEFORE", "MASUK");
+                                    String value = editText.getText().toString();
+                                    editText.setText(value + " ");
+                                    Log.d("REFERENSI BEFORE", "MASUK " + editText.getText().toString());
                                 }
-                                if (!editText.isEditText() && editText.isNumber()) {
-                                    cardData.setPin(editText.getText().toString());
+                            }
+
+                            if (editText.getText().toString().equals("") && editText.isMandatory()) {
+                                continue;
+                            }
+                            if (actionUrl.equals("A57000")) {
+                                if (((int) editText.getTag()) == 2) {
+                                    String idwp = editText.getText().toString();
+                                    if (idwp.startsWith("4") || idwp.startsWith("5") || idwp.startsWith("6")) {
+                                        newAct = "A57200";
+                                    }
+                                    if (idwp.startsWith("7") || idwp.startsWith("8") || idwp.startsWith("9")) {
+                                        newAct = "A57400";
+                                    }
+
                                 }
-                                if (editText.isEditText() && editText.isNumber()) {
-                                    if (id.equals(TapCard.TOPUP_DEPOSIT) || id.equals(TapCard.TOPUP_ONLINE)) {
-                                        cardData.setTopupAmount(editText.getText().toString());
-//                                        Log.d("TOPUP_NOM",editText.getText().toString());
-                                        btnText = "Kirim";
+                            }
+                            // HANDLING MAPPING MPN G2; S000C15=CASH;S000017=DEBIT
+                            if (formId.equals("S000015") && editText.comp.getString("comp_id").equals("M1001")) {
+                                // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
+                                String kodeBilling = editText.getText().toString();
+                                if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
+                                    // DJP
+                                    newActionUrl = "M0006A";
+                                } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
+                                    // DJBC
+                                    newActionUrl = "M0006C";
+                                } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
+                                    // DJA
+                                    newActionUrl = "M0006E";
+                                }
+                            } else if (formId.equals("S000017") && editText.comp.getString("comp_id").equals("M1001")) {
+                                // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
+                                String kodeBilling = editText.getText().toString();
+                                if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
+                                    // DJP
+                                    newActionUrl = "M0007A";
+                                } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
+                                    // DJBC
+                                    newActionUrl = "M0007C";
+                                } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
+                                    // DJA
+                                    newActionUrl = "M0007E";
+                                }
+                            }
+                            // MAPPING SERVICE FOR CETAK ULANG MPN
+                            else if (formId.equals("S000019") && editText.comp.getString("comp_id").equals("M1001")) {
+                                // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
+                                String kodeBilling = editText.getText().toString();
+                                if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
+                                    // Cetak Ulang DJP
+                                    newActionUrl = "M0007I";
+                                } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
+                                    // Cetak Ulang DJBC
+                                    newActionUrl = "M0007G";
+                                } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
+                                    // Cetak Ulang DJA
+                                    newActionUrl = "M0007H";
+                                }
+                            }
+                            //Add Filter No Pajak & PEMDA ID PBB
+                            if ((formId.equals("POC0030") || formId.equals("POC0033")) && editText.comp.getString("comp_id").equals("P0031")) {
+                                nop = editText.getText().toString();
+                            }
 
-                                    } else if (id.equals(TapCard.PEMBAYARAN_NORMAL) || id.equals(TapCard.PEMBAYARAN_DISKON)) {
-                                        cardData.setDeductAmount(editText.getText().toString());
+                            if (actionUrl.equals("R0000A") || actionUrl.equals("RMA020")) {
+                                stan = editText.getText().toString();
+                            }
+
+
+                            //INPUT CONFIG FITUR REPORT
+                            if (actionUrl.equals("R001A1") || actionUrl.equals("RMA011")
+                                    || actionUrl.equals("RMA014") || actionUrl.equals("R002A1")) {
+                                date = editText.getText().toString();
+                                SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
+                                SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                try {
+                                    date = myFormat.format(fromUser.parse(date));
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            //INPUT CONFIG FITUR SALE REVERSAL
+                            if (actionUrl.equals("REV561")) {
+                                stanForReversal = editText.getText().toString();
+                            }
+
+                            //HANDLE FITUR GANTI PIN
+                            try {
+                                if (actionUrl.equals("MA0070")) {
+                                    if (editText.comp.getString("comp_id").equals("MA071")) {
+                                        pin = editText.getText().toString();
+                                        Log.d("PIN BARU", pin);
+                                    }
+                                    if (editText.comp.getString("comp_id").equals("MA072")) {
+                                        pin_confirm = editText.getText().toString();
+                                        Log.d("CONFIRM PIN BARU", pin_confirm);
+                                        if (!pin_confirm.equals(pin)) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"PIN Baru Tidak Sesuai\",\n" +
+                                                    "\"value\":\"PIN Baru Tidak Sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                            processResponse(rps, "000000");
+                                            return;
+                                        }
                                     }
                                 }
 
-                            }
-                            if (v instanceof MagneticSwipe) {
-                                MagneticSwipe magneticSwipe = (MagneticSwipe) v;
-                                cardData.setTrack2Data(magneticSwipe.getText().toString());
-                            }
-                        }
+                                if (actionUrl.equals("MA0072")) {
+                                    if (editText.comp.getString("comp_id").equals("MA071")) {
+                                        pin = editText.getText().toString();
+                                        Log.d("PIN BARU", pin);
+                                    }
+                                    if (editText.comp.getString("comp_id").equals("MA072")) {
+                                        pin_confirm = editText.getText().toString();
+                                        Log.d("CONFIRM PIN BARU", pin_confirm);
+                                        if (!pin_confirm.equals(pin)) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"PIN Baru Tidak Sesuai\",\n" +
+                                                    "\"value\":\"PIN Baru Tidak Sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
 
-                    } catch (ClassCastException ex) {
-
-                    }
-                }
-            }
-
-            LayoutInflater li = LayoutInflater.from(context);
-            final TapCard promptsView = (TapCard) li.inflate(R.layout.tap_card, null);
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-            // set prompts.xml to alertdialog builder
-            alertDialogBuilder.setView(promptsView);
-            final AlertDialog alertTaps = alertDialogBuilder.create();
-
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(alertTaps.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-            if (id.equals(TapCard.PEMBAYARAN_NORMAL) ||
-                    id.equals(TapCard.PEMBAYARAN_DISKON) ||
-                    id.equals(TapCard.TOPUP_ONLINE) ||
-                    id.equals(TapCard.AKTIFASI_DEPOSIT) ||
-                    id.equals(TapCard.VOID_REFUND)) {
-                promptsView.setFormListener(new TapCard.FormListener() {
-                    @Override
-                    public void onSuccesListener(JSONObject obj) {
-
-                        promptsView.searchEnd();
-                        try {
-                            comp = obj.getJSONObject("screen");
-                            if (obj.has("server_ref")) {
-                                serverRef = obj.getString("server_ref");
-                            }
-                            if (obj.has("server_appr")) {
-                                serverAppr = obj.getString("server_appr");
-                            }
-                            if (obj.has("server_date")) {
-                                serverDate = obj.getString("server_date");
-                            }
-                            if (obj.has("server_time")) {
-                                serverTime = obj.getString("server_time");
-                            }
-                            if (obj.has("card_type")) {
-                                cardType = obj.getString("card_type");
-                            }
-                            if (obj.has("nomor_kartu")) {
-                                nomorKartu = obj.getString("nomor_kartu");
-                            }
-                            FormMenu.this.init();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        alertTaps.dismiss();
-                    }
-                });
-            } else {
-                promptsView.setFormListener(new TapCard.FormListener() {
-                    @Override
-                    public void onSuccesListener(JSONObject obj) {
-
-                        promptsView.searchEnd();
-                        try {
-                            JSONArray tmp = new JSONArray();
-                            JSONArray arr = comp.getJSONObject("comps").getJSONArray("comp");
-                            for (int i = 0; i < arr.length(); i++) {
-                                JSONObject resp = arr.getJSONObject(i);
-                                if (resp.getString("comp_lbl").contains("Proses") && resp.getString("comp_type").equals("7")) {
-                                    continue;
+                                            processResponse(rps, "000000");
+                                            return;
+                                        }
+                                    }
                                 }
-                                tmp.put(resp);
+                            } catch (Exception e) {
                             }
-                            comp.getJSONObject("comps").put("comp", tmp);
-                            if (obj.has("server_ref")) {
-                                serverRef = obj.getString("server_ref");
-                            }
-                            if (obj.has("server_appr")) {
-                                serverAppr = obj.getString("server_appr");
-                            }
-                            if (obj.has("server_date")) {
-                                serverDate = obj.getString("server_date");
-                            }
-                            if (obj.has("server_time")) {
-                                serverTime = obj.getString("server_time");
-                            }
-                            if (obj.has("card_type")) {
-                                cardType = obj.getString("card_type");
-                            }
-                            if (obj.has("nomor_kartu")) {
-                                nomorKartu = obj.getString("nomor_kartu");
-                            }
-                            FormMenu.this.init();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        alertTaps.dismiss();
-                    }
-                });
-            }
-            promptsView.init(cardData);
-            promptsView.searchBegin();
-            promptsView.setOkListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    alertTaps.dismiss();
-                    promptsView.searchEnd();
-                    ((Activity) context).finish();
-                }
-            });
-            alertTaps.show();
-            alertTaps.getWindow().setAttributes(lp);
 
-        } else {
-            if (actionUrl.equals(TapCard.SI_REAKTIVASI_PAY)) {
-                CardData cardData = new CardData();
-                String id = TapCard.REAKTIVASI_PAY;
-                cardData.setWhatToDo(id);
-                cardData.setMsgSI(actionUrl);
-                AlertDialog.Builder alertTap = new AlertDialog.Builder(context);
-                String btnText = "";
-                String f = "Saldo Deposit";
-                String e = "Lama Pasif";
-                String d = "Biaya Admin";
-                String c = "Status Kartu Setelah Reaktivasi";
-                JSONArray arr = comp.getJSONObject("comps").getJSONArray("comp");
-                int intDeduct = 0;
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject resp = arr.getJSONObject(i);
-                    if (resp.getString("comp_lbl").contains(d)) {
-                        String deduct = resp.getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                        deduct = deduct.split(",")[0];
-                        cardData.setDeductAmount(deduct.replace(".", ""));
-                    } else if (resp.getString("comp_lbl").contains(c)) {
-                        String aktif = resp.getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-//                        Log.d("RQ", "Status After : " + aktif);
-                        cardData.setStatusAfter(aktif);
-                    } else if (resp.getString("comp_lbl").contains(e)) {
-                        String lamaPasif = resp.getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                        cardData.setLamaPasif(lamaPasif);
-//                        Log.d("RQ", "Lama Pasif : " + lamaPasif);
-                    } else if (resp.getString("comp_lbl").contains(f)) {
-                        String saldoDeposit = resp.getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                        saldoDeposit = saldoDeposit.replace("\\,", "").replace("\\.", "");
-                        if (saldoDeposit.length() > 2) {
-                            saldoDeposit = saldoDeposit.substring(0, saldoDeposit.length() - 2);
-                        }
-                        cardData.setSaldoDeposit(saldoDeposit);
-//                        Log.d("RQ", "Saldo Deposit : " + saldoDeposit);
-                    }
-                }
-                LayoutInflater li = LayoutInflater.from(context);
-                final TapCard promptsView = (TapCard) li.inflate(R.layout.tap_card, null);
+                            //INPUT CONFIG FITUR BUKA REKENING
+                            if (actionUrl.equals("MA0080") || actionUrl.equals("MA0082")) {
+                                String addValue = editText.getText().toString();
+                                if (editText.comp.getString("comp_id").equals("MA097")) {
+                                    SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
+                                    SimpleDateFormat myFormat = new SimpleDateFormat("yyyyMMdd");
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                // set prompts.xml to alertdialog builder
-                alertDialogBuilder.setView(promptsView);
-                final AlertDialog alertTaps = alertDialogBuilder.create();
-
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                lp.copyFrom(alertTaps.getWindow().getAttributes());
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                // show it
-                promptsView.setFormListener(new TapCard.FormListener() {
-                    @Override
-                    public void onSuccesListener(JSONObject obj) {
-
-                        promptsView.searchEnd();
-                        try {
-                            comp = obj.getJSONObject("screen");
-                            if (obj.has("server_ref")) {
-                                serverRef = obj.getString("server_ref");
-                            }
-                            if (obj.has("server_appr")) {
-                                serverAppr = obj.getString("server_appr");
-                            }
-                            if (obj.has("server_date")) {
-                                serverDate = obj.getString("server_date");
-                            }
-                            if (obj.has("server_time")) {
-                                serverTime = obj.getString("server_time");
-                            }
-                            if (obj.has("card_type")) {
-                                cardType = obj.getString("card_type");
-                            }
-                            if (obj.has("nomor_kartu")) {
-                                nomorKartu = obj.getString("nomor_kartu");
-                            }
-                            FormMenu.this.init();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        alertTaps.dismiss();
-                    }
-                });
-                promptsView.init(cardData);
-                promptsView.searchBegin();
-                promptsView.setOkListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertTaps.dismiss();
-                        promptsView.searchEnd();
-                        ((Activity) context).finish();
-                    }
-                });
-                alertTaps.show();
-                alertTaps.getWindow().setAttributes(lp);
-            } else {
-                String newAct = null;
-                for (int i = 0; i < baseLayout.getChildCount(); i++) {
-                    for (int j = 0; j < baseLayout.getChildCount(); j++) {
-                        View v = baseLayout.getChildAt(i);
-                        try {
-                            int childIndex = Integer.parseInt(v.getTag(R.string.seq_holder).toString());
-                            if (childIndex == j) {
-
-                                if (v instanceof EditText) {
-                                    EditText editText = (EditText) v;
-
-                                    //HANDEL TRANSFER IF REFERENSI IS EMPTY
-                                    if (actionUrl.equals("MA0020") || actionUrl.equals("MA0030") || actionUrl.equals("MA0022") || actionUrl.equals("MA0032")){
-                                        if (editText.comp.getString("comp_id").equals("MA033") || editText.comp.getString("comp_id").equals("MA024")){
-                                            Log.d("REFERENSI BEFORE", "MASUK");
-                                            String value = editText.getText().toString();
-                                            editText.setText(value + " ");
-                                            Log.d("REFERENSI BEFORE", "MASUK "+editText.getText().toString());
-                                        }
-                                    }
-
-                                    if (editText.getText().toString().equals("") && editText.isMandatory()) {
-                                        continue;
-                                    }
-                                    if (actionUrl.equals("A57000")) {
-                                        if (((int) editText.getTag()) == 2) {
-                                            String idwp = editText.getText().toString();
-                                            if (idwp.startsWith("4") || idwp.startsWith("5") || idwp.startsWith("6")) {
-                                                newAct = "A57200";
-                                            }
-                                            if (idwp.startsWith("7") || idwp.startsWith("8") || idwp.startsWith("9")) {
-                                                newAct = "A57400";
-                                            }
-
-                                        }
-                                    }
-                                    // HANDLING MAPPING MPN G2; S000C15=CASH;S000017=DEBIT
-                                    if (formId.equals("S000015") && editText.comp.getString("comp_id").equals("M1001")) {
-                                        // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
-                                        String kodeBilling = editText.getText().toString();
-                                        if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
-                                            // DJP
-                                            newActionUrl = "M0006A";
-                                        } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
-                                            // DJBC
-                                            newActionUrl = "M0006C";
-                                        } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
-                                            // DJA
-                                            newActionUrl = "M0006E";
-                                        }
-                                    } else if (formId.equals("S000017") && editText.comp.getString("comp_id").equals("M1001")) {
-                                        // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
-                                        String kodeBilling = editText.getText().toString();
-                                        if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
-                                            // DJP
-                                            newActionUrl = "M0007A";
-                                        } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
-                                            // DJBC
-                                            newActionUrl = "M0007C";
-                                        } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
-                                            // DJA
-                                            newActionUrl = "M0007E";
-                                        }
-                                    }
-                                    // MAPPING SERVICE FOR CETAK ULANG MPN
-                                    else if (formId.equals("S000019") && editText.comp.getString("comp_id").equals("M1001")) {
-                                        // THERE'S ONLY ONE EDIT TEXT IN FORM, IF THERE'S ANOTHER NEW, PLEASE LOOKUP FOR TAG, FIND MASUKKAN KODE BILLING AND USE IT's SEQ AS A TAG
-                                        String kodeBilling = editText.getText().toString();
-                                        if (kodeBilling.startsWith("0") || kodeBilling.startsWith("1") || kodeBilling.startsWith("2") || kodeBilling.startsWith("3")) {
-                                            // Cetak Ulang DJP
-                                            newActionUrl = "M0007I";
-                                        } else if (kodeBilling.startsWith("4") || kodeBilling.startsWith("5") || kodeBilling.startsWith("6")) {
-                                            // Cetak Ulang DJBC
-                                            newActionUrl = "M0007G";
-                                        } else if (kodeBilling.startsWith("7") || kodeBilling.startsWith("8") || kodeBilling.startsWith("9")) {
-                                            // Cetak Ulang DJA
-                                            newActionUrl = "M0007H";
-                                        }
-                                    }
-                                    //Add Filter No Pajak & PEMDA ID PBB
-                                    if ((formId.equals("POC0030") || formId.equals("POC0033")) && editText.comp.getString("comp_id").equals("P0031")) {
-                                        nop = editText.getText().toString();
-                                    }
-
-                                    if (actionUrl.equals("R0000A") || actionUrl.equals("RMA020")) {
-                                        stan = editText.getText().toString();
-                                    }
-
-
-                                    //INPUT CONFIG FITUR REPORT
-                                    if (actionUrl.equals("R001A1") || actionUrl.equals("RMA011")
-                                            || actionUrl.equals("RMA014") || actionUrl.equals("R002A1")) {
-                                        date = editText.getText().toString();
-                                        SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
-                                        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                                        try {
-                                            date = myFormat.format(fromUser.parse(date));
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    //INPUT CONFIG FITUR SALE REVERSAL
-                                    if (actionUrl.equals("REV561")) {
-                                        stanForReversal = editText.getText().toString();
-                                    }
-
-                                    //HANDLE FITUR GANTI PIN
                                     try {
-                                        if (actionUrl.equals("MA0070")) {
-                                            if (editText.comp.getString("comp_id").equals("MA071")) {
-                                                pin = editText.getText().toString();
-                                                Log.d("PIN BARU", pin);
-                                            }
-                                            if (editText.comp.getString("comp_id").equals("MA072")) {
-                                                pin_confirm = editText.getText().toString();
-                                                Log.d("CONFIRM PIN BARU", pin_confirm);
-                                                if (!pin_confirm.equals(pin)) {
-                                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"PIN Baru Tidak Sesuai\",\n" +
-                                                            "\"value\":\"PIN Baru Tidak Sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
-
-                                                    processResponse(rps, "000000");
-                                                    return;
-                                                }
-                                            }
-                                        }
-
-                                        if (actionUrl.equals("MA0072")) {
-                                            if (editText.comp.getString("comp_id").equals("MA071")) {
-                                                pin = editText.getText().toString();
-                                                Log.d("PIN BARU", pin);
-                                            }
-                                            if (editText.comp.getString("comp_id").equals("MA072")) {
-                                                pin_confirm = editText.getText().toString();
-                                                Log.d("CONFIRM PIN BARU", pin_confirm);
-                                                if (!pin_confirm.equals(pin)) {
-                                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"PIN Baru Tidak Sesuai\",\n" +
-                                                            "\"value\":\"PIN Baru Tidak Sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
-
-                                                    processResponse(rps, "000000");
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    } catch (Exception e) {
+                                        addValue = myFormat.format(fromUser.parse(addValue));
+                                        editText.setText(addValue);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
                                     }
-
-                                    //INPUT CONFIG FITUR BUKA REKENING
-                                    if (actionUrl.equals("MA0080") || actionUrl.equals("MA0082")) {
-                                        String addValue = editText.getText().toString();
-                                        if (editText.comp.getString("comp_id").equals("MA097")) {
-                                            SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
-                                            SimpleDateFormat myFormat = new SimpleDateFormat("yyyyMMdd");
-
-                                            try {
-                                                addValue = myFormat.format(fromUser.parse(addValue));
-                                                editText.setText(addValue);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-
-                                        if (editText.comp.getString("comp_id").equals("MA094") || editText.comp.getString("comp_id").equals("MA096")) {
-                                            String sCap = editText.getText().toString().toUpperCase();
-                                            editText.setText(sCap);
-                                        }
-                                    }
-
-                                    //INPUT CONFIG FITUR BATAL REKENING
-                                    if (actionUrl.equals("MA0090") || actionUrl.equals("MA0092")) {
-                                        String addValue = editText.getText().toString();
-                                        if (editText.comp.getString("comp_id").equals("MA107")) {
-                                            if (addValue.length() < 12){
-                                                addValue = String.format("%-" + 12 + "s", addValue);
-                                                editText.setText(addValue);
-                                            }
-                                        }
-                                    }
-
-                                    Log.d("EDIT READ", editText.getText().toString());
-                                    data.add(editText.getText().toString());
                                 }
-                                if (v instanceof ComboBox) {
-                                    ComboBox comboBox = (ComboBox) v;
-                                    if (comboBox.compValues != null && comboBox.compValues.length() > 0) {
-                                        if (comboBox.compValuesHashMap != null && comboBox.compValuesHashMap.size() > 0){
-                                            cdata = comboBox.compValuesHashMap.get(comboBox.getSelectedItemPosition());
+
+                                if (editText.comp.getString("comp_id").equals("MA094") || editText.comp.getString("comp_id").equals("MA096")) {
+                                    String sCap = editText.getText().toString().toUpperCase();
+                                    editText.setText(sCap);
+                                }
+                            }
+
+                            //INPUT CONFIG FITUR BATAL REKENING
+                            if (actionUrl.equals("MA0090") || actionUrl.equals("MA0092")) {
+                                String addValue = editText.getText().toString();
+                                if (editText.comp.getString("comp_id").equals("MA107")) {
+                                    if (addValue.length() < 12) {
+                                        addValue = String.format("%-" + 12 + "s", addValue);
+                                        editText.setText(addValue);
+                                    }
+                                }
+                            }
+
+                            Log.d("EDIT READ", editText.getText().toString());
+                            data.add(editText.getText().toString());
+                        }
+                        if (v instanceof ComboBox) {
+                            ComboBox comboBox = (ComboBox) v;
+                            if (comboBox.compValues != null && comboBox.compValues.length() > 0) {
+                                if (comboBox.compValuesHashMap != null && comboBox.compValuesHashMap.size() > 0) {
+                                    cdata = comboBox.compValuesHashMap.get(comboBox.getSelectedItemPosition());
+                                } else {
+
+                                    //CONFIG COMBOBOX FOR GET ACCOUNT LIST
+                                    cdata = comboBox.list.get(comboBox.getSelectedItemPosition());
+
+                                    if (comboBox.compId.equals("MA015")) {
+                                        if (!formId.equals("MA00050") && !formId.equals("MA00051") && !formId.equals("MA00080") && !formId.equals("MA00082") && !formId.equals("MA00090") && !formId.equals("MA00092")
+                                                && !formId.equals("EP00300") && !formId.equals("EP00310") && !formId.equals("EP00410") && !formId.equals("EP00610") && !formId.equals("EP00612")
+                                                && !formId.equals("EP00710") && !formId.equals("EP00712") && !formId.equals("EP00810") && !formId.equals("EP00812")
+                                                && !formId.equals("EP00820") && !formId.equals("EP00822") && !formId.equals("EP00910") && !formId.equals("EP00912")) {
+                                            cdata = cdata.substring(0, 2) + "|" + cdata.substring(2);
                                         } else {
-
-                                            //CONFIG COMBOBOX FOR GET ACCOUNT LIST
-                                            cdata = comboBox.list.get(comboBox.getSelectedItemPosition());
-
-                                            if (comboBox.compId.equals("MA015")){
-                                                if (!formId.equals("MA00050") && !formId.equals("MA00051") && !formId.equals("MA00080") && !formId.equals("MA00082") && !formId.equals("MA00090") && !formId.equals("MA00092")
-                                                        && !formId.equals("EP00300") && !formId.equals("EP00310") && !formId.equals("EP00410") && !formId.equals("EP00610") && !formId.equals("EP00612")
-                                                        && !formId.equals("EP00710") && !formId.equals("EP00712") && !formId.equals("EP00810") && !formId.equals("EP00812")
-                                                        && !formId.equals("EP00820") && !formId.equals("EP00822") && !formId.equals("EP00910") && !formId.equals("EP00912")){
-                                                    cdata = cdata.substring(0,2) + "|" + cdata.substring(2);
-                                                } else {
-                                                    cdata = cdata.substring(2);
-                                                }
-                                            }
-
-                                            //CONFIG COMBOBOX
-                                            if (comboBox.compId.equals("MA021") || comboBox.compId.equals("EP010")
-                                                    || comboBox.compId.equals("EP025") || comboBox.compId.equals("EP060")
-                                                    ){
-                                                cdata = cdata.substring(0,3);
-                                            }
-
-                                            //CONFIG COMBOBOX PEMDA BPHTB
-                                            if (comboBox.compId.equals("EP075")) {
-                                                cdata = cdata.substring(0,4) + "|" + cdata.substring(5, 8);
-                                            }
-
-                                            //CONFIG COMBOBOX PEMDA PJDL & WEB-REG
-                                            if (comboBox.compId.equals("EP130")) {
-                                                cdata = cdata.substring(0,4) + "|" + cdata.substring(0, 4);
-                                            }
+                                            cdata = cdata.substring(2);
                                         }
+                                    }
 
-                                        //Add Filter No Pajak & PEMDA ID PBB
-                                        try {
-                                            String nops = cdata.substring(5);
-                                            if (!nop.startsWith(nops)) {
-                                                if (!nop.startsWith(PEMKAB_BANDUNG_NOP)) {
-                                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"NOP tidak sesuai dengan Pemda yang dipilih\",\n" +
-                                                            "\"value\":\"NOP tidak sesuai dengan Pemda yang dipilih\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
+                                    //CONFIG COMBOBOX
+                                    if (comboBox.compId.equals("MA021") || comboBox.compId.equals("EP010")
+                                            || comboBox.compId.equals("EP025") || comboBox.compId.equals("EP060")
+                                    ) {
+                                        cdata = cdata.substring(0, 3);
+                                    }
 
-                                                    processResponse(rps, "000000");
-                                                    return;
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                        }
+                                    //CONFIG COMBOBOX PEMDA BPHTB
+                                    if (comboBox.compId.equals("EP075")) {
+                                        cdata = cdata.substring(0, 4) + "|" + cdata.substring(5, 8);
+                                    }
 
-                                        if (comboBox.compId.equals("EP025")) {
-                                            if (formId.equals("EP00310") && cdata.equals("PKD")){
-                                                //HANDLING ESAMSAT SAMOLNAS CHIP TO OTHER SERVICE
-                                                newActionUrl = "EP0320";
-                                            } else
-                                            if (formId.equals("EP00312") && cdata.equals("PKD")){
-                                                //HANDLING ESAMSAT SAMOLNAS SWIPE TO OTHER SERVICE
-                                                newActionUrl = "EP0322";
-                                            }
-                                        }
-
-                                        Log.d("EDIT READ", cdata);
-                                        if (actionUrl.equals("A54321")) {
-                                            cdata = cdata.replace("Rp ", "").replace(".", "").replace(",00", "");
-                                        }
-                                        data.add(cdata);
-                                    } else {
-                                        cdata = comboBox.getSelectedItem().toString();
-                                        Log.d("EDIT READ", cdata);
-                                        if (actionUrl.equals("A54321")) {
-                                            cdata = cdata.replace("Rp ", "").replace(".", "").replace(",00", "");
-                                        }
-                                        data.add(cdata);
+                                    //CONFIG COMBOBOX PEMDA PJDL & WEB-REG
+                                    if (comboBox.compId.equals("EP130")) {
+                                        cdata = cdata.substring(0, 4) + "|" + cdata.substring(0, 4);
                                     }
                                 }
-                                if (v instanceof RadioButton) {
-                                    RadioButton radioButton = (RadioButton) v;
-                                    data.add(radioButton.isChecked() + "");
+
+                                //Add Filter No Pajak & PEMDA ID PBB
+                                try {
+                                    String nops = cdata.substring(5);
+                                    if (!nop.startsWith(nops)) {
+                                        if (!nop.startsWith(PEMKAB_BANDUNG_NOP)) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"NOP tidak sesuai dengan Pemda yang dipilih\",\n" +
+                                                    "\"value\":\"NOP tidak sesuai dengan Pemda yang dipilih\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                            processResponse(rps, "000000");
+                                            return;
+                                        }
+                                    }
+                                } catch (Exception e) {
                                 }
-                                if (v instanceof CheckBox) {
-                                    CheckBox checkBox = (CheckBox) v;
-                                    data.add(checkBox.isChecked() + "");
+
+                                if (comboBox.compId.equals("EP025")) {
+                                    if (formId.equals("EP00310") && cdata.equals("PKD")) {
+                                        //HANDLING ESAMSAT SAMOLNAS CHIP TO OTHER SERVICE
+                                        newActionUrl = "EP0320";
+                                    } else if (formId.equals("EP00312") && cdata.equals("PKD")) {
+                                        //HANDLING ESAMSAT SAMOLNAS SWIPE TO OTHER SERVICE
+                                        newActionUrl = "EP0322";
+                                    }
                                 }
-                                if (v instanceof MagneticSwipe) {
-                                    MagneticSwipe magneticSwipe = (MagneticSwipe) v;
-                                    String pan = magneticSwipe.getText().toString();
 
-                                    if (actionUrl.equals("M0001A") || actionUrl.equals("M0006E")
-                                            || actionUrl.equals("M0006C") || actionUrl.equals("M0006A")
-                                            || actionUrl.equals("M0005A") || actionUrl.equals("P00032")
-                                            || actionUrl.equals("P00034")) {
-                                        if (!pan.startsWith("110226")) {
-                                            if (TAG_CARD!=null){
-                                                if (TAG_CARD.equals("PETUGAS")) {
-                                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
-                                                            "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
+                                Log.d("EDIT READ", cdata);
+                                if (actionUrl.equals("A54321")) {
+                                    cdata = cdata.replace("Rp ", "").replace(".", "").replace(",00", "");
+                                }
+                                data.add(cdata);
+                            } else {
+                                cdata = comboBox.getSelectedItem().toString();
+                                Log.d("EDIT READ", cdata);
+                                if (actionUrl.equals("A54321")) {
+                                    cdata = cdata.replace("Rp ", "").replace(".", "").replace(",00", "");
+                                }
+                                data.add(cdata);
+                            }
+                        }
+                        if (v instanceof RadioButton) {
+                            RadioButton radioButton = (RadioButton) v;
+                            data.add(radioButton.isChecked() + "");
+                        }
+                        if (v instanceof CheckBox) {
+                            CheckBox checkBox = (CheckBox) v;
+                            data.add(checkBox.isChecked() + "");
+                        }
+                        if (v instanceof MagneticSwipe) {
+                            MagneticSwipe magneticSwipe = (MagneticSwipe) v;
+                            String pan = magneticSwipe.getText().toString();
 
-                                                    processResponse(rps, "000000");
-                                                    return;
-                                                } else {
-                                                    data.add(pan);
-                                                }
-                                            } else {
-                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
-                                                        "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
+                            if (actionUrl.equals("M0001A") || actionUrl.equals("M0006E")
+                                    || actionUrl.equals("M0006C") || actionUrl.equals("M0006A")
+                                    || actionUrl.equals("M0005A") || actionUrl.equals("P00032")
+                                    || actionUrl.equals("P00034")) {
+                                if (!pan.startsWith("110226")) {
+                                    if (TAG_CARD != null) {
+                                        if (TAG_CARD.equals("PETUGAS")) {
+                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
+                                                    "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
 
-                                                processResponse(rps, "000000");
-                                                return;
-                                            }
+                                            processResponse(rps, "000000");
+                                            return;
                                         } else {
                                             data.add(pan);
                                         }
                                     } else {
-                                        Boolean isMiniBanking = false;
-                                        for (int m = 0; m < miniBanking.length; m++){
-                                            if (actionUrl.equals(miniBanking[m])){
-                                                isMiniBanking = true;
-                                            }
-                                        }
+                                        JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
+                                                "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                "\"type\":\"3\",\"title\":\"Gagal\"}}");
 
-                                        if (actionUrl.equals("E31000")) {
-                                            pan = pan.substring(0, 16);
-                                            data.add(pan);
-                                        }
+                                        processResponse(rps, "000000");
+                                        return;
+                                    }
+                                } else {
+                                    data.add(pan);
+                                }
+                            } else {
+                                Boolean isMiniBanking = false;
+                                for (int m = 0; m < miniBanking.length; m++) {
+                                    if (actionUrl.equals(miniBanking[m])) {
+                                        isMiniBanking = true;
+                                    }
+                                }
+
+                                if (actionUrl.equals("E31000")) {
+                                    pan = pan.substring(0, 16);
+                                    data.add(pan);
+                                }
 //                                        else if (actionUrl.equals("MA0042")) {
 //                                            if (!pan.startsWith("110226")) {
 //                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
@@ -1621,78 +1343,78 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                                                return;
 //                                            }
 //                                        }
-                                        else {
-                                            data.add(pan);
-                                        }
-                                    }
-                                    Log.d("EDIT READ", pan);
-                                }
-                                if (v instanceof ChipInsert) {
-                                    ChipInsert chipInsert = (ChipInsert) v;
-                                    data.add(chipInsert.getText().toString());
-                                }
-                                if (v instanceof InsertICC) {
-                                    InsertICC insertICC = (InsertICC) v;
-                                    String track2 = insertICC.getText().toString();
-
-                                    if (actionUrl.equals("M0008B") || actionUrl.equals("M0010C")
-                                            || actionUrl.equals("P00035")) {
-                                        if (!track2.startsWith("110226")) {
-                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
-                                                    "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
-
-                                            processResponse(rps, "000000");
-                                            return;
-                                        } else {
-                                            data.add(track2);
-                                        }
-                                    } else {
-                                        if (track2.startsWith("110226")) {
-                                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
-                                                    "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
-
-                                            processResponse(rps, "000000");
-                                            return;
-                                        } else if (actionUrl.equals("M0008A") || actionUrl.equals("M0010A")) {
-                                            if (track2.startsWith("622011") || track2.startsWith("462040")) {
-                                                data.add(track2);
-                                            } else {
-                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
-                                                        "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
-
-                                                processResponse(rps, "000000");
-                                                return;
-                                            }
-                                        } else if (actionUrl.equals("M0011A") || actionUrl.equals("M0510A")) {
-                                            if (track2.startsWith("622011") || track2.startsWith("462040")) {
-                                                JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
-                                                        "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
-                                                        "\"type\":\"3\",\"title\":\"Gagal\"}}");
-
-                                                processResponse(rps, "000000");
-                                                return;
-                                            } else {
-                                                data.add(track2);
-                                            }
-                                        } else {
-                                            data.add(track2);
-                                        }
-                                    }
-                                    Log.d("EDIT READ", track2);
+                                else {
+                                    data.add(pan);
                                 }
                             }
+                            Log.d("EDIT READ", pan);
+                        }
+                        if (v instanceof ChipInsert) {
+                            ChipInsert chipInsert = (ChipInsert) v;
+                            data.add(chipInsert.getText().toString());
+                        }
+                        if (v instanceof InsertICC) {
+                            InsertICC insertICC = (InsertICC) v;
+                            String track2 = insertICC.getText().toString();
 
-                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-                            StringWriter sw = new StringWriter();
-                            PrintWriter ps = new PrintWriter(sw);
-                            ex.printStackTrace(ps);
+                            if (actionUrl.equals("M0008B") || actionUrl.equals("M0010C")
+                                    || actionUrl.equals("P00035")) {
+                                if (!track2.startsWith("110226")) {
+                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan bukan kartu petugas\",\n" +
+                                            "\"value\":\"Kartu yang anda gunakan bukan kartu petugas\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                    processResponse(rps, "000000");
+                                    return;
+                                } else {
+                                    data.add(track2);
+                                }
+                            } else {
+                                if (track2.startsWith("110226")) {
+                                    JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+                                            "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                            "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                    processResponse(rps, "000000");
+                                    return;
+                                } else if (actionUrl.equals("M0008A") || actionUrl.equals("M0010A")) {
+                                    if (track2.startsWith("622011") || track2.startsWith("462040")) {
+                                        data.add(track2);
+                                    } else {
+                                        JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+                                                "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                        processResponse(rps, "000000");
+                                        return;
+                                    }
+                                } else if (actionUrl.equals("M0011A") || actionUrl.equals("M0510A")) {
+                                    if (track2.startsWith("622011") || track2.startsWith("462040")) {
+                                        JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Kartu yang anda gunakan tidak sesuai\",\n" +
+                                                "\"value\":\"Kartu yang anda gunakan tidak sesuai\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                                "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                                        processResponse(rps, "000000");
+                                        return;
+                                    } else {
+                                        data.add(track2);
+                                    }
+                                } else {
+                                    data.add(track2);
+                                }
+                            }
+                            Log.d("EDIT READ", track2);
                         }
                     }
+
+                } catch (Exception ex) {
+//                            ex.printStackTrace();
+                    StringWriter sw = new StringWriter();
+                    PrintWriter ps = new PrintWriter(sw);
+                    ex.printStackTrace(ps);
                 }
+            }
+        }
 
 //                if (actionUrl.equals(SERVICE_PURCHASE_SELADA)){
 //                    data.add(nominal);
@@ -1700,209 +1422,219 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    Log.d("DATA", data.toString());
 //                }
 
-                String dataOutput = TextUtils.join("|", data);
+        String dataOutput = TextUtils.join("|", data);
 //                Toast.makeText(context, "Sending " + dataOutput, Toast.LENGTH_SHORT).show();
-                if (actionUrl.equals("L00001")) {
-                    Location xLocation;
-                    GPSLocation gpsLocation = new GPSLocation();
-                    String gloc = "";
-                    try {
-                        InputStream inputStream = context.openFileInput("loc.txt");
-                        if (inputStream != null) {
-                            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                            String receiveString = "";
-                            StringBuilder stringBuilder = new StringBuilder();
-                            while ((receiveString = bufferedReader.readLine()) != null) {
-                                stringBuilder.append(receiveString);
-                            }
-                            inputStream.close();
-                            gloc = stringBuilder.toString();
-                        }
-                    } catch (FileNotFoundException e) {
-                        gloc = "0,0";
-                        try {
-                            OutputStreamWriter osw = new OutputStreamWriter(context.openFileOutput("loc.txt", Context.MODE_PRIVATE));
-                            osw.write("0,0");
-                            osw.close();
-                        } catch (FileNotFoundException ee) {
-                            ee.printStackTrace();
-                        } catch (IOException ee) {
-                            ee.printStackTrace();
-                        }
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        gloc = "0,0";
-                        e.printStackTrace();
+        if (actionUrl.equals("L00001")) {
+            Location xLocation;
+            GPSLocation gpsLocation = new GPSLocation();
+            String gloc = "";
+            try {
+                InputStream inputStream = context.openFileInput("loc.txt");
+                if (inputStream != null) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                    String receiveString = "";
+                    StringBuilder stringBuilder = new StringBuilder();
+                    while ((receiveString = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(receiveString);
                     }
-                    if (gpsLocation != null) {
+                    inputStream.close();
+                    gloc = stringBuilder.toString();
+                }
+            } catch (FileNotFoundException e) {
+                gloc = "0,0";
+                try {
+                    OutputStreamWriter osw = new OutputStreamWriter(context.openFileOutput("loc.txt", Context.MODE_PRIVATE));
+                    osw.write("0,0");
+                    osw.close();
+                } catch (FileNotFoundException ee) {
+                    ee.printStackTrace();
+                } catch (IOException ee) {
+                    ee.printStackTrace();
+                }
+                e.printStackTrace();
+            } catch (IOException e) {
+                gloc = "0,0";
+                e.printStackTrace();
+            }
+            if (gpsLocation != null) {
 //                        gloc += String.valueOf(xLocation.getLongitude());
 //                        gloc += ",";
 //                        gloc += String.valueOf(xLocation.getLatitude());
 //                        Log.d("GPS", gloc);
-                    }
-                    String serialNum = Build.SERIAL;
-                    PackageInfo pInfo = null;
-                    try {
-                        pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    String version = pInfo.versionName;
-                    String ldata = String.format("%1$-10s", version);
-                    ldata += String.format("%1$-20s", serialNum);
-                    ldata += gloc;
+            }
+            String serialNum = Build.SERIAL;
+            PackageInfo pInfo = null;
+            try {
+                pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            String version = pInfo.versionName;
+            String ldata = String.format("%1$-10s", version);
+            ldata += String.format("%1$-20s", serialNum);
+            ldata += gloc;
 //                    ldata = ldata + "                                                            ";
 //                    ldata = ldata.substring(0,60);
-                    dataOutput = String.format("%1$-60s", ldata);
-                }
-                // settlement
-                if (actionUrl.equals("S00001")) {
-                    JSONArray rowList = handleSettlement();
-                    for (int i = 0; i < rowList.length(); i++) {
-                        JSONObject row = rowList.getJSONObject(i);
-                        data.add(row.getString("stan"));
-                    }
-                    // test
+            dataOutput = String.format("%1$-60s", ldata);
+        }
+        // settlement
+        if (actionUrl.equals("S00001")) {
+            JSONArray rowList = handleSettlement();
+            for (int i = 0; i < rowList.length(); i++) {
+                JSONObject row = rowList.getJSONObject(i);
+                data.add(row.getString("stan"));
+            }
+            // test
 //                    data.add("963018");
 //                    data.add("963015");
-                    // end test
-                    dataOutput = TextUtils.join("|", data);
-                }
+            // end test
+            dataOutput = TextUtils.join("|", data);
+        }
 
-                // reprint samsat
-                if (actionUrl.equals("R0000A")) {
-                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
-                    String pid = SAMSAT_PROFILES;
+        // reprint samsat
+        if (actionUrl.equals("R0000A")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = SAMSAT_PROFILES;
 
-                    JSONObject rps = null;
-                    try {
-                        rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    processResponse(rps, "reprint");
-                    return;
-                }
+            JSONObject rps = null;
+            try {
+                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "reprint");
+            return;
+        }
 
-                //Reprint MA
-                if (actionUrl.equals("RMA020")) {
-                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
-                    String pid = MINI_BANKING_PROFILES;
+        //Reprint MA
+        if (actionUrl.equals("RMA020")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = MINI_BANKING_PROFILES;
 
-                    JSONObject rps = null;
-                    try {
-                        rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    processResponse(rps, "reprint");
-                    return;
-                }
+            JSONObject rps = null;
+            try {
+                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "reprint");
+            return;
+        }
 
-                //Report Summary Samsat
-                if (actionUrl.equals("R001A1") || actionUrl.equals("R001A2")) {
-                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
-                    String pid = SAMSAT_PROFILES;
+        //Report Summary Samsat
+        if (actionUrl.equals("R001A1") || actionUrl.equals("R001A2")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = SAMSAT_PROFILES;
 
-                    JSONObject rps = null;
-                    try {
-                        rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    processResponse(rps, "");
-                    return;
-                }
+            JSONObject rps = null;
+            try {
+                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
+            return;
+        }
 
-                //Report Detail Samsat
-                if (actionUrl.equals("R002A1") || actionUrl.equals("R002A2")) {
-                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
-                    String pid = SAMSAT_PROFILES;
+        //Report Detail Samsat
+        if (actionUrl.equals("R002A1") || actionUrl.equals("R002A2")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = SAMSAT_PROFILES;
 
-                    JSONObject rps = null;
-                    try {
-                        rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    processResponse(rps, "");
-                    return;
-                }
+            JSONObject rps = null;
+            try {
+                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
+            return;
+        }
 
-                //Report Detail Mini Banking
-                if (actionUrl.equals("RMA014") || actionUrl.equals("RMA015")) {
-                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
-                    String pid = MINI_BANKING_PROFILES;
+        //Report Detail Mini Banking
+        if (actionUrl.equals("RMA014") || actionUrl.equals("RMA015")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = MINI_BANKING_PROFILES;
 
-                    JSONObject rps = null;
-                    try {
-                        rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    processResponse(rps, "");
-                    return;
-                }
+            JSONObject rps = null;
+            try {
+                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
+            return;
+        }
 
-                //Report Summary Mini Banking
-                if (actionUrl.equals("RMA011") || actionUrl.equals("RMA012")) {
-                    String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
-                    String pid = MINI_BANKING_PROFILES;
+        //Report Summary Mini Banking
+        if (actionUrl.equals("RMA011") || actionUrl.equals("RMA012")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = MINI_BANKING_PROFILES;
 
-                    JSONObject rps = null;
-                    try {
-                        rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    processResponse(rps, "");
-                    return;
-                }
+            JSONObject rps = null;
+            try {
+                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
+            return;
+        }
 
-                //Reversal Sale Selada
-                if (actionUrl.equals("REV561")) {
-                    sendReversalAdviceSale(stanForReversal);
-                    return;
-                }
+        //Reversal Sale Selada
+        if (actionUrl.equals("REV561")) {
+            sendReversalAdviceSale(stanForReversal);
+            return;
+        }
 
-                // reprint
-                if (actionUrl.startsWith("P") && !actionUrl.equals("P00030") && !actionUrl.equals("P00031") && !actionUrl.equals("P00032") && !actionUrl.equals("P00033") && !actionUrl.equals("P00034") && !actionUrl.equals("P00010")) {
-                    JSONObject jsonResp = handleReprint(actionUrl);
-                    processResponse(jsonResp, "reprint");
-                    return;
-                }
+        // reprint
+        if (actionUrl.startsWith("P") && !actionUrl.equals("P00030") && !actionUrl.equals("P00031") && !actionUrl.equals("P00032") && !actionUrl.equals("P00033") && !actionUrl.equals("P00034") && !actionUrl.equals("P00010")) {
+            JSONObject jsonResp = handleReprint(actionUrl);
+            processResponse(jsonResp, "reprint");
+            return;
+        }
 //                if (actionUrl.startsWith("R")) {
 //                    JSONObject jsonResp = handleReport(actionUrl);
 //                    processResponse(jsonResp, "report");
 //                    return;
 //                }
-                if (actionUrl.startsWith(""))
-                    // void
-                    if (actionUrl.startsWith("V")) {
-                        JSONObject jsonResp = handleVoid(dataOutput);
-                        processResponse(jsonResp, "void");
-                        return;
-                    }
-                try {
-                    final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
-                    msg.put("msg_id", msgId);
-                    msg.put("msg_ui", telephonyManager.getDeviceId());
-                    // HANDLING NEW ASSIGNED NEW ACTION URL IN THIS METHOD; EG FOR MPN G2 BJB
-                    if (!newActionUrl.equals("")) {
-                        msg.put("msg_si", newActionUrl);
-                    } else {
-                        msg.put("msg_si", actionUrl);
-                    }
-                    //ovride
-                    if (newAct != null) {
-                        msg.put("msg_si", newAct);
-                    }
-                    msg.put("msg_dt", dataOutput);
+        if (actionUrl.startsWith(""))
+            // void
+            if (actionUrl.startsWith("V")) {
+                JSONObject jsonResp = handleVoid(dataOutput);
+                processResponse(jsonResp, "void");
+                return;
+            }
+        try {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
+            msg.put("msg_id", msgId);
+            msg.put("msg_ui", telephonyManager.getDeviceId());
+            // HANDLING NEW ASSIGNED NEW ACTION URL IN THIS METHOD; EG FOR MPN G2 BJB
+            if (!newActionUrl.equals("")) {
+                msg.put("msg_si", newActionUrl);
+            } else {
+                msg.put("msg_si", actionUrl);
+            }
+            //ovride
+            if (newAct != null) {
+                msg.put("msg_si", newAct);
+            }
+            msg.put("msg_dt", dataOutput);
 
-                    //ADD JSON OBJECT msg_sn, msg_tid FOR ALL TRANSACTION (PENTEST)
-                    msg.put("msg_sn", preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
-                    msg.put("msg_tid", preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID));
+            //ADD JSON OBJECT msg_sn, msg_tid FOR ALL TRANSACTION (PENTEST)
+            msg.put("msg_sn", preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
+            msg.put("msg_tid", preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID));
 //                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //                    builder.setMessage(dataOutput);
 //                    builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
@@ -1913,91 +1645,87 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    });
 //                    AlertDialog diaLog = builder.create();
 //                    diaLog.show();
-                    //enc
+            //enc
 //                    try {
 //                        msg.put("msg_dt", compress(dataOutput));
 //                        msg.put("encrypted", "t");
 //                    } catch (Exception e) {
 //                        msg.put("msg_dt", dataOutput);
 //                    }
-                    final JSONObject msgRoot = new JSONObject();
-                    msgRoot.put("msg", msg);
+            final JSONObject msgRoot = new JSONObject();
+            msgRoot.put("msg", msg);
 //                    new PostData().execute(msgRoot.toString());
 
-                    JsonCompHandler.saveJsonMessage(context, msgId, "rq", msgRoot);
-                    // HANDLING NEW ASSIGNED NEW ACTION URL IN THIS METHOD; EG FOR MPN G2 BJB
-                    if (!newActionUrl.equals("")) {
+            JsonCompHandler.saveJsonMessage(context, msgId, "rq", msgRoot);
+            // HANDLING NEW ASSIGNED NEW ACTION URL IN THIS METHOD; EG FOR MPN G2 BJB
+            if (!newActionUrl.equals("")) {
 
-                        saveEdcLog(newActionUrl, msgId);
-                    } else {
+                saveEdcLog(newActionUrl, msgId);
+            } else {
 
-                        saveEdcLog(actionUrl, msgId);
-                    }
-                    if (panHolder != null) {
-                        updEdcLogPan(msgId, panHolder, tcaid);
-                    }
+                saveEdcLog(actionUrl, msgId);
+            }
+            if (panHolder != null) {
+                updEdcLogPan(msgId, panHolder, tcaid);
+            }
 
-                    String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
-                    String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
-                    String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
+            String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+            String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
+            String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
 
-                    StringRequest jor = new StringRequest(Request.Method.POST,
-                            httpPost,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        Log.d("TERIMA", response);
-                                        JSONObject jsonResp = new JSONObject(response);
-                                        if (jsonResp.has("encrypted")) {
-                                            String isEnc = jsonResp.getString("encrypted");
-                                            if (isEnc.equals("t")) {
-                                                jsonResp = decResponse(jsonResp);
-                                            }
-                                        }
-                                        dialog.dismiss();
-                                        processResponse(jsonResp, msgId);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+            StringRequest jor = new StringRequest(Request.Method.POST,
+                    httpPost,
+                    response -> {
+                        try {
+                            Log.d("TERIMA", response);
+                            JSONObject jsonResp = new JSONObject(response);
+                            if (jsonResp.has("encrypted")) {
+                                String isEnc = jsonResp.getString("encrypted");
+                                if (isEnc.equals("t")) {
+                                    jsonResp = decResponse(jsonResp);
                                 }
-
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                                Toast.makeText(context, "Request Timeout",
-                                        Toast.LENGTH_LONG).show();
-                                dialog.dismiss();
-                                context.onBackPressed();
-                                context.finish();
                             }
+                            dialog.dismiss();
+                            processResponse(jsonResp, msgId);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }) {
-                        @Override
-                        public String getBodyContentType() {
-                            return "text/plain; charset=utf-8";
-                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(context, "Request Timeout",
+                                Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                        context.onBackPressed();
+                        context.finish();
+                    }
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "text/plain; charset=utf-8";
+                }
 
-                        @Override
-                        public byte[] getBody() throws AuthFailureError {
-                            try {
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
 
-                                return msgRoot == null ? null : msgRoot.toString().getBytes("utf-8");
-                            } catch (UnsupportedEncodingException uee) {
-                                Log.e("VOLLEY", "Unsupported Encoding while trying to get the bytes of " + msgRoot.toString() + "utf-8");
-                                return null;
-                            }
-                        }
+                        return msgRoot == null ? null : msgRoot.toString().getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        Log.e("VOLLEY", "Unsupported Encoding while trying to get the bytes of " + msgRoot.toString() + "utf-8");
+                        return null;
+                    }
+                }
 
-                    };
-                    RequestQueue rq = Volley.newRequestQueue(context);
+            };
+            RequestQueue rq = Volley.newRequestQueue(context);
 
-                    jor.setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            jor.setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 //                    dialog = ProgressDialog.show(context, "Silahkan Tunggu....", "Data sedang dikirim", true);
-                    dialog = ProgressDialog.show(context, "Silahkan Tunggu....", "Transaksi sedang diproses", true);
-                    rq.add(jor);
-                    // display data to dialog
+            dialog = ProgressDialog.show(context, "Silahkan Tunggu....", "Transaksi sedang diproses", true);
+            rq.add(jor);
+            // display data to dialog
 //                    dialog = ProgressDialog.show(context, "Debug send data", msgRoot.toString(), true);
 //                    Handler dhan = new Handler();
 //                    Runnable dr = new Runnable() {
@@ -2007,11 +1735,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                        }
 //                    };
 //                    dhan.postDelayed(dr, 8000);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -2062,151 +1790,88 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         );
         params.setMargins(0, 20, 0, 0);
         baseLayout.removeAllViews();
-        if (Arrays.asList(TapCard.BRIZZI_MENU).contains(id)
-                && !id.equals(TapCard.TOPUP_ONLINE)
-                && !id.equals(TapCard.TOPUP_DEPOSIT)
-                && !id.equals(TapCard.PEMBAYARAN_NORMAL)
-                && !id.equals(TapCard.PEMBAYARAN_DISKON)
-                && !id.equals(TapCard.SETTLEMENT)) {
-            LayoutInflater li = LayoutInflater.from(context);
-            final TapCard promptsView = (TapCard) li.inflate(R.layout.tap_card, null);
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-            // set prompts.xml to alertdialog builder
-            alertDialogBuilder.setView(promptsView);
-            // create alert dialog
-            final AlertDialog alertTap = alertDialogBuilder.create();
 
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(alertTap.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-            // show it
-            CardData cardData = new CardData();
-            cardData.setWhatToDo(id);
-            if (id.equals(TapCard.REDEEM_NEXT)) {
-//                Log.d("REDEEM", comp.toString());
-                String vl = array.getJSONObject(0).getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                cardData.setCardNumber(vl);
-                vl = array.getJSONObject(1).getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                cardData.setRedCardBalance(vl);
-                vl = array.getJSONObject(2).getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                cardData.setRedDepoBalance(vl);
-                vl = array.getJSONObject(3).getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                cardData.setRedFee(vl);
-                vl = array.getJSONObject(4).getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                cardData.setRedTotal(vl);
-                vl = comp.getString("server_date");
-                cardData.settDate(vl);
-//                Log.d("REDEEM", vl);
-                vl = comp.getString("server_time");
-                cardData.settTime(vl);
-//                Log.d("REDEEM", vl);
-                vl = comp.getString("server_ref");
-                cardData.setServerRef(vl);
-//                Log.d("REDEEM", vl);
-            }
-            if (id.equals(TapCard.VOID_REFUND)) {
-                String sv = array.getJSONObject(1).getJSONObject("comp_values").getJSONArray("comp_value").getJSONObject(0).getString("value").trim();
-                cardData.setStanVoid(sv);
-            }
-            promptsView.setFormListener(new TapCard.FormListener() {
-                @Override
-                public void onSuccesListener(JSONObject obj) {
-
-                    promptsView.searchEnd();
-                    try {
-                        comp = obj.getJSONObject("screen");
-                        if (obj.has("server_ref")) {
-                            serverRef = obj.getString("server_ref");
-                        }
-                        if (obj.has("server_appr")) {
-                            serverAppr = obj.getString("server_appr");
-                        }
-                        if (obj.has("server_date")) {
-                            serverDate = obj.getString("server_date");
-                        }
-                        if (obj.has("server_time")) {
-                            serverTime = obj.getString("server_time");
-                        }
-                        if (obj.has("card_type")) {
-                            cardType = obj.getString("card_type");
-                        }
-                        if (obj.has("nomor_kartu")) {
-                            nomorKartu = obj.getString("nomor_kartu");
-                        }
-                        FormMenu.this.init();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    alertTap.dismiss();
-                }
-            });
-            promptsView.init(cardData);
-            if (!id.equals(TapCard.INITIALIZE)) {
-                promptsView.searchBegin();
-            }
-            promptsView.setOkListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    alertTap.dismiss();
-                    promptsView.searchEnd();
-                    ((Activity) context).finish();
-                }
-            });
-            alertTap.setOnKeyListener(new Dialog.OnKeyListener() {
-                @Override
-                public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-//                        Log.d("BACK", "FROM DIALOG");
-                        try {
-                            // magneticSwipe.closeDriver();
-                            // magneticSwipe.setIsQuit(true);
-                            promptsView.searchEnd();
-                            alertTap.dismiss();
-                            ((Activity) context).finish();
-//                            context.onBackPressed();
-                        } catch (Exception e) {
-                            //failed to close, maybe already closed or not open yet
-                            e.printStackTrace();
-                            Log.e("BACK", "FAILED");
-                        }
-                    }
-                    return true;
-                }
-            });
-
-            alertTap.show();
-            alertTap.getWindow().setAttributes(lp);
-        } else {
-            for (int j = 0; j < array.length(); j++) {
-                final JSONObject data = array.getJSONObject(j);
-                int seq = data.getInt("seq");
+        for (int j = 0; j < array.length(); j++) {
+            final JSONObject data = array.getJSONObject(j);
+            int seq = data.getInt("seq");
 //                Log.d("ITERASI2", ""+j);
-                int type = data.getInt("comp_type");
-                String lbl = data.getString("comp_lbl");
-                Log.d("INIT", lbl);
-                if (lbl.equals("voidsukses")) {
-                    JSONObject cvals = data.getJSONObject("comp_values");
-                    JSONArray cval = cvals.getJSONArray("comp_value");
-                    JSONObject fval = cval.getJSONObject(0);
-                    String stanVoidSukses = fval.getString("value");
-                    updVoidSukses(stanVoidSukses, lastan);
-                }
-                if (lbl.equals("track2")) {
-                    JSONObject cvals = data.getJSONObject("comp_values");
-                    JSONArray cval = cvals.getJSONArray("comp_value");
-                    JSONObject fval = cval.getJSONObject(0);
-                    String track2 = fval.getString("value");
-                    if (track2 != null) {
-                        if (track2.length() > 15) {
-                            panHolder = panFromTrack2(track2);
-                            boolean echip = emode.substring(1, 2).equals("5");
-                            if (echip) {
-                                if (parent.cardData != null) {
-                                    parent.cardData.setPan(panFromTrack2(track2));
-                                    parent.cardData.setTxst(0);
-                                }
+            int type = data.getInt("comp_type");
+            String lbl = data.getString("comp_lbl");
+            Log.d("INIT", lbl);
+            if (lbl.equals("voidsukses")) {
+                JSONObject cvals = data.getJSONObject("comp_values");
+                JSONArray cval = cvals.getJSONArray("comp_value");
+                JSONObject fval = cval.getJSONObject(0);
+                String stanVoidSukses = fval.getString("value");
+                updVoidSukses(stanVoidSukses, lastan);
+            }
+            if (lbl.equals("track2")) {
+                JSONObject cvals = data.getJSONObject("comp_values");
+                JSONArray cval = cvals.getJSONArray("comp_value");
+                JSONObject fval = cval.getJSONObject(0);
+                String track2 = fval.getString("value");
+                if (track2 != null) {
+                    if (track2.length() > 15) {
+                        panHolder = panFromTrack2(track2);
+                        boolean echip = emode.substring(1, 2).equals("5");
+                        if (echip) {
+                            if (parent.cardData != null) {
+                                parent.cardData.setPan(panFromTrack2(track2));
+                                parent.cardData.setTxst(0);
                             }
+                        }
+                    }
+                }
+            }
+            switch (type) {
+                case CommonConfig.ComponentType.TextView:
+                    TextView textView = (TextView) li.inflate(R.layout.text_view, null);
+                    textView.init(data);
+                    textView.setTag(R.string.seq_holder, seq);
+                    textView.setTag(R.string.lbl_holder, lbl);
+
+                    textView.setLayoutParams(params);
+                    baseLayout.addView(textView);
+                    break;
+                case CommonConfig.ComponentType.EditText:
+                    final EditText editText = (EditText) li.inflate(R.layout.edit_text, null);
+                    editText.init(data);
+                    String txt = editText.getText().toString();
+                    editText.setTag(R.string.seq_holder, seq);
+                    editText.setTag(R.string.lbl_holder, lbl);
+                    editText.setLayoutParams(params);
+
+                    if (formId.equals(MENU_PUCHASE)){
+                        if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
+                            editText.setText(amount);
+                            editText.setEnabled(false);
+                        }
+                        if (editText.getHint().toString().contains("Masukkan Kode Billing")) {
+                            editText.setText(mobileNumber);
+                            editText.setEnabled(false);
+                        }
+                        if (editText.getHint().toString().contains("Biaya Margin")) {
+                            editText.setText(margin);
+                            editText.setEnabled(false);
+                        }
+                    }
+
+                    if (formId.equals(MENU_PUCHASE_BJB)){
+                        if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
+                            editText.setText(amount);
+//                                editText.setFocusable(false);
+                            editText.setEnabled(false);
+
+                            editText.setEnabled(false);
+                            editText.setFocusable(false);
+                            editText.setClickable(false);
+                            editText.setInputType(InputType.TYPE_NULL);
+                            editText.setOnKeyListener(new View.OnKeyListener() {
+                                @Override
+                                public boolean onKey(View v,int keyCode,KeyEvent event) {
+                                    return true;  // Blocks input from hardware keyboards.
+                                }
+                            });
                         }
                     }
                 }
@@ -2248,6 +1913,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 editText.setText(amount);
                             }
                         }
+                    // for purchase bjb-selada only
 
 //                        if (editText.getHint().toString().equals("Jumlah Transfer")
 //                                || editText.getHint().toString().equals("Nominal Setor")
@@ -2287,161 +1953,161 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                            });
 //                        }
 
-                        baseLayout.addView(editText);
-                        break;
-                    case CommonConfig.ComponentType.PasswordField:
-                        EditText pinpadText = null;
-                        pinpadText = new EditText(context);
-                        pinpadText.init(data);
-                        pinpadText.setTag(R.string.seq_holder, seq);
-                        pinpadText.setTag(R.string.lbl_holder, lbl);
-                        pinpadText.setLayoutParams(params);
-                        if (pinpadText.isNumber()) {
-                            pinpadText.setVisibility(GONE);
-                        }
+                    baseLayout.addView(editText);
+                    break;
+                case CommonConfig.ComponentType.PasswordField:
+                    EditText pinpadText = null;
+                    pinpadText = new EditText(context);
+                    pinpadText.init(data);
+                    pinpadText.setTag(R.string.seq_holder, seq);
+                    pinpadText.setTag(R.string.lbl_holder, lbl);
+                    pinpadText.setLayoutParams(params);
+                    if (pinpadText.isNumber()) {
+                        pinpadText.setVisibility(GONE);
+                    }
 
-                        baseLayout.addView(pinpadText);
-                        pinpadTextList.add(pinpadText);
-                        pinModuleCounter++;
-                        break;
-                    case CommonConfig.ComponentType.Button:
-                        final String actionURl = comp.has("action_url") ? comp.getString("action_url") : "";
-                        Button button = (Button) li.inflate(R.layout.button, null);
-                        button.init(data);
-                        button.setTag(R.string.seq_holder, seq);
-                        button.setTag(R.string.lbl_holder, lbl);
-                        button.setLayoutParams(params);
-                        button.setTag(actionURl);
-                        button.setOnClickListener(FormMenu.this);
-                        button.setOnKeyListener(FormMenu.this);
-                        baseLayout.addView(button);
-                        formTrigger = button;
-                        break;
-                    case CommonConfig.ComponentType.CheckBox:
-                        CheckBox checkBox = (CheckBox) li.inflate(R.layout.check_box, null);
-                        checkBox.init(data);
-                        checkBox.setTag(R.string.seq_holder, seq);
-                        checkBox.setTag(R.string.lbl_holder, lbl);
-                        checkBox.setLayoutParams(params);
-                        baseLayout.addView(checkBox);
-                        break;
-                    case CommonConfig.ComponentType.RadioButton:
-                        RadioButton radioButton = (RadioButton) li.inflate(R.layout.radio_button, null);
-                        radioButton.setTag(R.string.seq_holder, seq);
-                        radioButton.setTag(R.string.lbl_holder, lbl);
-                        radioButton.init(data);
-                        radioButton.setLayoutParams(params);
-                        baseLayout.addView(radioButton, seq);
-                        break;
-                    case CommonConfig.ComponentType.ComboBox:
-                        ComboBox comboBox = (ComboBox) li.inflate(R.layout.spinner, null);
-                        comboBox.setTag(R.string.seq_holder, seq);
-                        comboBox.setTag(R.string.lbl_holder, lbl);
-                        comboBox.init(data);
-                        comboBox.setLayoutParams(params);
-                        baseLayout.addView(comboBox, seq);
-                        break;
-                    case CommonConfig.ComponentType.ChipInsert:
-                        if (!isReprint) {
-                            String comid = data.getString("comp_id");
-                            int iccStage = Integer.parseInt(comid.substring(2, 3));
-                            parent.modulStage = iccStage;
-                            Log.i("ICC", "" + iccStage);
-                            iccPreProcessed = true;
-                            iccIsTriggerd = true;
-                            if (parent.modulStage != CommonConfig.ICC_PROCESS_STAGE_FINISHED) {
-                                if (insertICC != null) {
-                                    try {
-                                        insertICC.closeDriver();
-                                        insertICC = null;
-                                    } catch (Exception e) {
-                                    }
+                    baseLayout.addView(pinpadText);
+                    pinpadTextList.add(pinpadText);
+                    pinModuleCounter++;
+                    break;
+                case CommonConfig.ComponentType.Button:
+                    final String actionURl = comp.has("action_url") ? comp.getString("action_url") : "";
+                    Button button = (Button) li.inflate(R.layout.button, null);
+                    button.init(data);
+                    button.setTag(R.string.seq_holder, seq);
+                    button.setTag(R.string.lbl_holder, lbl);
+                    button.setLayoutParams(params);
+                    button.setTag(actionURl);
+                    button.setOnClickListener(FormMenu.this);
+                    button.setOnKeyListener(FormMenu.this);
+                    baseLayout.addView(button);
+                    formTrigger = button;
+                    break;
+                case CommonConfig.ComponentType.CheckBox:
+                    CheckBox checkBox = (CheckBox) li.inflate(R.layout.check_box, null);
+                    checkBox.init(data);
+                    checkBox.setTag(R.string.seq_holder, seq);
+                    checkBox.setTag(R.string.lbl_holder, lbl);
+                    checkBox.setLayoutParams(params);
+                    baseLayout.addView(checkBox);
+                    break;
+                case CommonConfig.ComponentType.RadioButton:
+                    RadioButton radioButton = (RadioButton) li.inflate(R.layout.radio_button, null);
+                    radioButton.setTag(R.string.seq_holder, seq);
+                    radioButton.setTag(R.string.lbl_holder, lbl);
+                    radioButton.init(data);
+                    radioButton.setLayoutParams(params);
+                    baseLayout.addView(radioButton, seq);
+                    break;
+                case CommonConfig.ComponentType.ComboBox:
+                    ComboBox comboBox = (ComboBox) li.inflate(R.layout.spinner, null);
+                    comboBox.setTag(R.string.seq_holder, seq);
+                    comboBox.setTag(R.string.lbl_holder, lbl);
+                    comboBox.init(data);
+                    comboBox.setLayoutParams(params);
+                    baseLayout.addView(comboBox, seq);
+                    break;
+                case CommonConfig.ComponentType.ChipInsert:
+                    if (!isReprint) {
+                        String comid = data.getString("comp_id");
+                        int iccStage = Integer.parseInt(comid.substring(2, 3));
+                        parent.modulStage = iccStage;
+                        Log.i("ICC", "" + iccStage);
+                        iccPreProcessed = true;
+                        iccIsTriggerd = true;
+                        if (parent.modulStage != CommonConfig.ICC_PROCESS_STAGE_FINISHED) {
+                            if (insertICC != null) {
+                                try {
+                                    insertICC.closeDriver();
+                                    insertICC = null;
+                                } catch (Exception e) {
                                 }
-                                insertICC = (InsertICC) li.inflate(R.layout.icc_insert, null);
-                                insertICC.addInputListener(this);
                             }
-                            insertICC.setTag(R.string.seq_holder, seq);
-                            insertICC.setTag(R.string.lbl_holder, lbl);
-                            baseLayout.addView(insertICC);
-                            insertICC.setVisibility(GONE);
+                            insertICC = (InsertICC) li.inflate(R.layout.icc_insert, null);
+                            insertICC.addInputListener(this);
                         }
-                        break;
-                    case CommonConfig.ComponentType.InsertTap:
-                        break;
-                    case CommonConfig.ComponentType.MagneticSwipe:
-                        magneticSwipe = (MagneticSwipe) li.inflate(R.layout.magnetic_swipe, null);
-                        magneticSwipe.init();
-                        magneticSwipe.setTag(R.string.seq_holder, seq);
-                        magneticSwipe.setTag(R.string.lbl_holder, lbl);
-                        magneticSwipe.addSwipeListener(this);
-                        LayoutInflater li = LayoutInflater.from(context);
-                        View promptsView = li.inflate(R.layout.swipe_dialog, null);
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                        // set prompts.xml to alertdialog builder
-                        alertDialogBuilder.setView(promptsView);
-                        //alertDialogBuilder.setCancelable(false);
-                        // create alert dialog
-                        alert = alertDialogBuilder.create();
-                        hasMagModule = true;
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.copyFrom(alert.getWindow().getAttributes());
-                        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                        // show it
-                        alert.setOnKeyListener(new Dialog.OnKeyListener() {
-                            @Override
-                            public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        insertICC.setTag(R.string.seq_holder, seq);
+                        insertICC.setTag(R.string.lbl_holder, lbl);
+                        baseLayout.addView(insertICC);
+                        insertICC.setVisibility(GONE);
+                    }
+                    break;
+                case CommonConfig.ComponentType.InsertTap:
+                    break;
+                case CommonConfig.ComponentType.MagneticSwipe:
+                    magneticSwipe = (MagneticSwipe) li.inflate(R.layout.magnetic_swipe, null);
+                    magneticSwipe.init();
+                    magneticSwipe.setTag(R.string.seq_holder, seq);
+                    magneticSwipe.setTag(R.string.lbl_holder, lbl);
+                    magneticSwipe.addSwipeListener(this);
+                    LayoutInflater li = LayoutInflater.from(context);
+                    View promptsView = li.inflate(R.layout.swipe_dialog, null);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                    // set prompts.xml to alertdialog builder
+                    alertDialogBuilder.setView(promptsView);
+                    //alertDialogBuilder.setCancelable(false);
+                    // create alert dialog
+                    alert = alertDialogBuilder.create();
+                    hasMagModule = true;
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                    lp.copyFrom(alert.getWindow().getAttributes());
+                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                    lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                    // show it
+                    alert.setOnKeyListener(new Dialog.OnKeyListener() {
+                        @Override
+                        public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
 //                                    Log.d("BACK", "FROM DIALOG");
-                                    try {
-                                        magneticSwipe.openDriver();
-                                        magneticSwipe.closeDriver();
-                                        magneticSwipe.setIsQuit(true);
-                                        alert.dismiss();
-                                        context.onBackPressed();
-                                    } catch (Exception e) {
-                                        //failed to close, maybe already closed or not open yet
-                                    }
+                                try {
+                                    magneticSwipe.openDriver();
+                                    magneticSwipe.closeDriver();
+                                    magneticSwipe.setIsQuit(true);
+                                    alert.dismiss();
+                                    context.onBackPressed();
+                                } catch (Exception e) {
+                                    //failed to close, maybe already closed or not open yet
                                 }
-                                return true;
                             }
-                        });
-                        if (CommonConfig.getDeviceName().startsWith("WizarPOS")) {
-                            alert.show();
-                            if (SWIPELESS) {
-                                magneticSwipe.setText(dummyTrack);
+                            return true;
+                        }
+                    });
+                    if (CommonConfig.getDeviceName().startsWith("WizarPOS")) {
+                        alert.show();
+                        if (SWIPELESS) {
+                            magneticSwipe.setText(dummyTrack);
 
 //                                magneticSwipe.setText("5221842001365318=18111260000058300000");
 //                                onSwipeComplete(magneticSwipe, "5221842001365318=18111260000058300000");
-                            }
-                            if (SWIPEANY) {
-                                magneticSwipe.setText(dummyTrack);
-                            }
-                        } else {
-//                            magneticSwipe.setText("6013010612793951=17121200000075600000");
-                            magneticSwipe.setText(dummyTrack);
-                            SWIPELESS = true;
-                            SWIPEANY = true;
                         }
+                        if (SWIPEANY) {
+                            magneticSwipe.setText(dummyTrack);
+                        }
+                    } else {
+//                            magneticSwipe.setText("6013010612793951=17121200000075600000");
+                        magneticSwipe.setText(dummyTrack);
+                        SWIPELESS = true;
+                        SWIPEANY = true;
+                    }
 
-                        alert.getWindow().setAttributes(lp);
+                    alert.getWindow().setAttributes(lp);
 
-                        baseLayout.addView(magneticSwipe);
-                        magneticSwipe.setVisibility(GONE);
-                        break;
-                    case CommonConfig.ComponentType.SwipeInsert:
-                        break;
-                    case CommonConfig.ComponentType.SwipeInsertTap:
-                        break;
-                    case CommonConfig.ComponentType.SwipeTap:
-                        break;
-                    case CommonConfig.ComponentType.TapCard:
-                        hasTapModule = true;
-                        break;
-                }
-
+                    baseLayout.addView(magneticSwipe);
+                    magneticSwipe.setVisibility(GONE);
+                    break;
+                case CommonConfig.ComponentType.SwipeInsert:
+                    break;
+                case CommonConfig.ComponentType.SwipeInsertTap:
+                    break;
+                case CommonConfig.ComponentType.SwipeTap:
+                    break;
+                case CommonConfig.ComponentType.TapCard:
+                    hasTapModule = true;
+                    break;
             }
+
         }
+
 
         if (!isReprint) {
             if (insertICC != null) {
@@ -3142,7 +2808,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             Log.e(TAG, "PINPad is opened");
         } else {
             try {
-                int result = PINPadInterface.open();
+                int result = PinPadInterface.open();
                 if (result < 0) {
                     Log.e(TAG, "open() error! Error code = " + result);
                 } else {
@@ -3158,7 +2824,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private void close() {
         if (isOpened) {
             try {
-                int result = PINPadInterface.close();
+                int result = PinPadInterface.close();
                 if (result < 0) {
                     Log.e(TAG, "close() error! Error code = " + result);
                 } else {

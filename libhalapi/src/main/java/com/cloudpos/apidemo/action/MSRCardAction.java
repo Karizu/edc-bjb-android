@@ -104,14 +104,12 @@ public class MSRCardAction extends ConstantAction {
 
         @Override
         public void run() {
-            synchronized (MSRInterface.object) {
-                try {
-                    MSRInterface.object.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (MSRInterface.eventID == MSRInterface.CONTACTLESS_CARD_EVENT_FOUND_CARD) {
+        	try {
+				MSRInterface.waitForSwipe(20000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+            if (MSRInterface.eventID == MSRInterface.MSR_CARD_EVENT_FOUND_CARD) {
                 mCallback.sendSuccessMsg("Find a card");
                 int result = 0;
                 for (int trackNo = 0; trackNo < MSRInterface.TRACK_COUNT; trackNo++) {
@@ -131,7 +129,9 @@ public class MSRCardAction extends ConstantAction {
                 }
             } else if (MSRInterface.eventID == EVENT_ID_CANCEL) {
                 mCallback.sendSuccessMsg("Cancel notifier");
-            }
+            } else if (MSRInterface.eventID == MSRInterface.EVENT_NONE) {
+				mCallback.sendSuccessMsg("time out");
+			}
         }
     }
 

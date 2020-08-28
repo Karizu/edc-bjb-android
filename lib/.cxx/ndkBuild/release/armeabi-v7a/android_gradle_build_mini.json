@@ -1,0 +1,54 @@
+{
+  "buildFiles": [
+    "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk",
+    "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk"
+  ],
+  "cleanCommands": [
+    "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d clean"
+  ],
+  "buildTargetsCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "wizarpos_contactless_ic_card-release-armeabi-v7a": {
+      "artifactName": "wizarpos_contactless_ic_card",
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_contactless_ic_card.so",
+      "abi": "armeabi-v7a",
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_contactless_ic_card.so",
+      "runtimeFiles": []
+    },
+    "wizarpos_pinpad-release-armeabi-v7a": {
+      "artifactName": "wizarpos_pinpad",
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_pinpad.so",
+      "abi": "armeabi-v7a",
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_pinpad.so",
+      "runtimeFiles": []
+    },
+    "wizarpos_magnetic_stripe_reader-release-armeabi-v7a": {
+      "artifactName": "wizarpos_magnetic_stripe_reader",
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_magnetic_stripe_reader.so",
+      "abi": "armeabi-v7a",
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_magnetic_stripe_reader.so",
+      "runtimeFiles": []
+    },
+    "wizarpos_contact_ic_card-release-armeabi-v7a": {
+      "artifactName": "wizarpos_contact_ic_card",
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_contact_ic_card.so",
+      "abi": "armeabi-v7a",
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_contact_ic_card.so",
+      "runtimeFiles": []
+    },
+    "wizarpos_emv_kernel-release-armeabi-v7a": {
+      "artifactName": "wizarpos_emv_kernel",
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_emv_kernel.so",
+      "abi": "armeabi-v7a",
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_emv_kernel.so",
+      "runtimeFiles": []
+    },
+    "wizarpos_printer-release-armeabi-v7a": {
+      "artifactName": "wizarpos_printer",
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/jni/Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/lib APP_CPPFLAGS+\u003d /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_printer.so",
+      "abi": "armeabi-v7a",
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/lib/build/intermediates/ndkBuild/release/obj/local/armeabi-v7a/libwizarpos_printer.so",
+      "runtimeFiles": []
+    }
+  }
+}

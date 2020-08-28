@@ -32,9 +32,11 @@ static const char* g_pJNIREG_CLASS_INTERNAL =
 		"com/wizarpos/internal/jniinterface/MSRInterface";
 //	-add by pengli
 
-static jclass mcls;
-static jmethodID mmid;
+static jclass mcls = NULL;
+static jmethodID mmid = NULL;
 static JavaVM *g_jvm = NULL;
+
+pthread_mutex_t pthread_mute;
 
 typedef struct msr_hal_interface {
 	msr_open open;
@@ -83,7 +85,7 @@ int native_msr_open(JNIEnv * env, jclass obj) {
 	int nResult = ERR_HAS_OPENED; //最大软件错误码
 	env->GetJavaVM(&g_jvm);
 	if (g_pMSRInstance == NULL) {
-		void* pHandle = dlopen("libUnionpayCloudPos.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libwizarposDriver.so", RTLD_LAZY);
 		if (!pHandle) {
 			hal_sys_info("%s\n", dlerror());
 			return ERR_NORMAL;
@@ -91,7 +93,7 @@ int native_msr_open(JNIEnv * env, jclass obj) {
 		g_pMSRInstance = new MSR_HAL_INSTANCE();
 		g_pMSRInstance->pHandle = pHandle;
 
-		char *methodName;
+		const char *methodName;
 		if (NULL == (g_pMSRInstance->open = (msr_open) dlsym(pHandle, methodName = "msr_open"))
 				|| NULL == (g_pMSRInstance->close = (msr_close) dlsym(pHandle, methodName = "msr_close"))
 				|| NULL == (g_pMSRInstance->register_notifier = (msr_register_notifier) dlsym(pHandle, methodName = "msr_register_notifier"))
@@ -132,6 +134,7 @@ int native_msr_open(JNIEnv * env, jclass obj) {
 	msr_open_clean:
 		if (mcls != NULL) {
 			env->DeleteGlobalRef(mcls);
+			mcls = NULL;
 		}
 		hal_sys_info("msr_open_clean");
 		dlclose(g_pMSRInstance->pHandle);
@@ -143,9 +146,12 @@ int native_msr_open(JNIEnv * env, jclass obj) {
 
 int native_msr_close(JNIEnv * env, jclass obj) {
 	hal_sys_info("+native_msr_close()");
+	pthread_mutex_lock(&pthread_mute);
 	int nResult = ERR_NORMAL;
-	if (g_pMSRInstance == NULL)
+	if (g_pMSRInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return ERR_NOT_OPENED;
+	}
 
 	hal_sys_info("+ native_msr_unregister_notifier()");
 	nResult = g_pMSRInstance->unregister_notifier();
@@ -154,9 +160,11 @@ int native_msr_close(JNIEnv * env, jclass obj) {
 	nResult = g_pMSRInstance->close();
 
 	env->DeleteGlobalRef(mcls);
+	mcls = NULL;
 	dlclose(g_pMSRInstance->pHandle);
 	delete g_pMSRInstance;
 	g_pMSRInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	hal_sys_info("-native_msr_close(), result = %d", nResult);
 	return nResult;
 }

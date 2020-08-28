@@ -7,8 +7,16 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 
+//import com.wizarpos.jni.ContactICCardReaderInterface;
+//import com.wizarpos.jni.ContactICCardSlotInfo;
+
+//import com.wizarpos.jni.ContactICCardReaderInterface;
+
+//import  com.cloudpos.jniinterface.EMVJNIInterface;
+
 import com.wizarpos.jni.ContactICCardReaderInterface;
 import com.wizarpos.jni.ContactICCardSlotInfo;
+import com.wizarpos.jni.SmartCardEvent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import id.co.tornado.billiton.TestActivity;
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.common.FileControlInfo;
 import id.co.tornado.billiton.common.NsiccsData;
@@ -115,9 +122,6 @@ public class InsertICC extends com.rey.material.widget.EditText {
                     if (isOpen) {
                         closeDriver();
                     }
-                    if (logOutput!=null) {
-                        ((TestActivity) logOutput).hideFab();
-                    }
                 }
                 catch (Exception ex){
                     ex.printStackTrace();
@@ -194,7 +198,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
         isOpen = false;
         iccReady = false;
         try {
-            val=ContactICCardReaderInterface.close(nCardHandle);
+            val= ContactICCardReaderInterface.close(nCardHandle);
 //            writeLog("Close SCI : " + val);
             val=ContactICCardReaderInterface.terminate();
 //            writeLog("Terminate SCI : " + val);
@@ -280,7 +284,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
                     if (!listening) {
                         break;
                     }
-                    com.wizarpos.jni.SmartCardEvent event = new com.wizarpos.jni.SmartCardEvent();
+                    SmartCardEvent event = new SmartCardEvent();
                     if (isByPass){
                         event.nEventID = -1;
                         event.nSlotIndex = -1;

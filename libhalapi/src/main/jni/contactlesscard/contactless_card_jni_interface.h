@@ -22,6 +22,7 @@ jint JNICALL native_contactless_card_search_target_end(JNIEnv *, jclass);
 jint JNICALL native_contactless_card_attach_target(JNIEnv *, jclass, jbyteArray);
 jint JNICALL native_contactless_card_detach_target(JNIEnv *, jclass);
 jint JNICALL native_contactless_card_transmit(JNIEnv *, jclass, jbyteArray, jint, jbyteArray);
+jint JNICALL native_contactless_card_transmit_level3(JNIEnv *, jclass, jbyteArray, jint, jbyteArray,jint);
 jint JNICALL native_contactless_card_send_control_command(JNIEnv *, jclass, jint, jbyteArray, jint);
 jint JNICALL native_contactless_card_mc_verify_pin(JNIEnv *, jclass  , jint , jint, jbyteArray, jint);
 jint JNICALL native_contactless_card_mc_read(JNIEnv *, jclass , jint , jint, jbyteArray, jint);
@@ -34,6 +35,8 @@ jint JNICALL native_contactless_card_mc_decrement(JNIEnv *, jclass, jint , jint,
 jint JNICALL native_contactless_card_mc_transfer(JNIEnv *, jclass, jint , jint);
 jint JNICALL native_contactless_card_mc_restore(JNIEnv *, jclass, jint , jint);
 jint JNICALL native_contactless_card_final_touch_card(JNIEnv *, jclass);
+jboolean JNICALL native_contactless_card_is_opened(JNIEnv *, jclass);
+jint JNICALL native_contactless_card_get_handle(JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

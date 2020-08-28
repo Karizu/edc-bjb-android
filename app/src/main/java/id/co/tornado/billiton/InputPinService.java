@@ -11,9 +11,9 @@ import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.wizarpos.apidemo.util.StringUtility;
-import com.wizarpos.jni.PINPadInterface;
 import com.wizarpos.jni.PinPadCallbackHandler;
+import com.wizarpos.apidemo.util.StringUtility;
+import com.wizarpos.jni.PinPadInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -136,7 +136,7 @@ public class InputPinService extends Service {
                 close();
 
                 open();
-                int result = PINPadInterface.setKey(PINPadInterface.KEY_TYPE_MASTER, 0, 0, PINPadInterface.ALGORITH_3DES);
+                int result = PinPadInterface.setKey(PinPadInterface.KEY_TYPE_MASTER, 0, 0, PinPadInterface.ALGORITH_3DES);
                 Log.e(TAG, "setKey result = " + result);
                 if (result < 0) {
                     try {
@@ -149,7 +149,7 @@ public class InputPinService extends Service {
                 }
                 pinpadRetryCounter++;
             }
-            PINPadInterface.setupCallbackHandler(new PinPadCallbackHandler() {
+            PinPadInterface.setupCallbackHandler(new PinPadCallbackHandler() {
 
                 @Override
                 public void processCallback(byte[] data) {
@@ -167,6 +167,11 @@ public class InputPinService extends Service {
 
                     }
                 }
+
+                @Override
+                public void processCallback(int nCount, int nExtra) {
+
+                }
             });
             String pan = "123456789012345678";
             if (!panHolder.equals("")) {
@@ -175,8 +180,8 @@ public class InputPinService extends Service {
             if (formId.equals("7100000")||formId.equals("7300000")) {
                 pan = "9999999999999999";
             }
-            int ret = PINPadInterface.setPinLength(6,0);
-            ret = PINPadInterface.setPinLength(6,1);
+            int ret = PinPadInterface.setPinLength(6,0);
+            ret = PinPadInterface.setPinLength(6,1);
             new ReadingTask().execute(CommonConfig.MODE_CALCULATE, pan.getBytes(), pan.length(), -2, 1);
         }
     }
@@ -186,7 +191,7 @@ public class InputPinService extends Service {
             Log.e(TAG, "PINPad is opened");
         } else {
             try {
-                int result = PINPadInterface.open();
+                int result = PinPadInterface.open();
                 if (result < 0) {
                     Log.e(TAG, "open() error! Error code = " + result);
                 } else {
@@ -202,7 +207,7 @@ public class InputPinService extends Service {
     private void close() {
         if (isOpened) {
             try {
-                int result = PINPadInterface.close();
+                int result = PinPadInterface.close();
                 if (result < 0) {
                     Log.e(TAG, "close() error! Error code = " + result);
                 } else {
@@ -250,7 +255,7 @@ public class InputPinService extends Service {
             if (mode==CommonConfig.MODE_CALCULATE) {
                 byte[] pinBlock = new byte[8];
                 try {
-                    int ret = PINPadInterface.inputPIN(
+                    int ret = PinPadInterface.inputPIN(
                             (byte[]) params[1],
                             (int) params[2],
                             pinBlock,

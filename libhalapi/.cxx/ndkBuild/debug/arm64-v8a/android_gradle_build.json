@@ -1,0 +1,401 @@
+{
+  "buildFiles": [
+    "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk",
+    "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk"
+  ],
+  "cleanCommands": [
+    "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib clean"
+  ],
+  "buildTargetsCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "jni_cloudpos_terminal-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_terminal.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_terminal",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/terminal/terminal_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/terminal/terminal_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_terminal.so"
+    },
+    "jni_cloudpos_hsm-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_hsm.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_hsm",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hsm/osm_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_hsm.so"
+    },
+    "jni_cloudpos_msr-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_msr.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_msr",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/msr -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/msr/msr_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/msr -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/msr/msr_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/msr -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_msr.so"
+    },
+    "jni_cloudpos_rfcard-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_rfcard.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_rfcard",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/contactlesscard/contactless_card_event.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/contactlesscard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/contactlesscard/contactless_card_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/contactlesscard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/contactlesscard/contactless_card_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/contactlesscard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/contactlesscard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_rfcard.so"
+    },
+    "jni_cloudpos_fingerprint-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_fingerprint.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_fingerprint",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/fingerprint/fingerprint_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_fingerprint.so"
+    },
+    "jni_cloudpos_smartcard-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_smartcard.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_smartcard",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/smartcard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/smartcard/smart_card_event.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/smartcard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/smartcard/smart_card_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/smartcard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/smartcard/smart_card_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/smartcard -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_smartcard.so"
+    },
+    "jni_cloudpos_secondarydisplay-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_secondarydisplay.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_secondarydisplay",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay/customer_display_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay/customer_display_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/secondarydisplay -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_secondarydisplay.so"
+    },
+    "jni_cloudpos_pinpad-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_pinpad.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_pinpad",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad/jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad/pinpad_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad/prove/DES.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad/prove/pinpad_test.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad/prove/pinpad_utility.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/pinpad -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_pinpad.so"
+    },
+    "jni_cloudpos_battery-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_battery.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_battery",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/battery/battery_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/battery/battery_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_battery.so"
+    },
+    "jni_cloudpos_clonescreen-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_clonescreen.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_clonescreen",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/clonescreen/clone_screen_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/clonescreen/clone_screen_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_clonescreen.so"
+    },
+    "jni_cloudpos_idcard-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_idcard.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_idcard",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/identitycard/identity_card_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/identitycard/identity_card_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_idcard.so"
+    },
+    "jni_cloudpos_iso_fingerprint-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_iso_fingerprint.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_iso_fingerprint",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/iso_fingerprint/iso_fingerprint_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_iso_fingerprint.so"
+    },
+    "jni_cloudpos_led-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_led.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_led",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/led/led_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/led/led_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_led.so"
+    },
+    "jni_cloudpos_emv-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_emv.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_emv",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/emv/emv_kernal_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/emv/jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -fPIC -Wno-psabi -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_emv.so"
+    },
+    "jni_cloudpos_cashdrawer-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_cashdrawer.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_cashdrawer",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/cashdrawer/moneybox_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/cashdrawer/moneybox_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_cashdrawer.so"
+    },
+    "jni_cloudpos_serial-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_serial.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_serial",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial/serial_port_jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/serial -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_serial.so"
+    },
+    "jni_cloudpos_printer-debug-arm64-v8a": {
+      "buildCommand": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/ndk-build NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Android.mk NDK_APPLICATION_MK\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/Application.mk APP_ABI\u003darm64-v8a NDK_ALL_ABIS\u003darm64-v8a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003d/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/lib /Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_printer.so",
+      "toolchain": "toolchain-arm64-v8a",
+      "abi": "arm64-v8a",
+      "artifactName": "jni_cloudpos_printer",
+      "files": [
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/hal_sys_log.c",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/jni_register.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        },
+        {
+          "src": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni/printer/printer_jni_interface.cpp",
+          "flags": "-target aarch64-none-linux-android21 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes --sysroot /Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -D_FORTIFY_SOURCE\u003d2 -fno-exceptions -fno-rtti -fpic -O0 -UNDEBUG -fno-limit-debug-info -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -I/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -I/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/src/main/jni -DANDROID -Wno-psabi -fPIC -nostdinc++ -Wformat -Werror\u003dformat-security -fno-strict-aliasing"
+        }
+      ],
+      "output": "/Users/rizkyazhary/Documents/DevelopmentAndroid/edc-bjb/libhalapi/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a/libjni_cloudpos_printer.so"
+    }
+  },
+  "toolchains": {
+    "toolchain-arm64-v8a": {
+      "cCompilerExecutable": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+      "cppCompilerExecutable": "/Users/rizkyazhary/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

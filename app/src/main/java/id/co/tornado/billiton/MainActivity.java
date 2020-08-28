@@ -2,6 +2,7 @@ package id.co.tornado.billiton;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -80,6 +81,12 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
         ThemeManager.init(this, 1, 0, null);
         setContentView(R.layout.activity_main);
+
+        //Disable bluetooth
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.disable();
+        }
 
         showSetting = false;
         showViewer = false;

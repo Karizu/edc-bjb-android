@@ -1,0 +1,6 @@
+make: Nothing to be done for 'wizarpos_contact_ic_card'.
+make: Nothing to be done for 'wizarpos_contactless_ic_card'.
+make: Nothing to be done for 'wizarpos_emv_kernel'.
+make: Nothing to be done for 'wizarpos_magnetic_stripe_reader'.
+make: Nothing to be done for 'wizarpos_pinpad'.
+make: Nothing to be done for 'wizarpos_printer'.

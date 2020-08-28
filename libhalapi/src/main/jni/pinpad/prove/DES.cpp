@@ -2,10 +2,11 @@
  * DES.cpp
  *
  *  Created on: 2012-7-26
- *      Author: 李敏
+ *      Author: Michael
  */
 #include <stdlib.h>
 #include "DES.h"
+#include "String.h"
 
 /**********  DES 加密算法  ****************/
 
@@ -69,15 +70,17 @@ void DES_setkey(unsigned char *key)
 }
 
 /******************************************************
-DES加/解密函数
-入口参数:int Mode =0 加密 =1 解密
-         unsigned char *DataIn:输入数据 8字节
-         unsigned char *Key:   密钥 8字节
-出口参数:unsigned char *DataOut:加/解密结果 8字节
+DES encrypt/decrypt function
+parameter in:
+    int Mode 0: encrypt; 1: decrypt
+    unsigned char *DataIn: input data, 8 bytes
+    unsigned char *Key: key 8 bytes
+Parameter out:
+    unsigned char *DataOut: encrypt/decrypt result, 8 bytes
 *******************************************************/
 void DES(int Mode,unsigned char *DataIn,unsigned char *Key,unsigned char *DataOut)
 {
-    int i,j,k,r,op; /*op -1 解密, 1 加密  */
+    int i,j,k,r,op; /*op -1 decrypt, 1 encrypt  */
     unsigned char v4,v6;
 
     for(i=0; i<8; i++)   deskey[i]=Key[i];
@@ -125,11 +128,13 @@ void DES(int Mode,unsigned char *DataIn,unsigned char *Key,unsigned char *DataOu
         if (LR1[IIP_1[i]]) setbit(DataOut,i);
 }
 /*******************************************************
-3DES加/解密函数
-入口参数:int Mode =0 加密 =1 解密
-         unsigned char *DataIn:输入数据 8字节
-         unsigned char *Key:   密钥 16字节
-出口参数:unsigned char *DataOut:加/解密结果 8字节
+3DES encrypt/decrypt function
+Parameter in:
+        int Mode 0: encrypt; 1: decrypt
+        unsigned char *DataIn: Input data, 8 bytes
+        unsigned char *Key: Key, 16 bytes
+Parameter out:
+        unsigned char *DataOut: encrypt/decrypt result, 8 bytes
 ********************************************************/
 void TriDes(int Mode,unsigned char*DataIn,unsigned char*Key,unsigned char*DataOut)
 {

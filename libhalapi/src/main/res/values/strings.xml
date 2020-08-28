@@ -6,37 +6,40 @@
 
     <!-- options -->
     <!-- Main menu -->
-    <string name="WIZARPOS">IDCard,RFCard,SmartCard1,SmartCard2,MSRCard,PINPad,LED,SerialPort,CustomerDisplay,Printer,CashDrawer,FingerPrint,HDMI,Battery</string>
+    <string name="WIZARPOS">IDCard,RFCard,SmartCard,SmartCard102,SmartCard4442,PSAMCard,MSRCard,PINPad,LED,SerialPort,CustomerDisplay,Printer,CashDrawer,FingerPrint,IsoFingerPrint,HDMI,Battery</string>
     <string name="WIZARHAND_Q1">IDCardAction</string>
 
     <!-- sub menu -->
     <string name="IDCardAction">IDCardAction</string>
-    <string name="RFCardAction">Open,QueryInfo,Verify,Read,Write,Attach,Transmit,Detach,ReadMoneyValue,ReadMoneyValue2,WriteMoneyValue,Increment,Decrement,Transfer,Restore,Touch,Close</string>
-    <string name="SmartCardAction1">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
-    <string name="SmartCardAction2">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
+    <string name="RFCardAction">Open,QueryInfo,Verify,Verify_Level3,Read,Write,write_UltraLightC,Attach,Transmit,Transmit_Level3,Detach,ReadMoneyValue,ReadMoneyValue2,WriteMoneyValue,Increment,Decrement,Transfer,Restore,Touch,Close</string>
+    <string name="SmartCardAction">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
+    <string name="SmartCardAction_102">QueryMaxNumber,QueryPresence,Open,PowerOn,Verify,Write,Read,PowerOff,Close</string>
+    <string name="SmartCardAction_4442">QueryMaxNumber,QueryPresence,Open,PowerOn,Read,Write,Verify,PowerOff,Close</string>
+    <string name="PSAMCardAction">QueryMaxNumber,QueryPresence,Open,PowerOn,Transmit,PowerOff,Close</string>
     <string name="MSRCardAction">Open,Close</string>
-    <string name="PINPadAction">Open,GetSerialNumber,ShowText,ClearText,SetPINLength,UpdateUserKey,GetSerialNo,SelectKey,EncryptData,CalculateMAC,CalculatePINBlock,UpdateMasterKeyE,UpdateUserKeyE,SetAllowBypassPinFlag,Close</string>
+    <string name="PINPadAction">Open,GetSerialNumber,ShowText,ClearText,SetPINLength,UpdateUserKey,updateUserKeyCheck,updateUserKeyCheckE,UpdateMasterKey,UpdateMasterKeyE,GetSerialNo,GetMKCheckValue,GetSKCheckValue,SelectKey,EncryptData,CalculateMAC,VerifyResponseMac,SetGuiConfiguration,CalculatePINBlock,SetAllowBypassPinFlag,Close</string>
     <string name="LEDAction">Open,TurnOn,TurnOff,GetStatus,Close</string>
     <string name="SerialPortAction">Open,SetBaudrate,Read,Write,FlushIO,Close</string>
     <string name="CustomerDisplayAction">Open,BuzzerBeep,LEDPower,SetBackground,DisplayDefaultScreen,WritePicture,Close</string>
-    <string name="PrinterAction">Open,QueryStatus,Write,Close</string>
-    <string name="PrinterActionWIZARHAND_Q1">QueryVoltage,Open,QueryStatus,Write,Close</string>
+    <string name="PrinterAction">Open,QueryStatus,Write,printHTML,Close</string>
+    <string name="PrinterActionWIZARHAND_Q1">QueryVoltage,Open,QueryStatus,Write,printHTML,Close</string>
     <string name="CashDrawerAction">Open,KickOut,Close</string>
     <string name="FingerPrintAction">Open,GetFea,GetLastImage,Match,Cancel,Close</string>
+    <string name="IsoFingerPrintAction">Open,Enroll,Cancel,VerifyAgainstUserId,VerifyAll,VerifyAgainstFeature,GetUserFeature,StoreFeature,GetId,GetFeaExt,Match,GetImage,ConvertFormat,ListAllFingersStatus,DelFinger,DelAllFingers,Close</string>
 	<string name="CloneScreenAction">Open,Show,Close</string>
-	<string name="BatteryAction">Open,QueryInfo,Close</string>
+	<string name="BatteryAction">Open,QueryInfo,Close</string>	
 	
     <!-- buttons -->
-    <string name="app_name" translatable="false">APIDemoCloudPos3</string>
-    <string name="action_settings" translatable="false">Settings</string>
-    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="app_name">APIDemoCloudPos3</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
     <string name="clearlog">ClearLog</string>
     <string name="uninstall">Uninstall</string>
     <string name="back">Back</string>
     <string name="welcome">Welcome to</string>
     <string name="testEnd">Testing End!</string>
     <string name="jianjie">Test Profile</string>
-    <string name="version">Version: 0.0.1</string>
+    <string name="version">Version: %s</string>
 
     <!-- nromal displays -->
     <string name="device_not_open">device is not opened</string>
@@ -44,6 +47,9 @@
     <string name="operation_failed"> failed</string>
     <string name="operation_with_error">failed, error code = </string>
     <string name="operation_successful">successfully</string>
+
+    <!-- IsoFingerPrintAction -->
+    <string name="isofinger_press">please press fingerprint</string>
 
     <!-- IDCardAction -->
     <string name="txt_name">姓  名：</string>
@@ -58,4 +64,9 @@
     <string name="btn_begin_scanning">Begin Scanning</string>
     <string name="btn_end_scanning">End Scanning</string>
 
+    <!-- PrinterAction -->
+    <string name="print_QR_code">This is a QR Code!二维码</string>
+    <string name="printhtml_successful">printHTML successfully</string>
+    <string name="printhtml_failed">printHTML failed</string>
+    <string name="printing_wait">loading the print while,please wait</string>
 </resources>

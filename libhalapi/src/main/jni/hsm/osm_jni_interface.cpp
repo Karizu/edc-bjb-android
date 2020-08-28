@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <string.h>
 #include <jni.h>
+#include "pthread.h"
 
 #include "hal_sys_log.h"
 #include "osm_jni_interface.h"
@@ -25,6 +26,7 @@ const char* g_pJNIREG_CLASS_INTERNAL = "com/wizarpos/internal/jniinterface/HSMIn
 //com.cloudpos.jniinterface
 const char* g_pJNIREG_CLASS_CLOUDPOS = "com/cloudpos/jniinterface/HSMInterface";
 
+pthread_mutex_t pthread_mute;
 
 #define FIND_METHOD_FROM_SO(pointer, type, name) 				\
 	do															\
@@ -33,10 +35,6 @@ const char* g_pJNIREG_CLASS_CLOUDPOS = "com/cloudpos/jniinterface/HSMInterface";
 		if(g_pOSMInstance->pointer == NULL )						\
 		{														\
 			hal_sys_error("Failed to find" name);	\
-			if(name == "hsm_osm_generate_pinpad_csr" || name == "hsm_osm_enable_sensor" || name == "hsm_osm_reset" || name == "hsm_osm_save_object" || name == "hsm_osm_delete_object" ){\
-				hal_sys_error("System is not support this method : " name);\
-			}else	\
-				goto native_hsm_osm_open_clean;						\
 		}														\
 	}while(0);
 
@@ -70,10 +68,18 @@ typedef struct HSM_OSM_interface
 	HSM_OSM_GENERATE_CSR				generateCSR;
 	HSM_OSM_GENERATE_PINPAD_CSR			generatePinpadCSR;
 	HSM_OSM_ENABLE_SENSOR				enableSensor;
+
+	HSM_OSM_UPDATE_KEY					updateKey;
+	HSM_OSM_KEY_ENCRYPT					keyEncrypt;
+	HSM_OSM_KEY_DECRYPT					keyDecrypt;
+	HSM_OSM_IS_KEY_EXIST				isKeyExist;
+	HSM_OSM_GET_FLASH_ID				getFlashID;
+	HSM_OSM_UPDATE_SM4					updateSM4Key;
+	HSM_OSM_SAVE_CRL					saveCrl;
+	HSM_OSM_GET_CRL						getCrl;
+	HSM_OSM_QUERY_CRL_LABELS			queryCrlLabels;
 	void* pSoHandle;
 }HSM_OSM_INSTANCE;
-
-
 
 static HSM_OSM_INSTANCE* g_pOSMInstance = NULL;
 
@@ -83,7 +89,7 @@ int native_hsm_osm_open(JNIEnv* env, jclass obj)
 	hal_sys_info("native_hsm_osm_open() is called");
 	if(g_pOSMInstance == NULL)
 	{
-		void* pHandle = dlopen("libPKCS11Wrapper.so", RTLD_LAZY);
+		void* pHandle = dlopen("/system/lib/libPKCS11Wrapper.so", RTLD_LAZY);
 		if (!pHandle)
 		{
 			hal_sys_error("%s\n", dlerror());
@@ -96,7 +102,6 @@ int native_hsm_osm_open(JNIEnv* env, jclass obj)
 		FIND_METHOD_FROM_SO(saveUnionPayPrivateKey, HSM_OSM_SAVE_OBJECT, "hsm_osm_save_object");
 		FIND_METHOD_FROM_SO(deleteUnionPayPrivateKey, HSM_OSM_DELETE_OBJECT, "hsm_osm_delete_object");
 //		FIND_METHOD_FROM_SO(delete_all, HSM_OSM_DELETE_ALL, "hsm_osm_delete_all");
-
 //		******************************************************************************
 		FIND_METHOD_FROM_SO(isTampered, HSM_OSM_QUERY_STATUS, "hsm_osm_query_status");
 		FIND_METHOD_FROM_SO(generateKeyPair, HSM_OSM_GENERATE_KEYPAIR, "hsm_osm_generate_keypair");
@@ -126,6 +131,18 @@ int native_hsm_osm_open(JNIEnv* env, jclass obj)
 //		added by pengli for Q1
 		FIND_METHOD_FROM_SO(enableSensor, HSM_OSM_ENABLE_SENSOR, "hsm_osm_enable_sensor");
 
+//		added by pengli for CUP
+		FIND_METHOD_FROM_SO(updateKey, HSM_OSM_UPDATE_KEY, "hsm_osm_update_key");
+		FIND_METHOD_FROM_SO(keyEncrypt, HSM_OSM_KEY_ENCRYPT, "hsm_osm_key_encrypt");
+		FIND_METHOD_FROM_SO(keyDecrypt, HSM_OSM_KEY_DECRYPT, "hsm_osm_key_decrypt");
+		FIND_METHOD_FROM_SO(isKeyExist, HSM_OSM_IS_KEY_EXIST, "hsm_osm_is_key_exist");
+		FIND_METHOD_FROM_SO(getFlashID, HSM_OSM_GET_FLASH_ID, "hsm_osm_get_flash_id");
+		FIND_METHOD_FROM_SO(updateSM4Key, HSM_OSM_UPDATE_SM4, "hsm_osm_update_sm4");
+		FIND_METHOD_FROM_SO(saveCrl, HSM_OSM_SAVE_CRL, "hsm_osm_save_crl");
+		FIND_METHOD_FROM_SO(getCrl, HSM_OSM_SAVE_CRL, "hsm_osm_get_crl");
+		FIND_METHOD_FROM_SO(queryCrlLabels, HSM_OSM_QUERY_CRL_LABELS, "hsm_osm_query_crl_labels");
+//		HSM_OSM_GET_FLASH_ID
+
 		g_pOSMInstance->pSoHandle = pHandle;
 		nResult = g_pOSMInstance->open();
 		hal_sys_info("native_hsm_osm_open return value = %d\n", nResult);
@@ -149,13 +166,17 @@ int native_hsm_osm_close(JNIEnv* env, jclass obj)
 {
 	int nResult = 0;
 	hal_sys_info("native_hsm_osm_close() is called");
-	if(g_pOSMInstance == NULL)
+	pthread_mutex_lock(&pthread_mute);
+	if(g_pOSMInstance == NULL) {
+		pthread_mutex_unlock(&pthread_mute);
 		return -1;
+	}
 	nResult = g_pOSMInstance->close();
 	if(g_pOSMInstance->pSoHandle)
 		dlclose(g_pOSMInstance->pSoHandle);
 	delete g_pOSMInstance;
 	g_pOSMInstance = NULL;
+	pthread_mutex_unlock(&pthread_mute);
 	return nResult;
 }
 
@@ -426,6 +447,7 @@ int native_hsm_osm_get_random(JNIEnv* env, jclass obj,jbyteArray bufData, jint b
 	jbyte* strData = env->GetByteArrayElements(bufData, 0);
 	nResult = g_pOSMInstance->getRandom((unsigned char*)strData,bufLength);
 	env->ReleaseByteArrayElements(bufData, strData, 0);
+	hal_sys_info("leave native_hsm_osm_get_random() method, result = %d", nResult);
 	return nResult;
 }
 int native_hsm_osm_delete_cert(JNIEnv* env, jclass obj,jint certType, jstring alias){
@@ -528,7 +550,7 @@ int native_hsm_osm_generate_pinpad_csr(JNIEnv* env, jclass obj, jbyteArray bufDa
 }
 int native_hsm_osm_save_unionpay_prikey(JNIEnv* env, jclass obj, jbyteArray bufData, jint bufLength ){
 	int nResult = -1;
-	hal_sys_info("native_hsm_osm_save() is called %s\n" + bufLength);
+	hal_sys_info("native_hsm_osm_save_unionpay_prikey() is called %s\n" + bufLength);
 	HSM_OBJECT_PROPERTY CObj;
 	strcpy((char*)CObj.strLabel, "pk2048");
 	strcpy((char*)CObj.strID, "client2048");
@@ -541,7 +563,7 @@ int native_hsm_osm_save_unionpay_prikey(JNIEnv* env, jclass obj, jbyteArray bufD
 	hal_sys_info("CObj.nObjectType = %d\n", CObj.nObjectType);
 	nResult = g_pOSMInstance->saveUnionPayPrivateKey(&CObj, (unsigned char*)strData, bufLength, (HSM_OBJECT_DATA_TYPE)0);
 	env->ReleaseByteArrayElements(bufData, strData, 0);
-	hal_sys_info("native_hsm_osm_save() end result = " + nResult);
+	hal_sys_info("native_hsm_osm_save_unionpay_prikey() end result = " + nResult);
 	return nResult;
 }
 int native_hsm_osm_del_unionpay_prikey(JNIEnv* env, jclass obj){
@@ -563,9 +585,226 @@ int native_hsm_osm_del_unionpay_prikey(JNIEnv* env, jclass obj){
 	hal_sys_info("native_hsm_osm_del_unionpay_prikey() end result = " + nResult);
 	return nResult;
 }
+void throw_exception(JNIEnv* env, const char* method_name){
+	hal_sys_info("invoke throw_exception() method_name = %s" , method_name);
+	char strData[32] = {0};
+	const char* pString = "not found ";
+	hal_sys_info("invoke throw_exception() 0");
+	env->ExceptionDescribe();
+	hal_sys_info("invoke throw_exception() 1");
+	jclass newExcCls = env->FindClass("java/lang/NoSuchMethodException");
+	if(0 != newExcCls){
+		hal_sys_info("invoke throw_exception() 2");
+		sprintf(strData, "%s%s", pString, method_name);
+		env->ThrowNew(newExcCls, strData);
+		hal_sys_info("invoke throw_exception() end");
+	}
+}
 /*
  * "(P1P2PN...)Return"
  */
+int native_hsm_is_key_exist(JNIEnv* env, jclass obj, jint nKeyID, jint nKeyType ){
+	jboolean isExist = JNI_FALSE;
+	hal_sys_info("native_hsm_is_key_exist() is called %d , %d\n" , nKeyID, nKeyType );
+	if(g_pOSMInstance != NULL){
+		if(NULL == (g_pOSMInstance->isKeyExist)){
+			throw_exception(env, "isKeyExist");
+			return isExist;
+		}
+		if(NULL == (g_pOSMInstance->updateSM4Key)){
+			throw_exception(env, "updateSM4Key");
+			return isExist;
+		}
+		int nResult = g_pOSMInstance->isKeyExist(nKeyID, nKeyType);
+		hal_sys_info("native_hsm_is_key_exist() result = %d" , nResult);
+		if(nResult == 1){
+			isExist = JNI_TRUE;
+		}
+	}
+	hal_sys_info("native_hsm_is_key_exist() end isExist = %d" , isExist);
+	return isExist;
+}
+
+
+int native_hsm_key_decrypt(JNIEnv* env, jclass obj, jint nKeyID, jint nKeyType, jint nMode, jbyteArray bufData, jbyteArray pIV){
+	int nResult = -1;
+	hal_sys_info("native_hsm_key_decrypt() is called %d , %d, %d\n" , nKeyID, nKeyType, nMode);
+	if(g_pOSMInstance!= NULL){
+		if(NULL == (g_pOSMInstance->keyDecrypt)){
+			throw_exception(env, "keyDecrypt");
+			return nResult;
+		}
+		jbyte* p_bufData = env->GetByteArrayElements(bufData, 0);
+		jbyte* p_pLV = env->GetByteArrayElements(pIV, 0);
+		int nDataLength = env->GetArrayLength(bufData);
+		int nIVLength = env->GetArrayLength(bufData);
+		hal_sys_info("native_hsm_key_decrypt() nDataLength %d ,nIVLength %d\n" , nDataLength, nIVLength );
+		nResult = g_pOSMInstance->keyDecrypt(nKeyID, nKeyType, nMode, (unsigned char*)p_bufData, nDataLength, (unsigned char*)p_pLV, nIVLength);
+		env->ReleaseByteArrayElements(bufData, p_bufData, 0);
+		env->ReleaseByteArrayElements(pIV, p_pLV, 0);
+	}
+	hal_sys_info("native_hsm_key_decrypt() end result = " + nResult);
+	return nResult;
+}
+
+int native_hsm_key_encrypt(JNIEnv* env, jclass obj, jint nKeyID, jint nKeyType, jint nMode, jbyteArray bufData, jbyteArray pIV ){
+	int nResult = -1;
+	hal_sys_info("native_hsm_key_encrypt() is called %d , %d, %d\n" , nKeyID, nKeyType, nMode );
+	if(g_pOSMInstance!= NULL){
+		if(NULL == (g_pOSMInstance->keyEncrypt)){
+			throw_exception(env, "keyEncrypt");
+			return nResult;
+		}
+		jbyte* p_bufData = env->GetByteArrayElements(bufData, 0);
+		jbyte* p_pLV = env->GetByteArrayElements(pIV, 0);
+		int nDataLength = env->GetArrayLength(bufData);
+		int nIVLength = env->GetArrayLength(bufData);
+		hal_sys_info("native_hsm_key_encrypt() nDataLength %d , %d\n" , nDataLength, nIVLength );
+		nResult = g_pOSMInstance->keyEncrypt(nKeyID, nKeyType, nMode, (unsigned char*)p_bufData, nDataLength, (unsigned char*)p_pLV, nIVLength);
+		env->ReleaseByteArrayElements(bufData, p_bufData, 0);
+		env->ReleaseByteArrayElements(pIV, p_pLV, 0);
+	}
+	hal_sys_info("native_hsm_key_encrypt() end result = " + nResult);
+	return nResult;
+}
+
+
+int native_hsm_update_key(JNIEnv* env, jclass obj, jint nKeyID, jint nKeyType, jbyteArray bufData){
+	int nResult = -1;
+	hal_sys_info("native_hsm_update_key() is called %d , %d\n" , nKeyID, nKeyType );
+	if(g_pOSMInstance!= NULL){
+		if(NULL == (g_pOSMInstance->updateKey)){
+			throw_exception(env, "updateKey");
+			return nResult;
+		}
+		jbyte* p_bufData = env->GetByteArrayElements(bufData, 0);
+		int nDataLength = env->GetArrayLength(bufData);
+		hal_sys_info("native_hsm_update_key() nDataLength %d \n" , nDataLength );
+		nResult = g_pOSMInstance->updateKey(nKeyID, nKeyType,  (unsigned char*)p_bufData, nDataLength);
+		env->ReleaseByteArrayElements(bufData, p_bufData, 0);
+	}
+	hal_sys_info("native_hsm_update_key() end result = %d" , nResult);
+	return nResult;
+}
+int native_hsm_update_sm4_key(JNIEnv* env, jclass obj, jint nKeyID, jbyteArray bufData, jbyteArray sigData){
+	int nResult = -1;
+		hal_sys_info("native_hsm_update_sm4_key() is called %d , %d\n" , nKeyID );
+		if(g_pOSMInstance!= NULL){
+			if(NULL == (g_pOSMInstance->updateSM4Key)){
+				throw_exception(env, "updateSM4Key");
+				return nResult;
+			}
+			jbyte* p_bufData = env->GetByteArrayElements(bufData, 0);
+			int nDataLength = env->GetArrayLength(bufData);
+			hal_sys_info("native_hsm_update_sm4_key() nDataLength %d \n" , nDataLength );
+			jbyte* p_sigSig = env->GetByteArrayElements(sigData, 0);
+			int nSigLength = env->GetArrayLength(sigData);
+
+			nResult = g_pOSMInstance->updateSM4Key(nKeyID,  (unsigned char*)p_bufData, nDataLength, (unsigned char*)p_sigSig, nSigLength);
+
+			env->ReleaseByteArrayElements(bufData, p_bufData, 0);
+			env->ReleaseByteArrayElements(sigData, p_sigSig, 0);
+		}
+		hal_sys_info("native_hsm_update_sm4_key() end result = %d" , nResult);
+		return nResult;
+}
+jboolean native_hsm_is_opened(JNIEnv* env, jclass obj){
+	jboolean isOpened = JNI_FALSE;
+	hal_sys_info("native_hsm_is_opened() is called\n" );
+	if(g_pOSMInstance != NULL){
+		isOpened = JNI_TRUE;
+	}
+	hal_sys_info("native_hsm_is_opened() end result = %d" , isOpened);
+	return isOpened;
+}
+int native_hsm_get_flash_id(JNIEnv* env, jclass obj, jbyteArray bufData){
+	int nResult = -1;
+	hal_sys_info("native_hsm_get_flash_id() is called\n"  );
+	if(g_pOSMInstance!= NULL){
+		if(NULL == (g_pOSMInstance->getFlashID)){
+			throw_exception(env, "getFlashID");
+			return nResult;
+		}
+		jbyte* p_bufData = env->GetByteArrayElements(bufData, 0);
+		int nDataLength = env->GetArrayLength(bufData);
+		hal_sys_info("native_hsm_get_flash_id() nDataLength = %d \n" , nDataLength );
+		nResult = g_pOSMInstance->getFlashID((unsigned char*)p_bufData, nDataLength);
+		env->ReleaseByteArrayElements(bufData, p_bufData, 0);
+	}
+	hal_sys_info("native_hsm_get_flash_id() end result = %d" , nResult);
+	return nResult;
+}
+int native_hsm_save_crl(JNIEnv* env, jclass obj, jstring alias, jbyteArray pBuffer){
+	int nResult = -1;
+	hal_sys_info("native_hsm_save_crl() is called\n"  );
+	if(g_pOSMInstance!= NULL){
+		if(NULL == (g_pOSMInstance->saveCrl)){
+			throw_exception(env, "saveCrl");
+			return nResult;
+		}
+		char const *p_alias = env->GetStringUTFChars(alias, NULL);
+		jbyte* p_pBuffer = env->GetByteArrayElements(pBuffer, 0);
+		int npBufferLength = env->GetArrayLength(pBuffer);
+
+		nResult = g_pOSMInstance->saveCrl((char*)p_alias, (unsigned char*)p_pBuffer, npBufferLength, 0);
+
+		env->ReleaseStringUTFChars(alias,p_alias);
+		env->ReleaseByteArrayElements(pBuffer, p_pBuffer, 0);
+	}
+	hal_sys_info("native_hsm_save_crl() end result = %d" , nResult);
+	return nResult;
+}
+int native_hsm_get_crl(JNIEnv* env, jclass obj, jstring alias, jbyteArray pBuffer){
+	int nResult = -1;
+	hal_sys_info("native_hsm_get_crl() is called\n"  );
+	if(g_pOSMInstance!= NULL){
+		if(NULL == (g_pOSMInstance->getCrl)){
+			throw_exception(env, "getCrl");
+			return nResult;
+		}
+		char const *p_alias = env->GetStringUTFChars(alias, NULL);
+		jbyte* p_pBuffer = env->GetByteArrayElements(pBuffer, 0);
+		int npBufferLength = env->GetArrayLength(pBuffer);
+
+		nResult = g_pOSMInstance->getCrl((char*)p_alias, (unsigned char*)p_pBuffer, npBufferLength, 0);
+
+		env->ReleaseStringUTFChars(alias, p_alias);
+		env->ReleaseByteArrayElements(pBuffer, p_pBuffer, 0);
+	}
+	hal_sys_info("native_hsm_get_crl() end result = %d" , nResult);
+	return nResult;
+}
+int native_hsm_exist_method(JNIEnv* env, jclass obj, jstring sMethodName){
+	int nResult = -1;
+	const char* dname = env->GetStringUTFChars(sMethodName, 0);
+	hal_sys_info("native_hsm_exist_method(%s) is called\n", dname);
+	if(g_pOSMInstance!= NULL){
+		if(NULL != dlsym(g_pOSMInstance->pSoHandle, dname)){
+			nResult = 0;
+		};
+	}
+	hal_sys_info("native_hsm_exist_method() end result = %d" , nResult);
+	return nResult;
+}
+int native_hsm_query_crl_labels(JNIEnv* env, jclass obj, jbyteArray pLabel){
+	int nResult = -1;
+	hal_sys_info("native_hsm_query_crl_labels() is called\n"  );
+	if(g_pOSMInstance!= NULL){
+		if(NULL == (g_pOSMInstance->getCrl)){
+			throw_exception(env, "getCrl");
+			return nResult;
+		}
+		jbyte* p_Label = env->GetByteArrayElements(pLabel, 0);
+		int nLabelLength = env->GetArrayLength(pLabel);
+
+		hal_sys_info("native_hsm_get_crl() nLabelLength = %d \n", nLabelLength );
+		nResult = g_pOSMInstance->queryCrlLabels((unsigned char*)p_Label, nLabelLength);
+
+		env->ReleaseByteArrayElements(pLabel, p_Label, 0);
+	}
+	hal_sys_info("native_hsm_get_crl() end result = %d" , nResult);
+	return nResult;
+}
 
 static JNINativeMethod g_Methods[] =
 {
@@ -593,7 +832,19 @@ static JNINativeMethod g_Methods[] =
 	{"generatePINPadCSR",			"([BI)I",											(void*)native_hsm_osm_generate_pinpad_csr},
 	{"enableSensor",				"(I)I",												(void*)native_hsm_osm_enable_sensor},
 	{"saveUnionPayPrivateKey",		"([BI)I",											(void*)native_hsm_osm_save_unionpay_prikey},
-	{"deleteUnionPayPrivateKey",	"()I",												(void*)native_hsm_osm_del_unionpay_prikey}
+	{"deleteUnionPayPrivateKey",	"()I",												(void*)native_hsm_osm_del_unionpay_prikey},
+
+	{"updateKey",					"(II[B)I",											(void*)native_hsm_update_key},
+	{"keyEncrypt",					"(III[B[B)I",										(void*)native_hsm_key_encrypt},
+	{"keyDecrypt",					"(III[B[B)I",										(void*)native_hsm_key_decrypt},
+	{"isKeyExist",					"(II)Z",											(void*)native_hsm_is_key_exist},
+	{"isOpened",					"()Z",												(void*)native_hsm_is_opened},
+	{"getFlashID",					"([B)I",											(void*)native_hsm_get_flash_id},
+	{"updateSM4Key",				"(I[B[B)I",											(void*)native_hsm_update_sm4_key},
+	{"existMethod",					"(Ljava/lang/String;)I",							(void*)native_hsm_exist_method},
+	{"saveCrl",						"(Ljava/lang/String;[B)I",							(void*)native_hsm_save_crl},
+	{"getCrl",						"(Ljava/lang/String;[B)I",							(void*)native_hsm_get_crl},
+	{"queryCrlLabels",				"([B)I",											(void*)native_hsm_query_crl_labels},
 };
 
 

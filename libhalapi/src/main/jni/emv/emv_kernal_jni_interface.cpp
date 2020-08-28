@@ -10,6 +10,7 @@
 #include "emv_kernal_jni_interface.h"
 #include <android/log.h>
 #include "hal_sys_log.h"
+#include "String.h"
 
 const char* g_pJNIREG_CLASS_INTERNAL = "com/wizarpos/internal/jniinterface/EMVKernelInterface";
 
