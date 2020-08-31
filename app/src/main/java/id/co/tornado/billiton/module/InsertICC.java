@@ -471,7 +471,7 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
     private int openEmvSlot() {
         int val = 0;
         try {
-            if(appState.icInitFlag == false) {
+//            if(appState.icInitFlag == false) {
                 val = ContactICCardReaderInterface.init();
                 if (val  >= 0){
                     Log.d(tag, "ContactICCardReaderInterface.init() OK");
@@ -526,7 +526,7 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
                         }
                     }
                 }
-            }
+//            }
 
         } catch (Exception e) {
             writeLog(e.getMessage());

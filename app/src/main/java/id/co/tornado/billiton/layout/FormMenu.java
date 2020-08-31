@@ -670,6 +670,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
     }
 
+    public void closeAllDrivers(){
+        try {
+            insertICC.closeDriver();
+            insertICC = null;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
     private void showChangePinDialog(final View v) {
         try {
             final boolean isChangePIN = formId.equals("5900000") || formId.equals("MA00072") || formId.equals("MA00070");

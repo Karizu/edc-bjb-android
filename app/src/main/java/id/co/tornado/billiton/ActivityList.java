@@ -58,6 +58,8 @@ public class ActivityList extends FuncActivity {
     private String stan;
     private String json;
 
+    private View child = null;
+
     public int modulStage = CommonConfig.ICC_PROCESS_STAGE_INIT;
     public NsiccsData cardData = new NsiccsData();
 
@@ -164,7 +166,7 @@ public class ActivityList extends FuncActivity {
     }
 
     public void setMenu(JSONObject obj) {
-        View child = null;
+        child = null;
         Integer type = -1;
 
         try {
@@ -220,7 +222,7 @@ public class ActivityList extends FuncActivity {
     }
 
     public void setMenu(String id) {
-        View child = null;
+        child = null;
         Integer type = -1;
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         tellService(true);
@@ -243,6 +245,10 @@ public class ActivityList extends FuncActivity {
     @Override
     protected void onDestroy() {
         try {
+            if (child.getClass().isInstance(FormMenu.class)){
+                FormMenu fm = (FormMenu) child;
+                fm.closeAllDrivers();
+            }
             unbindService(myConnection);
             unbindService(serviceConnection);
         } catch (Exception e) {
@@ -254,6 +260,10 @@ public class ActivityList extends FuncActivity {
     @Override
     protected void onStop() {
         try {
+            if (child.getClass().isInstance(FormMenu.class)){
+                FormMenu fm = (FormMenu) child;
+                fm.closeAllDrivers();
+            }
             unbindService(myConnection);
             unbindService(serviceConnection);
         } catch (Exception e) {
@@ -267,9 +277,14 @@ public class ActivityList extends FuncActivity {
 //       Log.d("BACK", "PRESSED");
        try {
            try {
+               if (child.getClass().isInstance(FormMenu.class)){
+                   FormMenu fm = (FormMenu) child;
+                   fm.closeAllDrivers();
+               }
                unbindService(myConnection);
                unbindService(serviceConnection);
            } catch (Exception e) {
+
 
            }
            super.onBackPressed();
