@@ -33,9 +33,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':material')
-    implementation project(':libemv')
+//    implementation project(':libemv')
     implementation project(':lib205')
-    implementation project(path: ':libhalapi')
+//    implementation project(path: ':libhalapi')
 
     implementation 'com.android.support:appcompat-v7:25.3.1'
     implementation 'com.android.support:design:25.3.1'
@@ -45,4 +45,6 @@ dependencies {
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    implementation (name: 'cloudpossdkV1.5.3.005_Standard', ext: 'aar')
 }

@@ -4,6 +4,9 @@ buildscript {
     repositories {
         jcenter()
         google()
+        flatDir {
+            dirs 'libs'   // aar目录
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
@@ -20,6 +23,9 @@ allprojects {
             url 'http://dl.bintray.com/amulyakhare/maven'
         }
         google()
+        flatDir {
+            dirs 'libs'   // aar目录
+        }
     }
 }
 

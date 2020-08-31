@@ -23,6 +23,6 @@ android {
     }
 }
 dependencies {
-    implementation project(path: ':libhalapi')
+//    implementation project(path: ':libhalapi')
 }
 

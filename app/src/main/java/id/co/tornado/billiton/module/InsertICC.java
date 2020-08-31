@@ -14,8 +14,10 @@ import android.util.Log;
 
 //import  com.cloudpos.jniinterface.EMVJNIInterface;
 
+import com.cloudpos.jniinterface.IFuntionListener;
 import com.wizarpos.jni.ContactICCardReaderInterface;
 import com.wizarpos.jni.ContactICCardSlotInfo;
+import com.wizarpos.jni.PinPadInterface;
 import com.wizarpos.jni.SmartCardEvent;
 
 import org.json.JSONArray;
@@ -36,6 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import id.co.tornado.billiton.ActivityList;
+import id.co.tornado.billiton.FuncActivity;
+import id.co.tornado.billiton.MainApp;
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.common.FileControlInfo;
 import id.co.tornado.billiton.common.NsiccsData;
@@ -44,17 +49,33 @@ import id.co.tornado.billiton.handler.SingleTagParser;
 import id.co.tornado.billiton.module.listener.InputListener;
 import id.co.tornado.billiton.module.listener.LogOutput;
 
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_config_checksum;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_kernel_checksum;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_kernel_id;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_process_type;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_version_string;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_kernel_initialize;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_set_force_online;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_set_kernel_attr;
+import static com.cloudpos.jniinterface.EMVJNIInterface.emv_terminal_param_set_drl;
+import static com.cloudpos.jniinterface.EMVJNIInterface.loadEMVKernel;
+import static com.cloudpos.jniinterface.EMVJNIInterface.registerFunctionListener;
+import static id.co.tornado.billiton.FuncActivity.loadCAPK;
+
 
 /**
  * Created by indra on 24/11/15.
  */
-public class InsertICC extends com.rey.material.widget.EditText {
+public class InsertICC extends com.rey.material.widget.EditText implements IFuntionListener {
     Context context;
+    public FuncActivity funcActivity;
     public String tag = "ICC Module";
+    public static MainApp appState = null;
 
     private final int ICC_NO_EVENT = -1;
     private final int ICC_INSERT = 0;
     private final int ICC_REMOVE = 1;
+    private boolean cardListening = false;
 
     private boolean isQuit = true;
     private boolean isOpen = false;
@@ -178,6 +199,10 @@ public class InsertICC extends com.rey.material.widget.EditText {
     public InsertICC(Context context) {
         super(context);
         this.context = context;
+//        if (context instanceof FuncActivity) {
+//            funcActivity = (FuncActivity) context;
+//            appState = funcActivity.appState;
+//        }
     }
 
     public InsertICC(Context context, AttributeSet attrs) {
@@ -197,6 +222,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
         isQuit = true;
         isOpen = false;
         iccReady = false;
+        cardListening = false;
         try {
             val= ContactICCardReaderInterface.close(nCardHandle);
 //            writeLog("Close SCI : " + val);
@@ -273,15 +299,25 @@ public class InsertICC extends com.rey.material.widget.EditText {
         this.isOpen = isOpen;
     }
 
+    @Override
+    public void emvProcessCallback(byte[] bytes) {
+
+    }
+
+    @Override
+    public void cardEventOccured(int i) {
+
+    }
+
     private class CardStateListener implements Runnable {
 
         @Override
         public void run() {
-            boolean listening = true;
+            cardListening = true;
             int counter = 0;
             try {
-                while (listening) {
-                    if (!listening) {
+                while (cardListening) {
+                    if (!cardListening) {
                         break;
                     }
                     SmartCardEvent event = new SmartCardEvent();
@@ -307,13 +343,13 @@ public class InsertICC extends com.rey.material.widget.EditText {
                     switch (event.nEventID) {
                         case ICC_INSERT:
                             insertingCard = true;
-                            listening = false;
+                            cardListening = false;
                             cardPresent = true;
                             eventICCHandler.sendMessage(msg);
                             break;
                         case ICC_REMOVE:
                             if (!isByPass){
-                                listening = false;
+                                cardListening = false;
                                 cardPresent = false;
                                 eventICCHandler.sendMessage(msg);
                             }
@@ -350,6 +386,7 @@ public class InsertICC extends com.rey.material.widget.EditText {
         @Override
         public void run() {
             if (cardPresent) {
+                removeCardFirst = false;
                 try {
                     switch (procStage) {
                         case CommonConfig.ICC_PROCESS_STAGE_INIT:
@@ -434,24 +471,60 @@ public class InsertICC extends com.rey.material.widget.EditText {
     private int openEmvSlot() {
         int val = 0;
         try {
-            val = ContactICCardReaderInterface.init();
-//            writeLog("SCI Init : " + val);
-            val = ContactICCardReaderInterface.open(CHIP_SLOT_INDEX);
-//            writeLog("SCI Open : " + val);
-            nCardHandle = val;
-            isOpen = true;
+            if(appState.icInitFlag == false) {
+                val = ContactICCardReaderInterface.init();
+                if (val  >= 0){
+                    Log.d(tag, "ContactICCardReaderInterface.init() OK");
+//                    appState.icInitFlag = true;
+//                    appState.initData();
+//
+//                    appState.idleFlag = true;
+//                    if(appState.emvParamLoadFlag == false)
+//                    {
+//                        loadEMVParam();
+//                    }
+////                    else{
+////                        if(appState.emvParamChanged == true)
+////                        {
+////                            funcActivity.setEMVTermInfo();
+////                        }
+////                    }
+//
+//                    byte[] version = new byte[32];
+//                    byte[] kernelChecksum = new byte[8];
+//                    byte[] configChecksum = new byte[4];
+//
+//                    int len = emv_get_version_string(version, version.length);
+//
+//                    funcActivity.mHandler.setFunActivity(funcActivity);
+//
+//                    if(appState.icInitFlag != true)
+//                    {
+//                        appState.idleFlag = false;
+//                        return -1;
+//                    }
+//                    funcActivity.waitContactCard();
 
-            if (val >= 0) {
-                Thread.sleep(100);
-                int powerOn = iccPowerOn();
-                if (powerOn > 0) {
-                    cardPresent = true;
-                    writeLog("Card already present");
-                    Message msg = new Message();
-                    msg.what = ICC_INSERT;
-                    eventICCHandler.sendMessage(msg);
-                } else {
-                    writeLog("Silahkan masukkan kartu debit");
+
+                    val = ContactICCardReaderInterface.open(CHIP_SLOT_INDEX);
+
+                    nCardHandle = val;
+                    isOpen = true;
+
+                    if (val >= 0) {
+                        Thread.sleep(100);
+                        int powerOn = iccPowerOn();
+                        if (powerOn > 0) {
+                            cardPresent = true;
+                            writeLog("Card already present");
+//                            removeCardFirst = true;
+                            Message msg = new Message();
+                            msg.what = ICC_INSERT;
+                            eventICCHandler.sendMessage(msg);
+                        } else {
+                            writeLog("Silahkan masukkan kartu debit");
+                        }
+                    }
                 }
             }
 
@@ -461,6 +534,44 @@ public class InsertICC extends com.rey.material.widget.EditText {
         }
 
         return val;
+    }
+
+    public void loadEMVParam()
+    {
+        //lib path
+        String tmpEmvLibDir = "";
+        tmpEmvLibDir = appState.getDir("", 0).getAbsolutePath();
+        tmpEmvLibDir = tmpEmvLibDir.substring(0, tmpEmvLibDir.lastIndexOf('/')) + "/lib/libEMVKernal.so";
+
+        if (loadEMVKernel(tmpEmvLibDir.getBytes(),tmpEmvLibDir.getBytes().length) == 0)
+        {
+            registerFunctionListener(this);
+            emv_kernel_initialize();
+            emv_set_kernel_attr(new byte[]{0x20}, 1);
+            emv_terminal_param_set_drl(new byte[]{0x00}, 1);
+            if(loadCAPK() == -2)
+            {
+                funcActivity.capkChecksumErrorDialog(context);
+            }
+            funcActivity.loadAID();
+            funcActivity.loadExceptionFile();
+            funcActivity.loadRevokedCAPK();
+            funcActivity.setEMVTermInfo();
+
+            emv_set_force_online(appState.terminalConfig.getforceOnline());
+            Log.i("test", "kernel id:"+emv_get_kernel_id());
+            Log.i("test", "process type:"+emv_get_process_type());
+
+            appState.emvParamLoadFlag = true;
+        }
+        //update WK
+        // masterKey is new byte[]{'1','1','1','1','1','1','1','1' }
+        //Q1上不支持单倍长PINKEY
+        byte[] defaultPINKey = new byte[]{'2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2'};
+        if (PinPadInterface.open() >= 0) {
+            PinPadInterface.updateUserKey(appState.terminalConfig.getKeyIndex(), 0, defaultPINKey, defaultPINKey.length);
+            PinPadInterface.close();
+        }
     }
 
     public void readStage1() {
@@ -689,9 +800,18 @@ public class InsertICC extends com.rey.material.widget.EditText {
 //                    listener.onStateChanged("Melakukan transaksi CHIP\nHarap jangan lepaskan kartu sampai transaksi selesai",1);
 //                }
                     if (inputListeners.size()>0) {
-                        InputListener inputListener = inputListeners.get(0);
-                        inputListener.onStateChanged("Melakukan transaksi CHIP\nHarap jangan lepaskan kartu sampai transaksi selesai",1);
+                        if (removeCardFirst){
+                            removeCardFirst = false;
+                            InputListener inputListener = inputListeners.get(0);
+                            inputListener.onStateChanged("Mohon untuk melepaskan kartu terlebih dahulu",999);
+                        }
+                        else{
+                            InputListener inputListener = inputListeners.get(0);
+                            inputListener.onStateChanged("Melakukan transaksi CHIP\nHarap jangan lepaskan kartu sampai transaksi selesai",1);
+                        }
                     }
+
+
                 }
             }
             catch (Exception ex){

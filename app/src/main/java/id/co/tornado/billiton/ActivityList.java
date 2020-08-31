@@ -33,7 +33,7 @@ import id.co.tornado.billiton.handler.JsonCompHandler;
 import id.co.tornado.billiton.layout.FormMenu;
 import id.co.tornado.billiton.layout.ListMenu;
 
-public class ActivityList extends Activity {
+public class ActivityList extends FuncActivity {
 
     private LinearLayout linearLayout;
     private String id = "";

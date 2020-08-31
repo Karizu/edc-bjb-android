@@ -2,13 +2,11 @@ package id.co.tornado.billiton;
 
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rey.material.app.ThemeManager;
 
@@ -37,7 +34,7 @@ import id.co.tornado.billiton.handler.MenuListResolver;
 import id.co.tornado.billiton.layout.FormMenu;
 import id.co.tornado.billiton.layout.ListMenu;
 
-public class MainActivity extends Activity implements KeyEvent.Callback {
+public class MainActivity extends FuncActivity implements KeyEvent.Callback {
     //    private MagneticSwipe swipe = new MagneticSwipe();
     private LinearLayout linearLayout;
     private String id = "";
@@ -83,38 +80,64 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         setContentView(R.layout.activity_main);
 
         //Disable bluetooth
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.disable();
-        }
+//        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (mBluetoothAdapter.isEnabled()) {
+//            mBluetoothAdapter.disable();
+//        }
 
         showSetting = false;
         showViewer = false;
         currentScreen = new JSONObject();
         preferences = this.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-        android.widget.TextView txTid = (android.widget.TextView) findViewById(R.id.textViewTID);
-        android.widget.TextView txMid = (android.widget.TextView ) findViewById(R.id.textViewMID);
-        android.widget.TextView txMName = (android.widget.TextView ) findViewById(R.id.textViewMName);
-        android.widget.TextView txM2Name = (android.widget.TextView) findViewById(R.id.textView4);
-        txFcopy = (android.widget.TextView ) findViewById(R.id.textViewCopy);
-        android.widget.TextView txFsn = (android.widget.TextView ) findViewById(R.id.textViewSN);
-        android.widget.TextView txFsv = (android.widget.TextView ) findViewById(R.id.textViewSV);
-        txTid.setText("TID : " + preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID));
-        txMid.setText("MID : " + preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID));
-        txMName.setText(preferences.getString("merchant_address1", CommonConfig.INIT_MERCHANT_ADDRESS1));
-        txM2Name.setText(preferences.getString("merchant_name", CommonConfig.INIT_MERCHANT_NAME));
 
-        SimpleDateFormat ydf = new SimpleDateFormat("yyyy");
-        String year = ydf.format(new Date());
-        PackageInfo pInfo = null;
+//        Thread thread = new Thread(new VersionChecker(version));
+//        thread.start();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TextView txTid = (TextView) findViewById(R.id.textViewTID);
+        TextView txMid = (TextView ) findViewById(R.id.textViewMID);
+        TextView txMName = (TextView ) findViewById(R.id.textViewMName);
+        TextView txM2Name = (TextView) findViewById(R.id.textView4);
+        txFcopy = (TextView ) findViewById(R.id.textViewCopy);
+        TextView txFsn = (TextView ) findViewById(R.id.textViewSN);
+        TextView txFsv = (TextView ) findViewById(R.id.textViewSV);
+
+        if (txTid == null){
+            Log.d("ERROR", "LAYOUT NOT INFLATED");
+        }
+
         try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
+            txTid.setText("TID : " + preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID));
+            txMid.setText("MID : " + preferences.getString("merchant_id", CommonConfig.DEV_MERCHANT_ID));
+            txMName.setText(preferences.getString("merchant_address1", CommonConfig.INIT_MERCHANT_ADDRESS1));
+            txM2Name.setText(preferences.getString("merchant_name", CommonConfig.INIT_MERCHANT_NAME));
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
-        String version = pInfo.versionName;
 
-        txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "140820");
+        SimpleDateFormat ydf = new SimpleDateFormat("yyyy");
+        Date now = new Date();
+        if (now != null){
+            String year = ydf.format(now);
+            PackageInfo pInfo = null;
+            try {
+                pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                String version = pInfo.versionName;
+
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "140820");
+            } catch (Exception e) {
+                e.printStackTrace();
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "140820");
+            }
+        }
+        else{
+            txFcopy.setText("\u00a9 BANK BJB, v" + "0.5"+ ", " + "140820");
+        }
+
         String serialNum = Build.SERIAL;
         txFsn.setText(serialNum);
         txFsv.setText(preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
@@ -215,131 +238,129 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
             return;
         }
 
-          try {
+        try {
 
             //GET SCREEN FROM INTENT SELADA
-              if (formId != null){
-                  if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI) || formId.equals(MENU_REPORT_TRANSAKSI)
-                          || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO)) {
-                      Log.i("Set Menu", formId);
-                      if (!isKill){
-                          currentScreen = JsonCompHandler
-                                  .readJsonFromIntent(formId, this);
-                          Log.d("JSON", currentScreen.toString());
-                          setMenu(currentScreen);
-                      }
-                  }
-                  else if (formId.equals(PURCHASE_SELADA)){
-                      JSONObject jsonObject = new JSONObject("{\n" +
-                              "    \"action_url\": \"E82560\",\n" +
-                              "    \"ver\": \"1\",\n" +
-                              "    \"print\": null,\n" +
-                              "    \"comps\": {\n" +
-                              "      \"comp\": [\n" +
-                              "        {\n" +
-                              "          \"visible\": false,\n" +
-                              "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
-                              "          \"comp_type\": \"9\",\n" +
-                              "          \"comp_id\": \"I0209\",\n" +
-                              "          \"seq\": 0\n" +
-                              "        },\n" +
-                              "        {\n" +
-                              "          \"visible\": true,\n" +
-                              "          \"comp_lbl\": \"PIN\",\n" +
-                              "          \"comp_type\": \"3\",\n" +
-                              "          \"comp_id\": \"I0001\",\n" +
-                              "          \"comp_opt\": \"102006006\",\n" +
-                              "          \"seq\": 1\n" +
-                              "        },\n" +
-                              "        {\n" +
-                              "          \"visible\": true,\n" +
-                              "          \"comp_lbl\": \"Proses\",\n" +
-                              "          \"comp_type\": \"7\",\n" +
-                              "          \"comp_id\": \"G0001\",\n" +
-                              "          \"seq\": 2\n" +
-                              "        }\n" +
-                              "      ]\n" +
-                              "    },\n" +
-                              "    \"static_menu\": [\n" +
-                              "      \"Purchase\"\n" +
-                              "    ],\n" +
-                              "    \"print_text\": \"IPOP\",\n" +
-                              "    \"id\": \"MB82560\",\n" +
-                              "    \"type\": \"1\",\n" +
-                              "    \"title\": \"Purchase\"\n" +
-                              "  }");
-                      setMenu(jsonObject);
-                  }
-                  else if (formId.equals(PURCHASE_BJB)){
-                      JSONObject jsonObject = new JSONObject("{\n" +
-                              "    \"action_url\": \"E82510\",\n" +
-                              "    \"ver\": \"1\",\n" +
-                              "    \"print\": null,\n" +
-                              "    \"comps\": {\n" +
-                              "      \"comp\": [\n" +
-                              "        {\n" +
-                              "          \"visible\": false,\n" +
-                              "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
-                              "          \"comp_type\": \"9\",\n" +
-                              "          \"comp_id\": \"I0209\",\n" +
-                              "          \"seq\": 0\n" +
-                              "        },\n" +
-                              "        {\n" +
-                              "          \"visible\": true,\n" +
-                              "          \"comp_lbl\": \"PIN\",\n" +
-                              "          \"comp_type\": \"3\",\n" +
-                              "          \"comp_id\": \"I0001\",\n" +
-                              "          \"comp_opt\": \"102006006\",\n" +
-                              "          \"seq\": 1\n" +
-                              "        },\n" +
-                              "        {\n" +
-                              "          \"visible\": true,\n" +
-                              "          \"comp_lbl\": \"Proses\",\n" +
-                              "          \"comp_type\": \"7\",\n" +
-                              "          \"comp_id\": \"G0001\",\n" +
-                              "          \"seq\": 2\n" +
-                              "        }\n" +
-                              "      ]\n" +
-                              "    },\n" +
-                              "    \"static_menu\": [\n" +
-                              "      \"Purchase\"\n" +
-                              "    ],\n" +
-                              "    \"print_text\": \"IPOP\",\n" +
-                              "    \"id\": \"MB82510\",\n" +
-                              "    \"type\": \"1\",\n" +
-                              "    \"title\": \"Purchase\"\n" +
-                              "  }");
-                      setMenu(jsonObject);
-                  }
-                  else if (formId.equals("ONCLICK")) {
-                      // SKIP
-                  }
-                  else {
-                      Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
+            if (formId != null){
+                if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI) || formId.equals(MENU_REPORT_TRANSAKSI)
+                        || formId.equals(MENU_MINI_BANKING) || formId.equals(MENU_INFO_SALDO)) {
+                    Log.i("Set Menu", formId);
+                    if (!isKill){
+                        currentScreen = JsonCompHandler
+                                .readJsonFromIntent(formId, this);
+                        Log.d("JSON", currentScreen.toString());
+                        setMenu(currentScreen);
+                    }
+                }
+                else if (formId.equals(PURCHASE_SELADA)){
+                    JSONObject jsonObject = new JSONObject("{\n" +
+                            "    \"action_url\": \"E82560\",\n" +
+                            "    \"ver\": \"1\",\n" +
+                            "    \"print\": null,\n" +
+                            "    \"comps\": {\n" +
+                            "      \"comp\": [\n" +
+                            "        {\n" +
+                            "          \"visible\": false,\n" +
+                            "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
+                            "          \"comp_type\": \"9\",\n" +
+                            "          \"comp_id\": \"I0209\",\n" +
+                            "          \"seq\": 0\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "          \"visible\": true,\n" +
+                            "          \"comp_lbl\": \"PIN\",\n" +
+                            "          \"comp_type\": \"3\",\n" +
+                            "          \"comp_id\": \"I0001\",\n" +
+                            "          \"comp_opt\": \"102006006\",\n" +
+                            "          \"seq\": 1\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "          \"visible\": true,\n" +
+                            "          \"comp_lbl\": \"Proses\",\n" +
+                            "          \"comp_type\": \"7\",\n" +
+                            "          \"comp_id\": \"G0001\",\n" +
+                            "          \"seq\": 2\n" +
+                            "        }\n" +
+                            "      ]\n" +
+                            "    },\n" +
+                            "    \"static_menu\": [\n" +
+                            "      \"Purchase\"\n" +
+                            "    ],\n" +
+                            "    \"print_text\": \"IPOP\",\n" +
+                            "    \"id\": \"MB82560\",\n" +
+                            "    \"type\": \"1\",\n" +
+                            "    \"title\": \"Purchase\"\n" +
+                            "  }");
+                    setMenu(jsonObject);
+                }
+                else if (formId.equals(PURCHASE_BJB)){
+                    JSONObject jsonObject = new JSONObject("{\n" +
+                            "    \"action_url\": \"E82510\",\n" +
+                            "    \"ver\": \"1\",\n" +
+                            "    \"print\": null,\n" +
+                            "    \"comps\": {\n" +
+                            "      \"comp\": [\n" +
+                            "        {\n" +
+                            "          \"visible\": false,\n" +
+                            "          \"comp_lbl\": \"ICC Insert Tx\",\n" +
+                            "          \"comp_type\": \"9\",\n" +
+                            "          \"comp_id\": \"I0209\",\n" +
+                            "          \"seq\": 0\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "          \"visible\": true,\n" +
+                            "          \"comp_lbl\": \"PIN\",\n" +
+                            "          \"comp_type\": \"3\",\n" +
+                            "          \"comp_id\": \"I0001\",\n" +
+                            "          \"comp_opt\": \"102006006\",\n" +
+                            "          \"seq\": 1\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "          \"visible\": true,\n" +
+                            "          \"comp_lbl\": \"Proses\",\n" +
+                            "          \"comp_type\": \"7\",\n" +
+                            "          \"comp_id\": \"G0001\",\n" +
+                            "          \"seq\": 2\n" +
+                            "        }\n" +
+                            "      ]\n" +
+                            "    },\n" +
+                            "    \"static_menu\": [\n" +
+                            "      \"Purchase\"\n" +
+                            "    ],\n" +
+                            "    \"print_text\": \"IPOP\",\n" +
+                            "    \"id\": \"MB82510\",\n" +
+                            "    \"type\": \"1\",\n" +
+                            "    \"title\": \"Purchase\"\n" +
+                            "  }");
+                    setMenu(jsonObject);
+                }
+                else if (formId.equals("ONCLICK")) {
+                    // SKIP
+                }
+                else {
+                    Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
 //              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
-                      currentScreen = JsonCompHandler
-                              .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
+                    currentScreen = JsonCompHandler
+                            .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
 //                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
-                      ;
-                      setMenu(currentScreen);
-                  }
-              }
-              else {
-                  Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
+                    ;
+                    setMenu(currentScreen);
+                }
+            }
+            else {
+                Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
 //              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
-                  currentScreen = JsonCompHandler
-                          .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
+                currentScreen = JsonCompHandler
+                        .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
 //                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
-                  ;
-                  setMenu(currentScreen);
-              }
+                ;
+                setMenu(currentScreen);
+            }
         } catch (IOException e) {
-              e.printStackTrace();
+            e.printStackTrace();
         } catch (JSONException e) {
-              e.printStackTrace();
+            e.printStackTrace();
         }
-//        Thread thread = new Thread(new VersionChecker(version));
-//        thread.start();
     }
 
     @Override

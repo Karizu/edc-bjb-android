@@ -93,6 +93,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 import id.co.tornado.billiton.ActivityList;
+import id.co.tornado.billiton.FuncActivity;
 import id.co.tornado.billiton.MainActivity;
 import id.co.tornado.billiton.R;
 import id.co.tornado.billiton.common.CommonConfig;
@@ -1355,6 +1356,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         }
                         if (v instanceof InsertICC) {
                             InsertICC insertICC = (InsertICC) v;
+                            insertICC.funcActivity = (FuncActivity) context;
+                            insertICC.appState = ((FuncActivity) context).appState;
                             String track2 = insertICC.getText().toString();
 
                             if (actionUrl.equals("M0008B") || actionUrl.equals("M0010C")
@@ -2024,6 +2027,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 }
                             }
                             insertICC = (InsertICC) li.inflate(R.layout.icc_insert, null);
+                            insertICC.funcActivity = (FuncActivity) context;
+                            insertICC.appState = ((FuncActivity) context).appState;
                             insertICC.addInputListener(this);
                         }
                         insertICC.setTag(R.string.seq_holder, seq);
@@ -2143,10 +2148,6 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             }
         }
 
-        if (!txVerification) {
-            preparePrint();
-        }
-
         boolean hasChip = false;
         if (comp != null) {
             JSONObject comps = comp.has("comps") ? comp.getJSONObject("comps") : null;
@@ -2168,7 +2169,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
 
         if (hasChip) {
-            if (formId.equals("MA00050") || formId.equals("POC0020")
+            if (formId.equals("MA00050") || formId.equals("POC0020") || formId.equals("POC0030") || formId.equals("MA00040")
                     || formId.equals("MA00070") || formId.equals("MA00065")
                     || formId.equals("MA00055") || formId.equals("MA00035")
                     || formId.equals("MA00075") || formId.equals("MA00095")
@@ -2179,13 +2180,21 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("EPG0710") || formId.equals("EPG0810")
                     || formId.equals("EPG0820") || formId.equals("EPG0910")
 //                    || formId.equals(MENU_PUCHASE)
-                    ) {
+            ) {
                 //Skip icc
-            } else {
-                insertICC.isByPass = true;
-                showIccDialog(null);
+                insertICC.removeCardFirst = true;
             }
+//            else {
+//                insertICC.isByPass = true;
+////                showIccDialog(null);
+//            }
         }
+
+        if (!txVerification) {
+            preparePrint();
+        }
+
+
     }
 
     private void preparePrint() {
@@ -2843,27 +2852,27 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     public void onInputCompleted(View v, String result, String additional, NsiccsData cardData) {
         boolean usingPopup = false;
 
-        if (insertICC != null && insertICC.removeCardFirst) {
-            focusHasSets = true;
-
-            insertICC.removeCardFirst = false;
-            cancelFocus();
-            alert.dismiss();
-            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-            alertDialog.setTitle("EDC Bank BJB");
-
-            alertDialog.setMessage("Silahkan untuk melepas kartu terlebih dahulu");
-
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            context.onBackPressed();
-                            context.finish();
-                        }
-                    });
-            alertDialog.show();
-        }
+//        if (insertICC != null && insertICC.removeCardFirst) {
+//            focusHasSets = true;
+//
+//            insertICC.removeCardFirst = false;
+//            cancelFocus();
+//            alert.dismiss();
+//            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+//            alertDialog.setTitle("EDC Bank BJB");
+//
+//            alertDialog.setMessage("Silahkan untuk melepas kartu terlebih dahulu");
+//
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            context.onBackPressed();
+//                            context.finish();
+//                        }
+//                    });
+//            alertDialog.show();
+//        }
 
         if (insertICC != null && insertICC.isByPass) {
 
@@ -4102,6 +4111,26 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         break;
                     case 79:
                         insertICC.setText(p1);
+                        break;
+                    case 999:
+//                        insertICC.setText(p1);
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                        alertDialog.setTitle("Pemberitahuan");
+                        alertDialog.setMessage(p1);
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        context.onBackPressed();
+                                        context.finish();
+                                    }
+                                });
+                        Log.v("ALERT", "Remove card first, closing driver");
+                        insertICC.closeDriver();
+                        alert.dismiss();
+                        alertDialog.show();
+//                        context.onBackPressed();
                         break;
                     case 99:
                         refreshICCProcessDialog(p1, true);

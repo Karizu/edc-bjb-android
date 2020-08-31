@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.cloudpos.apidemo.common.Common;
 
 import org.apache.http.Header;
 import org.apache.http.HttpException;

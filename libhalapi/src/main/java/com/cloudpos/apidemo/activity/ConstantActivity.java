@@ -1,6 +1,5 @@
 package com.cloudpos.apidemo.activity;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +64,7 @@ public abstract class ConstantActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main_libhalapi);
 		initView();
 
 		

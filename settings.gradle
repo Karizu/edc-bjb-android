@@ -1,6 +1,7 @@
-include ':app',  ':material' , ':libemv'
+include ':app' ,  ':material'
+//, ':libemv'
 //, ':lib'
 project(':material').projectDir = new File('lib-material')
 include ':lib205'
 
-include ':libhalapi'
+//include ':libhalapi'
