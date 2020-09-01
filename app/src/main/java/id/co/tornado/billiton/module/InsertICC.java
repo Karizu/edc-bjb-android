@@ -17,7 +17,6 @@ import android.util.Log;
 import com.cloudpos.jniinterface.IFuntionListener;
 import com.wizarpos.jni.ContactICCardReaderInterface;
 import com.wizarpos.jni.ContactICCardSlotInfo;
-import com.wizarpos.jni.PinPadInterface;
 import com.wizarpos.jni.SmartCardEvent;
 
 import org.json.JSONArray;
@@ -38,9 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import id.co.tornado.billiton.ActivityList;
-import id.co.tornado.billiton.FuncActivity;
-import id.co.tornado.billiton.MainApp;
+//import id.co.tornado.billiton.MainApp;
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.common.FileControlInfo;
 import id.co.tornado.billiton.common.NsiccsData;
@@ -49,28 +46,15 @@ import id.co.tornado.billiton.handler.SingleTagParser;
 import id.co.tornado.billiton.module.listener.InputListener;
 import id.co.tornado.billiton.module.listener.LogOutput;
 
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_config_checksum;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_kernel_checksum;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_kernel_id;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_process_type;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_get_version_string;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_kernel_initialize;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_set_force_online;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_set_kernel_attr;
-import static com.cloudpos.jniinterface.EMVJNIInterface.emv_terminal_param_set_drl;
-import static com.cloudpos.jniinterface.EMVJNIInterface.loadEMVKernel;
-import static com.cloudpos.jniinterface.EMVJNIInterface.registerFunctionListener;
-import static id.co.tornado.billiton.FuncActivity.loadCAPK;
-
 
 /**
  * Created by indra on 24/11/15.
  */
 public class InsertICC extends com.rey.material.widget.EditText implements IFuntionListener {
     Context context;
-    public FuncActivity funcActivity;
+
     public String tag = "ICC Module";
-    public static MainApp appState = null;
+//    public static MainApp appState = null;
 
     private final int ICC_NO_EVENT = -1;
     private final int ICC_INSERT = 0;
@@ -96,6 +80,8 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
     private int procStage;
     public boolean isByPass = false;
     public String formId;
+
+//    private Thread t1, t2;
 
     private FileControlInfo fci;
     private NsiccsData nsiccsData;
@@ -181,6 +167,15 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
                         }
                         else if (isOpen) {
                             isQuit = false;
+//                            try {
+//                                if (t1 != null){
+//                                    t1.interrupt();
+//                                    t1 = null;
+//                                }
+//                            }
+//                            catch (Exception e){
+//                                e.printStackTrace();
+//                            }
                             Thread t1 = new Thread(new GetData());
                             t1.start();
                         }
@@ -223,6 +218,24 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
         isOpen = false;
         iccReady = false;
         cardListening = false;
+//            try {
+//                if (t2 != null){
+//                    t2.interrupt();
+//                    t2 = null;
+//                }
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
+//            try {
+//                if (t1 != null){
+//                    t1.interrupt();
+//                    t1 = null;
+//                }
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
         try {
             val= ContactICCardReaderInterface.close(nCardHandle);
 //            writeLog("Close SCI : " + val);
@@ -283,6 +296,15 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
         try {
             procStage = stage;
             nsiccsData = dataHolder;
+//            try {
+//                if (t1 != null){
+//                    t1.interrupt();
+//                    t1 = null;
+//                }
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
             Thread t1 = new Thread(new GetData());
             t1.start();
         }
@@ -536,43 +558,43 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
         return val;
     }
 
-    public void loadEMVParam()
-    {
-        //lib path
-        String tmpEmvLibDir = "";
-        tmpEmvLibDir = appState.getDir("", 0).getAbsolutePath();
-        tmpEmvLibDir = tmpEmvLibDir.substring(0, tmpEmvLibDir.lastIndexOf('/')) + "/lib/libEMVKernal.so";
-
-        if (loadEMVKernel(tmpEmvLibDir.getBytes(),tmpEmvLibDir.getBytes().length) == 0)
-        {
-            registerFunctionListener(this);
-            emv_kernel_initialize();
-            emv_set_kernel_attr(new byte[]{0x20}, 1);
-            emv_terminal_param_set_drl(new byte[]{0x00}, 1);
-            if(loadCAPK() == -2)
-            {
-                funcActivity.capkChecksumErrorDialog(context);
-            }
-            funcActivity.loadAID();
-            funcActivity.loadExceptionFile();
-            funcActivity.loadRevokedCAPK();
-            funcActivity.setEMVTermInfo();
-
-            emv_set_force_online(appState.terminalConfig.getforceOnline());
-            Log.i("test", "kernel id:"+emv_get_kernel_id());
-            Log.i("test", "process type:"+emv_get_process_type());
-
-            appState.emvParamLoadFlag = true;
-        }
-        //update WK
-        // masterKey is new byte[]{'1','1','1','1','1','1','1','1' }
-        //Q1上不支持单倍长PINKEY
-        byte[] defaultPINKey = new byte[]{'2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2'};
-        if (PinPadInterface.open() >= 0) {
-            PinPadInterface.updateUserKey(appState.terminalConfig.getKeyIndex(), 0, defaultPINKey, defaultPINKey.length);
-            PinPadInterface.close();
-        }
-    }
+//    public void loadEMVParam()
+//    {
+//        //lib path
+//        String tmpEmvLibDir = "";
+//        tmpEmvLibDir = appState.getDir("", 0).getAbsolutePath();
+//        tmpEmvLibDir = tmpEmvLibDir.substring(0, tmpEmvLibDir.lastIndexOf('/')) + "/lib/libEMVKernal.so";
+//
+//        if (loadEMVKernel(tmpEmvLibDir.getBytes(),tmpEmvLibDir.getBytes().length) == 0)
+//        {
+//            registerFunctionListener(this);
+//            emv_kernel_initialize();
+//            emv_set_kernel_attr(new byte[]{0x20}, 1);
+//            emv_terminal_param_set_drl(new byte[]{0x00}, 1);
+//            if(loadCAPK() == -2)
+//            {
+//                funcActivity.capkChecksumErrorDialog(context);
+//            }
+//            funcActivity.loadAID();
+//            funcActivity.loadExceptionFile();
+//            funcActivity.loadRevokedCAPK();
+//            funcActivity.setEMVTermInfo();
+//
+//            emv_set_force_online(appState.terminalConfig.getforceOnline());
+//            Log.i("test", "kernel id:"+emv_get_kernel_id());
+//            Log.i("test", "process type:"+emv_get_process_type());
+//
+//            appState.emvParamLoadFlag = true;
+//        }
+//        //update WK
+//        // masterKey is new byte[]{'1','1','1','1','1','1','1','1' }
+//        //Q1上不支持单倍长PINKEY
+//        byte[] defaultPINKey = new byte[]{'2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2'};
+//        if (PinPadInterface.open() >= 0) {
+//            PinPadInterface.updateUserKey(appState.terminalConfig.getKeyIndex(), 0, defaultPINKey, defaultPINKey.length);
+//            PinPadInterface.close();
+//        }
+//    }
 
     public void readStage1() {
         int val = 0;
@@ -1026,8 +1048,17 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
 
                 } else {
 //            writeLog("ICC DRIVER", "Open Driver succeed!");
-                    Thread t1 = new Thread(new CardStateListener());
-                    t1.start();
+//                    try {
+//                        if (t2 != null) {
+//                            t2.interrupt();
+//                            t2 = null;
+//                        }
+//                    }
+//                    catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+                    Thread t2 = new Thread(new CardStateListener());
+                    t2.start();
                 }
             }
         }

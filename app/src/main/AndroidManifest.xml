@@ -15,7 +15,11 @@
 
 
     <!-- android.permission.WRITE_SETTINGS -->
-    <uses-permission android:name="android.permission.CLOUDPOS_DEFAULT_LAUNCHER" />
+<!--    <uses-permission android:name="android.permission.CLOUDPOS_DEFAULT_LAUNCHER" />-->
+
+
+
+
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -85,7 +89,6 @@
     <uses-permission android:name="android.permission.DELETE_PACKAGES" />
 
     <application
-        android:name=".MainApp"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/logo_bjb_small"

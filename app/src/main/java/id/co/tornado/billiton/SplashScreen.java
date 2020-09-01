@@ -51,6 +51,7 @@ public class SplashScreen extends Activity {
     private String nominal = "";
     private String amount = "";
     private String margin = "";
+    private String is_from_selada = "";
     private String tid = "";
     private String mids = "";
     private String mn = "";
@@ -82,6 +83,12 @@ public class SplashScreen extends Activity {
                 nominal = intent.getStringExtra("nominal");
                 amount = intent.getStringExtra("amount");
                 margin = intent.getStringExtra("margin");
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            try {
+                is_from_selada = intent.getStringExtra("is_from_selada");
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -355,6 +362,7 @@ public class SplashScreen extends Activity {
                         intent.putExtra("nominal", nominal);
                         intent.putExtra("amount", amount);
                         intent.putExtra("margin", margin);
+                        intent.putExtra("is_from_selada", is_from_selada);
 
                         intent.putExtra("tid", tid);
                         intent.putExtra("mids", mids);
@@ -386,6 +394,8 @@ public class SplashScreen extends Activity {
             intent.putExtra("nominal", nominal);
             intent.putExtra("amount", amount);
             intent.putExtra("margin", margin);
+            intent.putExtra("is_from_selada", is_from_selada);
+
 
             intent.putExtra("tid", tid);
             intent.putExtra("mids", mids);

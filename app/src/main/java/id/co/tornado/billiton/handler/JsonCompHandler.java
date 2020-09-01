@@ -5,11 +5,25 @@
  */
 package id.co.tornado.billiton.handler;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -30,6 +44,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -37,6 +52,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import id.co.tornado.billiton.common.CommonConfig;
+
+import static id.co.tornado.billiton.layout.FormMenu.compress;
+import static id.co.tornado.billiton.layout.FormMenu.decResponse;
 
 /**
  * @author indra
@@ -128,6 +146,7 @@ public class JsonCompHandler {
     }
 
     public static JSONObject readJsonFromUrl(String id, Context ctx) throws IOException, JSONException {
+        Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
@@ -151,11 +170,19 @@ public class JsonCompHandler {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             JSONObject json = new JSONObject(jsonText);
+//            if (json.has("encrypted")) {
+//                String isEnc = json.getString("encrypted");
+//                if (isEnc.equals("t")) {
+//                    json = decResponse(json);
+//                }
+//            }
+            dialog.dismiss();
             return (JSONObject) json.get("screen");
 
         }
         catch (Exception e){
             e.printStackTrace();
+            dialog.dismiss();
             return new JSONObject();
         }
         finally {

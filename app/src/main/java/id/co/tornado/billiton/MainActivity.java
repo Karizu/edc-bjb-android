@@ -34,7 +34,7 @@ import id.co.tornado.billiton.handler.MenuListResolver;
 import id.co.tornado.billiton.layout.FormMenu;
 import id.co.tornado.billiton.layout.ListMenu;
 
-public class MainActivity extends FuncActivity implements KeyEvent.Callback {
+public class MainActivity extends Activity implements KeyEvent.Callback {
     //    private MagneticSwipe swipe = new MagneticSwipe();
     private LinearLayout linearLayout;
     private String id = "";
@@ -61,6 +61,7 @@ public class MainActivity extends FuncActivity implements KeyEvent.Callback {
     private String nominal = "";
     private String amount = "";
     private String margin = "";
+    private String is_from_selada = "";
     private String tid = "";
     private String mids = "";
     private String mn = "";
@@ -160,6 +161,11 @@ public class MainActivity extends FuncActivity implements KeyEvent.Callback {
                 nominal = intent.getStringExtra("nominal");
                 amount = intent.getStringExtra("amount");
                 margin = intent.getStringExtra("margin");
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            try {
+                is_from_selada = intent.getStringExtra("is_from_selada");
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -430,6 +436,10 @@ public class MainActivity extends FuncActivity implements KeyEvent.Callback {
                 if (json!=null){
                     bundle.putString("json", json);
                 }
+                if (is_from_selada!=null && !is_from_selada.equals("")){
+                    bundle.putString("is_from_selada", is_from_selada);
+                }
+
                 intent.putExtras(bundle);
                 startActivity(intent);
                 return;

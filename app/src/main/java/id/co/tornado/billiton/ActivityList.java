@@ -33,7 +33,7 @@ import id.co.tornado.billiton.handler.JsonCompHandler;
 import id.co.tornado.billiton.layout.FormMenu;
 import id.co.tornado.billiton.layout.ListMenu;
 
-public class ActivityList extends FuncActivity {
+public class ActivityList extends Activity {
 
     private LinearLayout linearLayout;
     private String id = "";
@@ -57,8 +57,11 @@ public class ActivityList extends FuncActivity {
     private String margin = "";
     private String stan;
     private String json;
+    private boolean isLauchedFromSelada = false;
 
     private View child = null;
+
+    public boolean lauchFromSelada = false;
 
     public int modulStage = CommonConfig.ICC_PROCESS_STAGE_INIT;
     public NsiccsData cardData = new NsiccsData();
@@ -146,7 +149,17 @@ public class ActivityList extends FuncActivity {
             nominal = getIntent().getExtras().getString("nominal");
             amount = getIntent().getExtras().getString("amount");
             margin = getIntent().getExtras().getString("margin");
+
         } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            if (getIntent().getExtras().containsKey("is_from_selada") && getIntent().getExtras().getString("is_from_selada").equals("true")){
+                isLauchedFromSelada = true;
+            }
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
 
@@ -276,6 +289,7 @@ public class ActivityList extends FuncActivity {
     public void onBackPressed() {
 //       Log.d("BACK", "PRESSED");
        try {
+
            try {
                if (child.getClass().isInstance(FormMenu.class)){
                    FormMenu fm = (FormMenu) child;
@@ -285,9 +299,15 @@ public class ActivityList extends FuncActivity {
                unbindService(serviceConnection);
            } catch (Exception e) {
 
-
            }
-           super.onBackPressed();
+           if (isLauchedFromSelada){
+               Intent intents = new Intent(this, MainActivity.class);
+               intents.putExtra("kill", "kill");
+               this.startActivity(intents);
+           }
+           else{
+               super.onBackPressed();
+           }
        } catch (Exception e) {
            Log.e("BACK", "ERROR");
          //

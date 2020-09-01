@@ -77,7 +77,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -93,7 +92,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 import id.co.tornado.billiton.ActivityList;
-import id.co.tornado.billiton.FuncActivity;
 import id.co.tornado.billiton.MainActivity;
 import id.co.tornado.billiton.R;
 import id.co.tornado.billiton.common.CommonConfig;
@@ -103,7 +101,6 @@ import id.co.tornado.billiton.handler.DataBaseHelper;
 import id.co.tornado.billiton.handler.JsonCompHandler;
 import id.co.tornado.billiton.handler.Track2BINChecker;
 import id.co.tornado.billiton.module.Button;
-import id.co.tornado.billiton.module.CardData;
 import id.co.tornado.billiton.module.CheckBox;
 import id.co.tornado.billiton.module.ChipInsert;
 import id.co.tornado.billiton.module.ComboBox;
@@ -829,7 +826,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                             break;
                         case CommonConfig.CALLBACK_CANCEL:
 //                            Toast.makeText(context, "receive cancel", Toast.LENGTH_SHORT).show();
-                            dialog = ProgressDialog.show(context, "Clean Up", "Clearing Input Cache", true);
+//                            dialog = ProgressDialog.show(context, "Clean Up", "Clearing Input Cache", true);
+                            context.onBackPressed();
                             break;
                         case CommonConfig.CALLBACK_CANCEL_DONE:
 //                            Toast.makeText(context, "receive cancel done", Toast.LENGTH_SHORT).show();
@@ -1165,7 +1163,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                         }
                                     }
                                 }
-                            } catch (Exception e) {
+                            } catch (Exception es) {
                             }
 
                             //INPUT CONFIG FITUR BUKA REKENING
@@ -1367,8 +1365,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         }
                         if (v instanceof InsertICC) {
                             InsertICC insertICC = (InsertICC) v;
-                            insertICC.funcActivity = (FuncActivity) context;
-                            insertICC.appState = ((FuncActivity) context).appState;
+//                            insertICC.funcActivity = (FuncActivity) context;
+//                            insertICC.appState = ((FuncActivity) context).appState;
                             String track2 = insertICC.getText().toString();
 
                             if (actionUrl.equals("M0008B") || actionUrl.equals("M0010C")
@@ -1512,6 +1510,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = SAMSAT_PROFILES;
 
             JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+//            requestReprintReport(date, tid, pid, simNumber, "reprint");
             try {
                 rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
             } catch (IOException e) {
@@ -1527,6 +1527,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = MINI_BANKING_PROFILES;
 
             JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+//            requestReprintReport(date, tid, pid, simNumber, "reprint");
             try {
                 rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
             } catch (IOException e) {
@@ -1542,6 +1544,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = SAMSAT_PROFILES;
 
             JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+//            requestReprintReport(date, tid, pid, simNumber, "summary");
             try {
                 rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
             } catch (IOException e) {
@@ -1557,6 +1561,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = SAMSAT_PROFILES;
 
             JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+//            requestReprintReport(date, tid, pid, simNumber, "detail");
             try {
                 rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
             } catch (IOException e) {
@@ -1572,6 +1578,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = MINI_BANKING_PROFILES;
 
             JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+//            requestReprintReport(date, tid, pid, simNumber, "detail");
             try {
                 rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
             } catch (IOException e) {
@@ -1585,8 +1593,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         if (actionUrl.equals("RMA011") || actionUrl.equals("RMA012")) {
             String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
             String pid = MINI_BANKING_PROFILES;
-
             JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+//            requestReprintReport(date, tid, pid, simNumber, "summary");
             try {
                 rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
             } catch (IOException e) {
@@ -1659,15 +1668,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    });
 //                    AlertDialog diaLog = builder.create();
 //                    diaLog.show();
-            //enc
+
+                    //enc
 //                    try {
-//                        msg.put("msg_dt", compress(dataOutput));
 //                        msg.put("encrypted", "t");
+//                        msg.put("msg_dt", compress(dataOutput));
 //                    } catch (Exception e) {
 //                        msg.put("msg_dt", dataOutput);
 //                    }
-            final JSONObject msgRoot = new JSONObject();
-            msgRoot.put("msg", msg);
+
+                    final JSONObject msgRoot = new JSONObject();
+                    msgRoot.put("msg", msg);
 //                    new PostData().execute(msgRoot.toString());
 
             JsonCompHandler.saveJsonMessage(context, msgId, "rq", msgRoot);
@@ -2038,8 +2049,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 }
                             }
                             insertICC = (InsertICC) li.inflate(R.layout.icc_insert, null);
-                            insertICC.funcActivity = (FuncActivity) context;
-                            insertICC.appState = ((FuncActivity) context).appState;
+//                            insertICC.funcActivity = (FuncActivity) context;
+//                            insertICC.appState = ((FuncActivity) context).appState;
                             insertICC.addInputListener(this);
                         }
                         insertICC.setTag(R.string.seq_holder, seq);
@@ -2180,7 +2191,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
 
         if (hasChip) {
-            if (formId.equals("MA00050") || formId.equals("POC0020") || formId.equals("POC0030") || formId.equals("MA00040")
+            if (formId.equals("MA00050") || formId.equals("POC0020")
                     || formId.equals("MA00070") || formId.equals("MA00065")
                     || formId.equals("MA00055") || formId.equals("MA00035")
                     || formId.equals("MA00075") || formId.equals("MA00095")
@@ -3292,6 +3303,123 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
     }
 
+    public void requestReprintReport(String date, final String tid, String pid, String iccid, String type) {
+        dettachPrint();
+        dialog = ProgressDialog.show(context, "Loading", "Sedang Mengirim Permintaan", true);
+        final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        final JSONObject msg = new JSONObject();
+        try {
+            msg.put("msg_id", stan);
+            msg.put("msg_pd", pid);
+            msg.put("msg_ui", telephonyManager.getDeviceId());
+            try {
+                msg.put("msg_td", compress(tid));
+                Log.d("td", compress(tid));
+            } catch (Exception e) {
+                msg.put("msg_td", tid);
+                e.printStackTrace();
+            }
+            msg.put("msg_sn", iccid);
+            msg.put("msg_dte", date);
+
+            final JSONObject msgRoot = new JSONObject();
+            msgRoot.put("msg", msg);
+            String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+            String postpath = "";
+
+            switch (type) {
+                case "summary":
+                    postpath = "report";
+                    break;
+                case "detail":
+                    postpath = "reportDetail";
+                    break;
+                case "reprint":
+                    postpath = "print";
+                    break;
+            }
+
+            String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
+
+            StringRequest jor = new StringRequest(Request.Method.POST,
+                    httpPost,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                Log.d("TERIMA", response);
+//                                String resp = decompress(response);
+//                                JSONObject jsonResp = new JSONObject(resp);
+//                                JSONObject newRoot = new JSONObject();
+//                                String screen = (String) jsonResp.get("screen");
+//                                newRoot.put("screen", screen);
+                                JSONObject jsonResp = new JSONObject(response);
+                                if (jsonResp.has("encrypted")) {
+                                    String isEnc = jsonResp.getString("encrypted");
+                                    if (isEnc.equals("t")) {
+                                        jsonResp = decResponse(jsonResp);
+                                    }
+                                }
+                                dialog.dismiss();
+                                processResponse(jsonResp, tid);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        try {
+                            Toast.makeText(context, "Request Timeout",
+                                    Toast.LENGTH_LONG).show();
+                            JSONObject rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[" +
+                                    "{\"visible\":true,\"comp_values\":{\"comp_value\":[" +
+                                    "{\"print\":\"Tidak Dapat Mengirim Permintaan\",\n" +
+                                    "\"value\":\"Tidak Dapat Mengirim Permintaan\"}]" +
+                                    "},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+                            Log.d("ERROR", error.getMessage());
+                            processResponse(rps, tid);
+                            dialog.dismiss();
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "text/plain; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+
+                        return msgRoot == null ? null : msgRoot.toString().getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        Log.e("VOLLEY", "Unsupported Encoding while trying to get the bytes of " + msgRoot.toString() + "utf-8");
+                        return null;
+                    }
+                }
+
+
+            };
+            jor.setRetryPolicy(new DefaultRetryPolicy(10000,
+                    0,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            RequestQueue revrq = Volley.newRequestQueue(context);
+            revrq.add(jor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void prepareSaleFallback() {
         if (alert.isShowing()) {
             alert.dismiss();
@@ -4132,9 +4260,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        context.onBackPressed();
-                                        context.finish();
+//                                        dialog.dismiss();
+//                                        if (context instanceof ActivityList) {
+//                                            Intent intents = new Intent(((ActivityList) context), MainActivity.class);
+//                                            intents.putExtra("kill", "kill");
+//                                            ((ActivityList) context).startActivity(intents);
+//                                        } else {
+                                            dialog.dismiss();
+                                            context.onBackPressed();
+                                            context.finish();
+//                                        }
                                     }
                                 });
                         Log.v("ALERT", "Remove card first, closing driver");
@@ -5688,7 +5823,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             @Override
             public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-//                                    Log.d("BACK", "FROM DIALOG");
+
                     try {
                         if (insertICC.isOpen()) {
                             insertICC.closeDriver();
