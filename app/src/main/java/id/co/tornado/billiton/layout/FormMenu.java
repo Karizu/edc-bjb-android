@@ -1238,6 +1238,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                     if (comboBox.compId.equals("EP130")) {
                                         cdata = cdata.substring(0, 4) + "|" + cdata.substring(0, 4);
                                     }
+
+                                    if (comboBox.compId.equals("EP025")) {
+                                        if (formId.equals("EP00310") && cdata.equals("PKD")) {
+                                            //HANDLING ESAMSAT SAMOLNAS CHIP TO OTHER SERVICE
+                                            newActionUrl = "EP0320";
+                                        } else if (formId.equals("EP00312") && cdata.equals("PKD")) {
+                                            //HANDLING ESAMSAT SAMOLNAS SWIPE TO OTHER SERVICE
+                                            newActionUrl = "EP0322";
+                                        }
+                                    }
                                 }
 
                                 //Add Filter No Pajak & PEMDA ID PBB
@@ -1256,20 +1266,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 } catch (Exception e) {
                                 }
 
-                                if (comboBox.compId.equals("EP025")) {
-                                    if (formId.equals("EP00310") && cdata.equals("PKD")) {
-                                        //HANDLING ESAMSAT SAMOLNAS CHIP TO OTHER SERVICE
-                                        newActionUrl = "EP0320";
-                                    } else if (formId.equals("EP00312") && cdata.equals("PKD")) {
-                                        //HANDLING ESAMSAT SAMOLNAS SWIPE TO OTHER SERVICE
-                                        newActionUrl = "EP0322";
-                                    }
-                                }
-
                                 Log.d("EDIT READ", cdata);
                                 if (actionUrl.equals("A54321")) {
                                     cdata = cdata.replace("Rp ", "").replace(".", "").replace(",00", "");
                                 }
+
                                 data.add(cdata);
                             } else {
                                 cdata = comboBox.getSelectedItem().toString();
@@ -1848,58 +1849,59 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     }
                 }
             }
-            switch (type) {
-                case CommonConfig.ComponentType.TextView:
-                    TextView textView = (TextView) li.inflate(R.layout.text_view, null);
-                    textView.init(data);
-                    textView.setTag(R.string.seq_holder, seq);
-                    textView.setTag(R.string.lbl_holder, lbl);
 
-                    textView.setLayoutParams(params);
-                    baseLayout.addView(textView);
-                    break;
-                case CommonConfig.ComponentType.EditText:
-                    final EditText editText = (EditText) li.inflate(R.layout.edit_text, null);
-                    editText.init(data);
-                    String txt = editText.getText().toString();
-                    editText.setTag(R.string.seq_holder, seq);
-                    editText.setTag(R.string.lbl_holder, lbl);
-                    editText.setLayoutParams(params);
-
-                    if (formId.equals(MENU_PUCHASE)){
-                        if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
-                            editText.setText(amount);
-                            editText.setEnabled(false);
-                        }
-                        if (editText.getHint().toString().contains("Masukkan Kode Billing")) {
-                            editText.setText(mobileNumber);
-                            editText.setEnabled(false);
-                        }
-                        if (editText.getHint().toString().contains("Biaya Margin")) {
-                            editText.setText(margin);
-                            editText.setEnabled(false);
-                        }
-                    }
-
-                    if (formId.equals(MENU_PUCHASE_BJB)){
-                        if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
-                            editText.setText(amount);
-//                                editText.setFocusable(false);
-                            editText.setEnabled(false);
-
-                            editText.setEnabled(false);
-                            editText.setFocusable(false);
-                            editText.setClickable(false);
-                            editText.setInputType(InputType.TYPE_NULL);
-                            editText.setOnKeyListener(new View.OnKeyListener() {
-                                @Override
-                                public boolean onKey(View v,int keyCode,KeyEvent event) {
-                                    return true;  // Blocks input from hardware keyboards.
-                                }
-                            });
-                        }
-                    }
-                }
+//            switch (type) {
+//                case CommonConfig.ComponentType.TextView:
+//                    TextView textView = (TextView) li.inflate(R.layout.text_view, null);
+//                    textView.init(data);
+//                    textView.setTag(R.string.seq_holder, seq);
+//                    textView.setTag(R.string.lbl_holder, lbl);
+//                    textView.setLayoutParams(params);
+//
+//                    baseLayout.addView(textView);
+//                    break;
+//                case CommonConfig.ComponentType.EditText:
+//                    final EditText editText = (EditText) li.inflate(R.layout.edit_text, null);
+//                    editText.init(data);
+//                    String txt = editText.getText().toString();
+//                    editText.setTag(R.string.seq_holder, seq);
+//                    editText.setTag(R.string.lbl_holder, lbl);
+//                    editText.setLayoutParams(params);
+//
+//                    if (formId.equals(MENU_PUCHASE)){
+//                        if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
+//                            editText.setText(amount);
+//                            editText.setEnabled(false);
+//                        }
+//                        if (editText.getHint().toString().contains("Masukkan Kode Billing")) {
+//                            editText.setText(mobileNumber);
+//                            editText.setEnabled(false);
+//                        }
+//                        if (editText.getHint().toString().contains("Biaya Margin")) {
+//                            editText.setText(margin);
+//                            editText.setEnabled(false);
+//                        }
+//                    }
+//
+//                    if (formId.equals(MENU_PUCHASE_BJB)){
+//                        if (editText.getHint().toString().contains("Masukkan Nominal Sale")){
+//                            editText.setText(amount);
+////                                editText.setFocusable(false);
+//                            editText.setEnabled(false);
+//
+//                            editText.setEnabled(false);
+//                            editText.setFocusable(false);
+//                            editText.setClickable(false);
+//                            editText.setInputType(InputType.TYPE_NULL);
+//                            editText.setOnKeyListener(new View.OnKeyListener() {
+//                                @Override
+//                                public boolean onKey(View v,int keyCode,KeyEvent event) {
+//                                    return true;  // Blocks input from hardware keyboards.
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
                 switch (type) {
                     case CommonConfig.ComponentType.TextView:
                         TextView textView = (TextView) li.inflate(R.layout.text_view, null);
@@ -2132,7 +2134,6 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     hasTapModule = true;
                     break;
             }
-
         }
 
 
