@@ -985,6 +985,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
     public void actionUrl(Button button, final String actionUrl) throws JSONException {
         Log.d("DO_ACTION", actionUrl);
+//        if (insertICC != null && insertICC.needToCloseICC){
+//            insertICC.closeDriver();
+//        }
         String newActionUrl = "";
 //        Toast.makeText(context, "pinblock " + pinblockHolder, Toast.LENGTH_SHORT).show();
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -2937,19 +2940,19 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     return;
 
                 } else if (additional.startsWith("fallback")) {
-                    try {
-                        if (insertICC != null) {
-                            if (insertICC.isOpen()) {
-                                insertICC.closeDriver();
-                            }
-                        }
-                    } catch (Exception e) {
-                        //failed to close, maybe already closed or not open yet
-                    }
+//                    try {
+//                        if (insertICC != null) {
+//                            if (insertICC.isOpen()) {
+//                                insertICC.closeDriver();
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        //failed to close, maybe already closed or not open yet
+//                    }
                     refreshICCProcessDialog("Chip tidak terdeteksi, menyiapkan fallback", true);
                     alert.show();
                     iccPreProcessed = false;
-                    insertICC = null;
+//                    insertICC = null;
                     if (formId.equals("MB82510")) {
                         prepareSaleFallback();
                     } else if (formId.equals("MB82560")) {
@@ -3025,7 +3028,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     refreshICCProcessDialog("Aplikasi chip tidak terdeteksi atau kartu telah diblok", true);
                     alert.show();
                     iccPreProcessed = false;
-                    insertICC = null;
+//                    insertICC = null;
                     preparePopupGagal("Aplikasi chip tidak terdeteksi atau kartu telah diblok");
                     return;
                 }

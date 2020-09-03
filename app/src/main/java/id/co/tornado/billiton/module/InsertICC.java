@@ -59,7 +59,8 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
     private final int ICC_NO_EVENT = -1;
     private final int ICC_INSERT = 0;
     private final int ICC_REMOVE = 1;
-    private boolean cardListening = false;
+    public boolean cardListening = false;
+    public boolean needToCloseICC = false;
 
     private boolean isQuit = true;
     private boolean isOpen = false;
@@ -114,6 +115,7 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
                         closeDriver();
                     } else if (data.get("RC").toString().equals("07")) {
                         additional = "fallback";
+//                        needToCloseICC = true;
                         closeDriver();
                     } else if (data.get("RC").toString().equals("10")) {
                         additional = "blocked";
@@ -217,7 +219,9 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
         isQuit = true;
         isOpen = false;
         iccReady = false;
-        cardListening = false;
+//        if (!needToCloseICC){
+            cardListening = false;
+//        }
 //            try {
 //                if (t2 != null){
 //                    t2.interrupt();
@@ -338,17 +342,18 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
             cardListening = true;
             int counter = 0;
             try {
+                SmartCardEvent event = null;
                 while (cardListening) {
                     if (!cardListening) {
                         break;
                     }
-                    SmartCardEvent event = new SmartCardEvent();
+                    event = new SmartCardEvent();
                     if (isByPass){
                         event.nEventID = -1;
                         event.nSlotIndex = -1;
                     }
                     ContactICCardReaderInterface.pollEvent(2000, event);
-//                writeFromBackground("Pool result : " + event.nEventID + " loop " + counter);
+//                    writeFromBackground("Pool result : " + event.nEventID + " loop " + counter);
 //                    for (InputListener il : inputListeners) {
 //                        il.onStateChanged("Event " + event.nEventID == null ? "null" : String.valueOf(event.nEventID)
 //                                + " Loop " + counter == null ? "null" : String.valueOf(counter), 99);
