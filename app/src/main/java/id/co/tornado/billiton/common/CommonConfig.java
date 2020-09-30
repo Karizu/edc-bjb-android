@@ -57,6 +57,10 @@ public class CommonConfig {
     private static final String wSocketKey = "H4sIAAAAAAAAANMvyS0GAJSVspMEAAAA";
     private static final String htPostKey = "H4sIAAAAAAAAANN3DApKLS7RTyzIBAB/30O2CwAAAA==";
     private static final String postPathKey = "H4sIAAAAAAAAAEssyAQAD9gFrQMAAAA=";
+    public static final String chKey_1 = "H4sIAAAAAAAAADM0MTcytQAAI+Bl6gYAAAA=";
+    public static final String chKey_2 = "H4sIAAAAAAAAALOwsLAAAB+/PgEEAAAA";
+    public static final String chKey_3 = "H4sIAAAAAAAAADMytbA0MwYAwc5YuQYAAAA=";
+    public static final String chKey_4 = "H4sIAAAAAAAAADMzs7QEAPHkY4UEAAAA";
 
     private static final String PROSELIP = getVal(intProKey);
     public static final String DEVSELIP = getVal(intDeKey);
@@ -111,6 +115,16 @@ public class CommonConfig {
     public static String getVal(String key){
         try {
             return decompress(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String setVal(String key){
+        try {
+            Log.d(key, compress(key));
+            return compress(key);
         } catch (IOException e) {
             e.printStackTrace();
         }

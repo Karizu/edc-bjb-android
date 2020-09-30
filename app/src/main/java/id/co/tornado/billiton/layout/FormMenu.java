@@ -244,6 +244,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private String SCREEN_PURCHASE_FALLBACK = "MB82562";
     private String SCREEN_PURCHASE_BJB = "MB82511";
     private String SCREEN_PURCHASE_BJB_FALLBACK = "MB82512";
+    private boolean isSettle;
     private String val2 = "";
     private String val1 = "";
 //    PEMKAB KARAWANG
@@ -1498,11 +1499,35 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
         // settlement
         if (actionUrl.equals("S00001")) {
+            isSettle = false;
             JSONArray rowList = handleSettlement();
             for (int i = 0; i < rowList.length(); i++) {
                 JSONObject row = rowList.getJSONObject(i);
                 data.add(row.getString("stan"));
             }
+            // test
+//                    data.add("963018");
+//                    data.add("963015");
+            // end test
+            dataOutput = TextUtils.join("|", data);
+        }
+
+        if (actionUrl.equals("ST0001")) {
+            isSettle = true;
+            JSONArray rowList = handleSettlement();
+            int mAmount = 0;
+            String mTotal = String.valueOf(rowList.length());
+            for (int i = 0; i < rowList.length(); i++) {
+                JSONObject row = rowList.getJSONObject(i);
+                mAmount += Integer.parseInt(row.getString("amount").replace(".0", ""));
+            }
+
+            Log.d("mAmountSet", mAmount + "");
+            Log.d("mTotal", mTotal);
+
+            data.add(mTotal);
+            data.add(mAmount + "00");
+            data.add("0");
             // test
 //                    data.add("963018");
 //                    data.add("963015");
@@ -5005,6 +5030,22 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
         JSONObject responObj = jsonResp.getJSONObject("screen");
 //                                        JsonCompHandler.saveJson(context, responObj);
+
+        JSONObject vals = responObj
+                .getJSONObject("comps")
+                .getJSONArray("comp").getJSONObject(0)
+                .getJSONObject("comp_values")
+                .getJSONArray("comp_value").getJSONObject(0);
+
+        String resp = Html.fromHtml(vals.getString("value")).toString();
+
+        if (isSettle) {
+            if (resp.equals("Proses Settlement Per Transaksi")) {
+                processSettledBatch();
+                return;
+            }
+        }
+
         int type = responObj.getInt("type");
         if (isReprint) {
             if (jsonResp.has("tcaid")) {
@@ -5109,6 +5150,293 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         }
                     });
             alertDialog.show();
+        }
+    }
+
+    private void processSettledBatch() {
+        try {
+            JSONArray rowList = handleSettlement();
+            int counter = rowList.length();
+            for (int i = 0; i < rowList.length(); i++) {
+                JSONObject row = rowList.getJSONObject(i);
+                sendRequestSettleBatch(row.getString("track2"),
+                        row.getString("amount").replace(".0", ""),
+                        row.getString("msgId"),
+                        "000000" + row.getString("stan"),
+                        counter, i);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void proccessSettlementAfterBatch() {
+
+        try {
+
+            final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            final JSONObject msg = new JSONObject();
+            final List<String> data = new ArrayList<>();
+            JSONArray rowList = handleSettlement();
+            for (int i = 0; i < rowList.length(); i++) {
+                JSONObject row = rowList.getJSONObject(i);
+                data.add(row.getString("stan"));
+            }
+            // test
+//                    data.add("963018");
+//                    data.add("963015");
+            // end test
+            String dataOutput = TextUtils.join("|", data);
+
+            final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
+            msg.put("msg_id", msgId);
+            msg.put("msg_ui", telephonyManager.getDeviceId());
+            msg.put("msg_si", "S00001");
+//            msg.put("msg_dt", dataOutput);
+
+            //ADD JSON OBJECT msg_sn, msg_tid FOR ALL TRANSACTION (PENTEST)
+            msg.put("msg_sn", preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
+            msg.put("msg_tid", preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID));
+
+            //enc
+            try {
+                msg.put("encrypted", "t");
+                msg.put("msg_dt", compress(dataOutput));
+            } catch (Exception e) {
+                msg.put("msg_dt", dataOutput);
+            }
+
+            final JSONObject msgRoot = new JSONObject();
+            msgRoot.put("msg", msg);
+
+            String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+            String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
+            String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
+
+            StringRequest jor = new StringRequest(Request.Method.POST,
+                    httpPost,
+                    response -> {
+                        try {
+                            Log.d("TERIMA", response);
+                            JSONObject jsonResp = new JSONObject(response);
+                            if (jsonResp.has("encrypted")) {
+                                String isEnc = jsonResp.getString("encrypted");
+                                if (isEnc.equals("t")) {
+                                    jsonResp = decResponse(jsonResp);
+                                }
+                            }
+                            dialog.dismiss();
+                            processResponse(jsonResp, msgId);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(context, "Request Timeout",
+                                Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                        context.onBackPressed();
+                        context.finish();
+                    }
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "text/plain; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+
+                        return msgRoot == null ? null : msgRoot.toString().getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        Log.e("VOLLEY", "Unsupported Encoding while trying to get the bytes of " + msgRoot.toString() + "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+            RequestQueue rq = Volley.newRequestQueue(context);
+
+            jor.setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//                    dialog = ProgressDialog.show(context, "Silahkan Tunggu....", "Data sedang dikirim", true);
+            dialog = ProgressDialog.show(context, "Silahkan Tunggu....", "Transaksi sedang diproses", true);
+            rq.add(jor);
+            // display data to dialog
+//                    dialog = ProgressDialog.show(context, "Debug send data", msgRoot.toString(), true);
+//                    Handler dhan = new Handler();
+//                    Runnable dr = new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            dialog.dismiss();
+//                        }
+//                    };
+//                    dhan.postDelayed(dr, 8000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendRequestSettleBatch(String pan, String amount, String messageId, String mstan, int counter, int pos) {
+
+        try {
+
+            final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            SharedPreferences preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            final JSONObject msg = new JSONObject();
+            final List<String> datas = new ArrayList<>();
+            datas.add(pan);
+            datas.add(String.valueOf(amount));
+            datas.add(messageId);
+            datas.add(mstan);
+
+            String dataOutput = TextUtils.join("|", datas);
+
+            final String msgId = telephonyManager.getDeviceId() + sdf.format(new Date());
+            msg.put("msg_id", msgId);
+            msg.put("msg_ui", telephonyManager.getDeviceId());
+            msg.put("msg_si", "ST0002");
+            msg.put("msg_dt", dataOutput);
+
+            //ADD JSON OBJECT msg_sn, msg_tid FOR ALL TRANSACTION (PENTEST)
+            msg.put("msg_sn", preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
+            msg.put("msg_tid", preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID));
+
+            //enc
+//                    try {
+//                        msg.put("encrypted", "t");
+//                        msg.put("msg_dt", compress(dataOutput));
+//                    } catch (Exception e) {
+//                        msg.put("msg_dt", dataOutput);
+//                    }
+
+            final JSONObject msgRoot = new JSONObject();
+            msgRoot.put("msg", msg);
+
+            String hostname = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+            String postpath = preferences.getString("postpath", CommonConfig.POST_PATH);
+            String httpPost = CommonConfig.HTTP_PROTOCOL + "://" + hostname + "/" + postpath;
+
+            StringRequest jor = new StringRequest(Request.Method.POST,
+                    httpPost,
+                    response -> {
+                        try {
+                            Log.d("TERIMA", response);
+                            JSONObject jsonResp = new JSONObject(response);
+                            dialog.dismiss();
+                            if (counter - 1 == pos) {
+                                JSONObject responObj = jsonResp.getJSONObject("screen");
+                                JSONObject val = responObj
+                                        .getJSONObject("comps")
+                                        .getJSONArray("comp").getJSONObject(0)
+                                        .getJSONObject("comp_values")
+                                        .getJSONArray("comp_value").getJSONObject(0);
+                                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                                if (val.has("value")) {
+                                    if (Html.fromHtml(val.getString("value")).toString().equals("Transaksi sukses")) {
+                                        proccessSettlementAfterBatch();
+                                    } else {
+                                        processResponse(jsonResp, msgId);
+                                    }
+                                } else {
+                                    alertDialog.setTitle("Gagal");
+                                    alertDialog.setMessage("Error belum terdefinisi");
+                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+
+                                                    Intent intents = new Intent(context, MainActivity.class);
+                                                    intents.putExtra("kill", "kill");
+                                                    context.startActivity(intents);
+
+                                                }
+                                            });
+                                    alertDialog.show();
+                                }
+                            }
+//                            processResponse(jsonResp, msgId);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(context, "Request Timeout",
+                                Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                        context.onBackPressed();
+                        context.finish();
+                    }
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "text/plain; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+
+                        return msgRoot == null ? null : msgRoot.toString().getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        Log.e("VOLLEY", "Unsupported Encoding while trying to get the bytes of " + msgRoot.toString() + "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+            RequestQueue rq = Volley.newRequestQueue(context);
+
+            jor.setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//                    dialog = ProgressDialog.show(context, "Silahkan Tunggu....", "Data sedang dikirim", true);
+            dialog = ProgressDialog.show(context, "Silahkan Tunggu....", "Transaksi sedang diproses", true);
+            rq.add(jor);
+            // display data to dialog
+//                    dialog = ProgressDialog.show(context, "Debug send data", msgRoot.toString(), true);
+//                    Handler dhan = new Handler();
+//                    Runnable dr = new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            dialog.dismiss();
+//                        }
+//                    };
+//                    dhan.postDelayed(dr, 8000);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

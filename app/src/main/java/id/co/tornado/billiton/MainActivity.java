@@ -577,26 +577,26 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         if (keyCode>6 && keyCode<17) {
             codeHolder += String.valueOf(keyCode-7);
         }
-        if (codeHolder.equals("147258")) {
+        if (codeHolder.equals(CommonConfig.getVal(CommonConfig.chKey_1))) {
             if (!showSetting) {
                 Log.d("onKeyDown", "Code : " + keyCode + ", Event : " + event);
                 showSetting = true;
                 setMenu(currentScreen);
             }
         }
-        if (codeHolder.equals("8888")) {
+        if (codeHolder.equals(CommonConfig.getVal(CommonConfig.chKey_2))) {
             if (showSetting) {
                 showSetting = false;
                 setMenu(currentScreen);
             }
         }
-        if (codeHolder.equals("258963")) {
+        if (codeHolder.equals(CommonConfig.getVal(CommonConfig.chKey_3))) {
             if (!showViewer) {
                 showViewer = true;
                 setMenu(currentScreen);
             }
         }
-        if (codeHolder.equals("6699")) {
+        if (codeHolder.equals(CommonConfig.getVal(CommonConfig.chKey_4))) {
             if (showViewer) {
                 showViewer = false;
                 setMenu(currentScreen);
