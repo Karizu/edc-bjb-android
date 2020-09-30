@@ -147,6 +147,7 @@ public class JsonCompHandler {
 
     public static JSONObject readJsonFromUrl(String id, Context ctx) throws IOException, JSONException {
         Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
+        dialog.show();
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
@@ -187,12 +188,19 @@ public class JsonCompHandler {
         }
         finally {
             if (is != null){
-                is.close();
+                try {
+                    is.close();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public static JSONObject readJsonFromIntent(String id, Context ctx) throws IOException, JSONException {
+        Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
+        dialog.show();
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
@@ -208,20 +216,33 @@ public class JsonCompHandler {
         InputStream is = null;
         try {
             is = url.openStream();
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String jsonText = readAll(rd);
+                JSONObject json = new JSONObject(jsonText);
+                dialog.dismiss();
+                return (JSONObject) json.get("screen");
+            } finally {
+                dialog.dismiss();
+                if (is != null){
+                    try {
+                        is.close();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
         } catch (Exception e){
+            dialog.dismiss();
             e.printStackTrace();
         }
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return (JSONObject) json.get("screen");
-        } finally {
-            is.close();
-        }
+        return new JSONObject();
     }
 
     public static JSONObject reprintFromArrest(String pid, String tid, String stan, Context ctx) throws IOException, JSONException {
+        Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
+        dialog.show();
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
@@ -232,18 +253,37 @@ public class JsonCompHandler {
 //        URL url = new URL(hostname + "/device/" + serialNum + "/loadMenu/" + id);
         URL url = new URL(hostname + "/print?pid=" + pid + "&tid=" + tid + "&stan=" + stan + "&simNumber=" + simNumber);
 //        URL url = new URL(hostname + "/print?pid=" + pid + "&tid=" + tid + "&stan=" + stan );
-        InputStream is = url.openStream();
+
         try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
+            InputStream is = url.openStream();
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String jsonText = readAll(rd);
+                JSONObject json = new JSONObject(jsonText);
+                dialog.dismiss();
+                return json;
+            } finally {
+                dialog.dismiss();
+                if (is != null){
+                    try {
+                        is.close();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
+        catch (Exception e){
+            dialog.dismiss();
+            e.printStackTrace();
+        }
+        return  new JSONObject();
     }
 
     public static JSONObject reportFromArrest(String pid, String tid, String date, Context ctx) throws IOException, JSONException {
+        Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
+        dialog.show();
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
@@ -254,18 +294,36 @@ public class JsonCompHandler {
 //        URL url = new URL(hostname + "/device/" + serialNum + "/loadMenu/" + id);
         URL url = new URL(hostname + "/report?pid=" + pid + "&tid=" + tid + "&date=" + date + "&simNumber=" + simNumber);
 //        URL url = new URL(hostname + "/report?pid=" + pid + "&tid=" + tid + "&date=" + date);
-        InputStream is = url.openStream();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
+        try{
+            InputStream is = url.openStream();
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String jsonText = readAll(rd);
+                JSONObject json = new JSONObject(jsonText);
+                dialog.dismiss();
+                return json;
+            } finally {
+                dialog.dismiss();
+                if (is != null){
+                    try {
+                        is.close();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
+        catch (Exception e){
+            dialog.dismiss();
+            e.printStackTrace();
+        }
+        return new JSONObject();
     }
 
     public static JSONObject reportDetailFromArrest(String pid, String tid, String date, Context ctx) throws IOException, JSONException {
+        Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
+        dialog.show();
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
@@ -276,15 +334,31 @@ public class JsonCompHandler {
 //        URL url = new URL(hostname + "/device/" + serialNum + "/loadMenu/" + id);
         URL url = new URL(hostname + "/reportDetail?pid=" + pid + "&tid=" + tid + "&date=" + date + "&simNumber=" + simNumber);
 //        URL url = new URL(hostname + "/reportDetail?pid=" + pid + "&tid=" + tid + "&date=" + date);
-        InputStream is = url.openStream();
         try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
+            InputStream is = url.openStream();
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String jsonText = readAll(rd);
+                JSONObject json = new JSONObject(jsonText);
+                dialog.dismiss();
+                return json;
+            } finally {
+                dialog.dismiss();
+                if (is != null){
+                    try {
+                        is.close();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
+        catch (Exception e){
+            dialog.dismiss();
+            e.printStackTrace();
+        }
+        return new JSONObject();
     }
 
     public static JSONObject loginSetting(String username, String password, Context ctx) throws IOException, JSONException {
@@ -296,15 +370,28 @@ public class JsonCompHandler {
         Log.d("LOAD URL", hostname + "/loginSetting?username=" + username + "&password=" + password);
 //        URL url = new URL(hostname + "/device/" + serialNum + "/loadMenu/" + id);
         URL url = new URL(hostname + "/loginSetting?username=" + username + "&password=" + password);
-        InputStream is = url.openStream();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
+        try{
+            InputStream is = url.openStream();
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String jsonText = readAll(rd);
+                JSONObject json = new JSONObject(jsonText);
+                return json;
+            } finally {
+                if (is != null){
+                    try {
+                        is.close();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return new JSONObject();
     }
 
     public static boolean saveJson(Context context, String id) throws IOException, Exception {

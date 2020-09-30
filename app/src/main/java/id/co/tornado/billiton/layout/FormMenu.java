@@ -2953,7 +2953,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     refreshICCProcessDialog("Chip tidak terdeteksi, menyiapkan fallback", true);
                     alert.show();
                     iccPreProcessed = false;
-//                    insertICC = null;
+                    insertICC = null;
                     if (formId.equals("MB82510")) {
                         prepareSaleFallback();
                     } else if (formId.equals("MB82560")) {
@@ -3029,7 +3029,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     refreshICCProcessDialog("Aplikasi chip tidak terdeteksi atau kartu telah diblok", true);
                     alert.show();
                     iccPreProcessed = false;
-//                    insertICC = null;
+                    insertICC = null;
                     preparePopupGagal("Aplikasi chip tidak terdeteksi atau kartu telah diblok");
                     return;
                 }

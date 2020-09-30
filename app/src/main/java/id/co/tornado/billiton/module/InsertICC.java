@@ -258,7 +258,12 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
             int val=0;
 //        writeLog("Opening ICC Slot");
             try {
-                val=openEmvSlot();
+                if (!isDriverLoaded){
+                    val=openEmvSlot();
+                }
+                else{
+                    return true;
+                }
             } catch (Exception e) {
                 val=-1;
             }
@@ -494,6 +499,7 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
             }
         }
     }
+    private boolean isDriverLoaded = false;
 
     private int openEmvSlot() {
         int val = 0;
@@ -502,38 +508,10 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
                 val = ContactICCardReaderInterface.init();
                 if (val  >= 0){
                     Log.d(tag, "ContactICCardReaderInterface.init() OK");
-//                    appState.icInitFlag = true;
-//                    appState.initData();
-//
-//                    appState.idleFlag = true;
-//                    if(appState.emvParamLoadFlag == false)
-//                    {
-//                        loadEMVParam();
-//                    }
-////                    else{
-////                        if(appState.emvParamChanged == true)
-////                        {
-////                            funcActivity.setEMVTermInfo();
-////                        }
-////                    }
-//
-//                    byte[] version = new byte[32];
-//                    byte[] kernelChecksum = new byte[8];
-//                    byte[] configChecksum = new byte[4];
-//
-//                    int len = emv_get_version_string(version, version.length);
-//
-//                    funcActivity.mHandler.setFunActivity(funcActivity);
-//
-//                    if(appState.icInitFlag != true)
-//                    {
-//                        appState.idleFlag = false;
-//                        return -1;
-//                    }
-//                    funcActivity.waitContactCard();
-
-
                     val = ContactICCardReaderInterface.open(CHIP_SLOT_INDEX);
+                    if (val >= 0){
+                        isDriverLoaded = true;
+                    }
 
                     nCardHandle = val;
                     isOpen = true;
