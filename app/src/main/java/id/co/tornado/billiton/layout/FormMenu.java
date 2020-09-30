@@ -244,6 +244,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private String SCREEN_PURCHASE_FALLBACK = "MB82562";
     private String SCREEN_PURCHASE_BJB = "MB82511";
     private String SCREEN_PURCHASE_BJB_FALLBACK = "MB82512";
+    private String val2 = "";
+    private String val1 = "";
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -1525,6 +1527,36 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             return;
         }
 
+        // last reprint
+        if (actionUrl.equals("PR000P") || actionUrl.equals("PR000M") || actionUrl.equals("PR00MB")) {
+            String pid = "";
+            stan = handleLastReprint();
+
+            switch (actionUrl) {
+                case "PR000P":
+                    pid = PBB_PROFILES;
+                    break;
+                case "PR000M":
+                    pid = MPN_PROFILES;
+                    break;
+                case "PR00MB":
+                    pid = MINI_BANKING_PROFILES;
+                    break;
+            }
+
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+//            requestReprintReport(date, tid, pid, simNumber, "reprint");
+            try {
+                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "reprint");
+            return;
+        }
+
         //Reprint MA
         if (actionUrl.equals("RMA020")) {
             String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
@@ -1657,7 +1689,6 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             if (newAct != null) {
                 msg.put("msg_si", newAct);
             }
-            msg.put("msg_dt", dataOutput);
 
             //ADD JSON OBJECT msg_sn, msg_tid FOR ALL TRANSACTION (PENTEST)
             msg.put("msg_sn", preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER));
@@ -1672,6 +1703,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    });
 //                    AlertDialog diaLog = builder.create();
 //                    diaLog.show();
+
+            msg.put("msg_dt", dataOutput);
 
                     //enc
 //                    try {
@@ -2596,6 +2629,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         if (dataArr.getString("comp_id").equals("M1012") && lbl.contains("NTPN") && (value == null || value.equals("null"))) {
                             value = "-";
                         }
+
+                        if (dataArr.getString("comp_id").equals("MA039") && lbl.contains("Biaya Admin")) {
+                            val1 = value;
+                            value = "Val1";
+                        }
+
+                        if (dataArr.getString("comp_id").equals("MA040") && lbl.contains("Total")) {
+                            val2 = value;
+                            value = "Val2";
+                        }
+
                         if (!lbl.startsWith("--S")) {
                             if (lbl.startsWith("--B")) {
                                 lbl = lbl.substring(3);
@@ -4666,7 +4710,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         data = addTrfSamsatFooter(data);
                     }
                     ESCPOSApi.printStruk(bitmap, data, mdata, tid, mid, stan, countPrint,
-                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName);
+                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName, formId, val1, val2);
                 } else {
                     ESCPOSApi.printStruk(bitmap, data);
                 }
@@ -5145,6 +5189,46 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
 //        Toast.makeText(context, logText, Toast.LENGTH_LONG).show();
         return rps;
+    }
+
+    private String handleLastReprint() {
+        if (helperDb == null) {
+            helperDb = new DataBaseHelper(context);
+        }
+        String last_stan = "";
+        SQLiteDatabase clientDB = null;
+        JSONObject rps = new JSONObject();
+        String logText = "reprint [" + serviceId + "]";
+        try {
+            Log.d("CEK ARYO", "5");
+            rps = new JSONObject("{\"screen\":{\"ver\":\"1\",\"comps\":{\"comp\":[{\"visible\":true,\"comp_values\":{\"comp_value\":[{\"print\":\"Data transaksi tidak ditemukan\",\n" +
+                    "\"value\":\"Data transaksi tidak ditemukan\"}]},\"comp_lbl\":\" \",\"comp_type\":\"1\",\"comp_id\":\"P00001\",\"seq\":0}]},\"id\":\"000000F\",\n" +
+                    "\"type\":\"3\",\"title\":\"Gagal\"}}");
+
+            helperDb.openDataBase();
+            clientDB = helperDb.getActiveDatabase();
+            String qLog = "";
+
+            qLog = "select * from edc_log  "
+                    + "order by log_id desc limit 1";
+
+            Cursor cLog = clientDB.rawQuery(qLog, null);
+            if (cLog.moveToFirst()) {
+                String msgId = cLog.getString(cLog.getColumnIndex("messageid"));
+                String tcaid = cLog.getString(cLog.getColumnIndex("previd"));
+                String txpan = cLog.getString(cLog.getColumnIndex("track2"));;
+                last_stan = cLog.getString(cLog.getColumnIndex("stan"));
+                if (cLog != null) {
+                    cLog.close();
+                }
+            }
+        } catch (Exception ex) {
+            Log.i("TX", "DB error");
+            ex.printStackTrace();
+            logText += ", excptn";
+        }
+//        Toast.makeText(context, logText, Toast.LENGTH_LONG).show();
+        return last_stan;
     }
 
     private JSONObject handleReport(String serviceId) {

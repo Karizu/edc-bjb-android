@@ -221,7 +221,8 @@ public class ESCPOSApi {
     public static void printStruk(Bitmap image,List<PrintSize>data,List<String> mdata,
                                   String tid, String mid, String stan, int pcopy, String svrRef,
                                   String svrDate, String svrTime, String cardType, String cardNumber,
-                                  String screenLoader, String batchNumber, String svrAppr, String storeName) {
+                                  String screenLoader, String batchNumber, String svrAppr, String storeName,
+                                  String formId, String val1, String val2) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -368,6 +369,36 @@ public class ESCPOSApi {
                 printCommands(LEFT_ALIGN);
                 PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
                 printCommands(fPz);
+            }
+            else if (formId.equals("MA0023F") || formId.equals("MA0002F")){
+                Boolean isFlag;
+                if (pz.getMessage().contains("Biaya Admin") || pz.getMessage().contains("Val1")) {
+                    if (pcopy == 0) {
+                        //skip
+                    } else {
+                        if (pz.getMessage().contains("Val1")) {
+                            printCommands(LEFT_ALIGN);
+                            PrintSize fPz = new PrintSize(FontSize.NORMAL, val1+"\n");
+                            printCommands(fPz);
+                        } else {
+                            printCommands(pz);
+                        }
+                    }
+                } else if (pz.getMessage().contains("Total") || pz.getMessage().contains("Val2")) {
+                    if (pcopy == 0) {
+                        //skip
+                    } else {
+                        if (pz.getMessage().contains("Val2")) {
+                            printCommands(LEFT_ALIGN);
+                            PrintSize fPz = new PrintSize(FontSize.NORMAL, val2+"\n");
+                            printCommands(fPz);
+                        } else {
+                            printCommands(pz);
+                        }
+                    }
+                } else {
+                    printCommands(pz);
+                }
             }
             else {
                 printCommands(pz);
