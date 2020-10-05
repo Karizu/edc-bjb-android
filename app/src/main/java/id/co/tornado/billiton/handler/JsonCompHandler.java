@@ -152,10 +152,10 @@ public class JsonCompHandler {
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
         String serialNum = Build.SERIAL;
-        // Create an unbound socket
         if (id.contains("Rp")) {
             return new JSONObject();
         }
+        // Create an unbound socket
 //        Log.d("LOAD URL",hostname + "/device/" + serialNum + "/loadMenu/" + id);
         String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
         String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
@@ -171,12 +171,12 @@ public class JsonCompHandler {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             JSONObject json = new JSONObject(jsonText);
-//            if (json.has("encrypted")) {
-//                String isEnc = json.getString("encrypted");
-//                if (isEnc.equals("t")) {
-//                    json = decResponse(json);
-//                }
-//            }
+            if (json.has("encrypted")) {
+                String isEnc = json.getString("encrypted");
+                if (isEnc.equals("t")) {
+                    json = decResponse(json);
+                }
+            }
             dialog.dismiss();
             return (JSONObject) json.get("screen");
 

@@ -1106,14 +1106,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 nop = editText.getText().toString();
                             }
 
-                            if (actionUrl.equals("R0000A") || actionUrl.equals("RMA020")) {
+                            if (actionUrl.equals("R0000A") || actionUrl.equals("RMA020") || actionUrl.equals("R0000C")) {
                                 stan = editText.getText().toString();
                             }
 
 
                             //INPUT CONFIG FITUR REPORT
                             if (actionUrl.equals("R001A1") || actionUrl.equals("RMA011")
-                                    || actionUrl.equals("RMA014") || actionUrl.equals("R002A1")) {
+                                    || actionUrl.equals("RMA014") || actionUrl.equals("R002A1")
+                                    || actionUrl.equals("R001D1") || actionUrl.equals("R002C1")
+                            ) {
                                 date = editText.getText().toString();
                                 SimpleDateFormat fromUser = new SimpleDateFormat("ddMMyyyy");
                                 SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1219,7 +1221,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                                     if (comboBox.compId.equals("MA015")) {
                                         if (!formId.equals("MA00050") && !formId.equals("MA00051") && !formId.equals("MA00080") && !formId.equals("MA00082") && !formId.equals("MA00090") && !formId.equals("MA00092")
-                                                && !formId.equals("EP00300") && !formId.equals("EP00310") && !formId.equals("EP00410") && !formId.equals("EP00610") && !formId.equals("EP00612")
+                                                && !formId.equals("EP00300") && !formId.equals("EP00310") && !formId.equals("EP00312") && !formId.equals("EP00410") && !formId.equals("EP00610") && !formId.equals("EP00612")
                                                 && !formId.equals("EP00710") && !formId.equals("EP00712") && !formId.equals("EP00810") && !formId.equals("EP00812")
                                                 && !formId.equals("EP00820") && !formId.equals("EP00822") && !formId.equals("EP00910") && !formId.equals("EP00912")) {
                                             cdata = cdata.substring(0, 2) + "|" + cdata.substring(2);
@@ -1542,13 +1544,30 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "reprint");
-            try {
-                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            processResponse(rps, "reprint");
+            requestReprintReport(date, tid, pid, simNumber, "reprint");
+//            try {
+//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "reprint");
+            return;
+        }
+
+        // reprint mpn & pbb
+        if (actionUrl.equals("R0000C")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = MPN_PROFILES;
+
+            JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+            requestReprintReport(date, tid, pid, simNumber, "reprint");
+//            try {
+//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "reprint");
             return;
         }
 
@@ -1572,13 +1591,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "reprint");
-            try {
-                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            processResponse(rps, "reprint");
+            requestReprintReport(date, tid, pid, simNumber, "reprint");
+//            try {
+//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "reprint");
             return;
         }
 
@@ -1589,13 +1608,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "reprint");
-            try {
-                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            processResponse(rps, "reprint");
+            requestReprintReport(date, tid, pid, simNumber, "reprint");
+//            try {
+//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "reprint");
             return;
         }
 
@@ -1606,13 +1625,30 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "summary");
-            try {
-                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            processResponse(rps, "");
+            requestReprintReport(date, tid, pid, simNumber, "summary");
+//            try {
+//                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "");
+            return;
+        }
+
+        //Report Summary mpn & pbb
+        if (actionUrl.equals("R001D1") || actionUrl.equals("R001D2")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = MPN_PROFILES;
+
+            JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+            requestReprintReport(date, tid, pid, simNumber, "summary");
+//            try {
+//                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "");
             return;
         }
 
@@ -1623,13 +1659,30 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "detail");
-            try {
-                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            processResponse(rps, "");
+            requestReprintReport(date, tid, pid, simNumber, "detail");
+//            try {
+//                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "");
+            return;
+        }
+
+        //Report Detail mpn & pbb
+        if (actionUrl.equals("R002C1") || actionUrl.equals("R002C2")) {
+            String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
+            String pid = MPN_PROFILES;
+
+            JSONObject rps = null;
+            String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
+            requestReprintReport(date, tid, pid, simNumber, "detail");
+//            try {
+//                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "");
             return;
         }
 
@@ -1640,13 +1693,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "detail");
-            try {
-                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            processResponse(rps, "");
+            requestReprintReport(date, tid, pid, simNumber, "detail");
+//            try {
+//                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "");
             return;
         }
 
@@ -1656,13 +1709,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = MINI_BANKING_PROFILES;
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "summary");
-            try {
-                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            processResponse(rps, "");
+            requestReprintReport(date, tid, pid, simNumber, "summary");
+//            try {
+//                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            processResponse(rps, "");
             return;
         }
 
@@ -1673,7 +1726,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
 
         // reprint
-        if (actionUrl.startsWith("P") && !actionUrl.equals("P00030") && !actionUrl.equals("P00031") && !actionUrl.equals("P00032") && !actionUrl.equals("P00033") && !actionUrl.equals("P00034") && !actionUrl.equals("P00010")) {
+        if (actionUrl.startsWith("P") && !actionUrl.equals("P00030") && !actionUrl.equals("P00031") && !actionUrl.equals("P00032") && !actionUrl.equals("P00033") && !actionUrl.equals("P00034") && !actionUrl.equals("P00010") && !actionUrl.startsWith("PR")) {
             JSONObject jsonResp = handleReprint(actionUrl);
             processResponse(jsonResp, "reprint");
             return;
@@ -1729,15 +1782,15 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    AlertDialog diaLog = builder.create();
 //                    diaLog.show();
 
-            msg.put("msg_dt", dataOutput);
+//            msg.put("msg_dt", dataOutput);
 
                     //enc
-//                    try {
-//                        msg.put("encrypted", "t");
-//                        msg.put("msg_dt", compress(dataOutput));
-//                    } catch (Exception e) {
-//                        msg.put("msg_dt", dataOutput);
-//                    }
+                    try {
+                        msg.put("encrypted", "t");
+                        msg.put("msg_dt", compress(dataOutput));
+                    } catch (Exception e) {
+                        msg.put("msg_dt", dataOutput);
+                    }
 
                     final JSONObject msgRoot = new JSONObject();
                     msgRoot.put("msg", msg);
@@ -5925,6 +5978,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         if (helperDb == null) {
             helperDb = new DataBaseHelper(context);
         }
+
         SQLiteDatabase clientDB = null;
         String logText = "Update log";
         String reversed = "null";
