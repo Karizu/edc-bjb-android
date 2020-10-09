@@ -358,8 +358,8 @@ public class ActivityList extends Activity {
             }else{
 //                setMenu(JsonCompHandler.readJson(this, compAct));
                 setMenu(JsonCompHandler
-                        .readJsonFromCacheIfAvailable(this, compAct)
-//                        .readJsonFromUrl(compAct, this)
+//                        .readJsonFromCacheIfAvailable(this, compAct)
+                        .readJsonFromUrl(compAct, this)
                 );
             }
         } catch (IOException e) {

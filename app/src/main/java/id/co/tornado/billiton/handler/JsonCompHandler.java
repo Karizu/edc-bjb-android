@@ -159,7 +159,7 @@ public class JsonCompHandler {
 //        Log.d("LOAD URL",hostname + "/device/" + serialNum + "/loadMenu/" + id);
         String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
         String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
-        Log.d("LOAD URL", hostname + "/screen?id=" + id + "&simNumber=" + simNumber + "&tid=" + tid);
+//        Log.d("LOAD URL", hostname + "/screen?id=" + id + "&simNumber=" + simNumber + "&tid=" + tid);
 //        URL url = new URL(hostname + "/device/" + serialNum + "/loadMenu/" + id);
         URL url = new URL(hostname + "/screen?id=" + id);
 //        URL url = new URL(hostname + "/screen?id=" + id + "&simNumber=" + simNumber + "&tid=" + tid);
@@ -483,7 +483,7 @@ public class JsonCompHandler {
             FileInputStream fis = new FileInputStream("/data/data/" + context.getPackageName() + "/files/" + id + ".json");
             BufferedReader rd = new BufferedReader(new InputStreamReader(fis));
             respJsonObject = new JSONObject(readAll(rd));
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             respJsonObject = saveJsonWhenNoCache(context, id);
         }
         return respJsonObject;

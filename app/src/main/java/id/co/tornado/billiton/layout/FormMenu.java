@@ -345,8 +345,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             else {
 //                comp = JsonCompHandler.readJson(context, id);
                 comp = JsonCompHandler
-                        .readJsonFromCacheIfAvailable(context, id)
-//                        .readJsonFromUrl(id, context)
+//                        .readJsonFromCacheIfAvailable(context, id)
+                        .readJsonFromUrl(id, context)
                 ;
                 init();
             }
@@ -1544,13 +1544,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "reprint");
-//            try {
-//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "reprint");
+//            requestReprintReport(date, tid, pid, simNumber, "reprint");
+            try {
+                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "reprint");
             return;
         }
 
@@ -1561,13 +1561,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "reprint");
-//            try {
-//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "reprint");
+//            requestReprintReport(date, tid, pid, simNumber, "reprint");
+            try {
+                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "reprint");
             return;
         }
 
@@ -1591,13 +1591,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "reprint");
-//            try {
-//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "reprint");
+//            requestReprintReport(date, tid, pid, simNumber, "reprint");
+            try {
+                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "reprint");
             return;
         }
 
@@ -1608,13 +1608,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "reprint");
-//            try {
-//                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "reprint");
+//            requestReprintReport(date, tid, pid, simNumber, "reprint");
+            try {
+                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "reprint");
             return;
         }
 
@@ -1625,13 +1625,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "summary");
-//            try {
-//                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "");
+//            requestReprintReport(date, tid, pid, simNumber, "summary");
+            try {
+                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
             return;
         }
 
@@ -1642,13 +1642,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "summary");
-//            try {
-//                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "");
+//            requestReprintReport(date, tid, pid, simNumber, "summary");
+            try {
+                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
             return;
         }
 
@@ -1659,13 +1659,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "detail");
-//            try {
-//                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "");
+//            requestReprintReport(date, tid, pid, simNumber, "detail");
+            try {
+                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
             return;
         }
 
@@ -1676,13 +1676,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "detail");
-//            try {
-//                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "");
+//            requestReprintReport(date, tid, pid, simNumber, "detail");
+            try {
+                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
             return;
         }
 
@@ -1693,13 +1693,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "detail");
-//            try {
-//                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "");
+//            requestReprintReport(date, tid, pid, simNumber, "detail");
+            try {
+                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
             return;
         }
 
@@ -1709,13 +1709,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = MINI_BANKING_PROFILES;
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-            requestReprintReport(date, tid, pid, simNumber, "summary");
-//            try {
-//                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            processResponse(rps, "");
+//            requestReprintReport(date, tid, pid, simNumber, "summary");
+            try {
+                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            processResponse(rps, "");
             return;
         }
 
@@ -1782,15 +1782,15 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    AlertDialog diaLog = builder.create();
 //                    diaLog.show();
 
-//            msg.put("msg_dt", dataOutput);
+            msg.put("msg_dt", dataOutput);
 
                     //enc
-                    try {
-                        msg.put("encrypted", "t");
-                        msg.put("msg_dt", compress(dataOutput));
-                    } catch (Exception e) {
-                        msg.put("msg_dt", dataOutput);
-                    }
+//                    try {
+//                        msg.put("encrypted", "t");
+//                        msg.put("msg_dt", compress(dataOutput));
+//                    } catch (Exception e) {
+//                        msg.put("msg_dt", dataOutput);
+//                    }
 
                     final JSONObject msgRoot = new JSONObject();
                     msgRoot.put("msg", msg);
