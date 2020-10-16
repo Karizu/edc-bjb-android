@@ -49,7 +49,7 @@ public class CommonConfig {
     private static final int WS_NORMAL_PORT = 80;
     public static final int WS_NON_SSL_PORT = WS_NORMAL_PORT;
 
-    private static final String intDeSelKey = "H4sIAAAAAAAAADM207M00TO10DO0MAQAWnddcwwAAAA=";
+    public static final String intDeSelKey = "H4sIAAAAAAAAADM207M00TO10DO0MAQAWnddcwwAAAA=";
     public static final String intProSelKey = "H4sIAAAAAAAAADM207M00TO10DO0MLKyMLAwAACERKhvEQAAAA==";
     public static final String intProBjKey = "H4sIAAAAAAAAAEtNSdZLSszLTspK0kvO18tMAQBgXEBjEQAAAA==";
 
@@ -65,9 +65,9 @@ public class CommonConfig {
     public static final String chKey_3 = "H4sIAAAAAAAAADMytbA0MwYAwc5YuQYAAAA=";
     public static final String chKey_4 = "H4sIAAAAAAAAADMzs7QEAPHkY4UEAAAA";
 
-//    private static final String PROSELIP = getVal(intProBjKey);
-    private static final String PROSELIP = getVal(intProSelKey);
-    public static final String DESELIP = getVal(intDeSelKey);
+//    public static final String PROSELIP = getVal(intProBjKey);
+    public static final String PROSELIP = getVal(intProSelKey);
+//    public static final String PROSELIP = getVal(intDeSelKey);
 
     public static final String[] FORM_MENU_KEY = {"type", "title", "id", "print", "print_text", "ver", "comps"};
     public static final String[] FORM_MENU_COMP_KEY = {"visible", "comp_type", "comp_id", "comp_opt", "comp_act", "seq", "comp_values"};
@@ -91,11 +91,11 @@ public class CommonConfig {
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
     public static final String INIT_REST_ACT = "S000025";
 
-//    public static final String DEV_TERMINAL_ID = "13030022";
-//    public static final String DEV_MERCHANT_ID = "00110025000001";
-//    public static final String INIT_MERCHANT_NAME = "SAMSAT SUMEDANG";
-//    public static final String INIT_MERCHANT_ADDRESS1 = "CABANG SUMEDANG";
-//    public static final String INIT_MERCHANT_ADDRESS2 = "SUMEDANG";
+//    public static final String DEV_TERMINAL_ID = "13040039";
+//    public static final String DEV_MERCHANT_ID = "00010025000001";
+//    public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 3";
+//    public static final String INIT_MERCHANT_ADDRESS1 = "SOEKARNO HATTA";
+//    public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
 //    public static final String INIT_REST_ACT = "S000SMT";
 
     public static final String INIT_SIM_NUMBER = "000000";

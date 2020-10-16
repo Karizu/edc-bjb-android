@@ -129,14 +129,14 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 String version = pInfo.versionName;
 
-                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "091020");
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "141020");
             } catch (Exception e) {
                 e.printStackTrace();
-                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "091020");
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "141020");
             }
         }
         else{
-            txFcopy.setText("\u00a9 BANK BJB, v" + "0.1"+ ", " + "091020");
+            txFcopy.setText("\u00a9 BANK BJB, v" + "0.1"+ ", " + "141020");
         }
 
         String serialNum = Build.SERIAL;

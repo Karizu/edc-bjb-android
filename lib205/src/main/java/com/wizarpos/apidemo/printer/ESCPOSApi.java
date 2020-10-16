@@ -28,7 +28,7 @@ public class ESCPOSApi {
     public static final byte[] CENTER_ALIGN = {0x1B, 0x61, 1};
     public static final byte[] LEFT_ALIGN = {0x1B, 0x61, 0};
     public static final byte[] RIGHT_ALIGN = {0x1B, 0x61, 2};
-    public static final byte[] TEXT_BOLD = {0x1B,0x45};
+    public static final byte[] TEXT_BOLD = {0x1B, 0x45};
 
     public static final byte[] LINE_SPACING_24DOTS = buildPOSCommand(SET_LINE_SPACING, (byte) 24);
     public static final byte[] LINE_SPACING_30DOTS = buildPOSCommand(SET_LINE_SPACING, (byte) 30);
@@ -36,7 +36,7 @@ public class ESCPOSApi {
 
     public static int maxBitsWidth = 255;
 
-    public static byte[] setLineSpacing(int size){
+    public static byte[] setLineSpacing(int size) {
         return buildPOSCommand(SET_LINE_SPACING, (byte) size);
     }
 
@@ -125,7 +125,7 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    public static void printStruk(Bitmap image,List<PrintSize>data) {
+    public static void printStruk(Bitmap image, List<PrintSize> data) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -182,15 +182,15 @@ public class ESCPOSApi {
         printCommandsSmall("KOTA BERANTAH\n");
         printCommands("\n");
         printCommands(LEFT_ALIGN);
-        String sameLine = addSpaceBetween("TID : 123456","MID : 123456789",false);
+        String sameLine = addSpaceBetween("TID : 123456", "MID : 123456789", false);
         printCommandsSmall(sameLine + "\n");
-        sameLine = addSpaceBetween("BATCH : 000000","TRACE NO : 002102",false);
-        printCommandsSmall(sameLine+"\n");
+        sameLine = addSpaceBetween("BATCH : 000000", "TRACE NO : 002102", false);
+        printCommandsSmall(sameLine + "\n");
         Date d = new Date();
-        sameLine = addSpaceBetween("TANGGAL : "+printDate(d),"JAM : "+printTime(d),false);
+        sameLine = addSpaceBetween("TANGGAL : " + printDate(d), "JAM : " + printTime(d), false);
         printCommandsSmall(sameLine + "\n");
         printCommands("\n");
-        for(PrintSize pz : data){
+        for (PrintSize pz : data) {
 //            Log.d("zzzz", pz.getMessage());
             if (pz.getMessage().equals("START_FOOTER")) {
                 printCommands(CENTER_ALIGN);
@@ -201,8 +201,8 @@ public class ESCPOSApi {
             } else if (pz.getMessage().equals("STOP FOOTER")) {
                 printCommands(LEFT_ALIGN);
             }
-            if (pz.getMessage().equals("Info Kuota Bansos")) {}
-            else {
+            if (pz.getMessage().equals("Info Kuota Bansos")) {
+            } else {
                 printCommands(pz);
             }
         }
@@ -218,11 +218,11 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    public static void printStruk(Bitmap image,List<PrintSize>data,List<String> mdata,
+    public static void printStruk(Bitmap image, List<PrintSize> data, List<String> mdata,
                                   String tid, String mid, String stan, int pcopy, String svrRef,
                                   String svrDate, String svrTime, String cardType, String cardNumber,
                                   String screenLoader, String batchNumber, String svrAppr, String storeName,
-                                  String formId, String val1, String val2) {
+                                  String val1, String val2, String prosel) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -275,18 +275,18 @@ public class ESCPOSApi {
         printCommands("\n");
 
         //ADD STORE NAME HEADER
-        if (!storeName.equals("AGEN")){
-            printCommandsSmall(storeName+"\n");
+        if (!storeName.equals("AGEN")) {
+            printCommandsSmall(storeName + "\n");
         }
 
         for (String md : mdata) {
-            printCommandsSmall(md+"\n");
+            printCommandsSmall(md + "\n");
         }
 //        printCommandsSmall("MERCHANT LOREM IPSUM\n");
 //        printCommandsSmall("JL. ANTAH BERANTAH\n");
 //        printCommandsSmall("NO 34A\n");
 //        printCommandsSmall("KOTA BERANTAH\n");
-        if (pcopy>2) {
+        if (pcopy > 2) {
             printCommands("\n");
             printCommandsSmall("**********DUPLICATE**********\n");
         }
@@ -301,32 +301,32 @@ public class ESCPOSApi {
         if (!cardNumber.equals("")) {
             printCommandsSmall(cardType + "\n");
             if (!cardType.contains("FLY")) {
-                printBold_2Commands(" "+cardNumber + "\n");
+                printBold_2Commands(" " + cardNumber + "\n");
             }
             printCommandsSmall("\n");
         }
         Date d = new Date();
         String strDate = printDate(d);
         String strTime = printTime(d);
-        if (svrDate.length()==4) {
+        if (svrDate.length() == 4) {
             strDate = grabDate(d, svrDate);
-        } else if (svrDate.length()==10) {
+        } else if (svrDate.length() == 10) {
             strDate = grabSQLDate(d, svrDate);
         }
-        if (svrTime.length()==6) {
+        if (svrTime.length() == 6) {
             strTime = grabTime(d, svrTime);
-        } else if (svrTime.length()==8) {
+        } else if (svrTime.length() == 8) {
             strTime = svrTime;
         }
-        printCommandsSmall(strDate + ", " +strTime + "\n");
-        sameLine = addSpaceBetween("BATCH  : " + batchNumber,"TRACE NO : " + stan,false);
+        printCommandsSmall(strDate + ", " + strTime + "\n");
+        sameLine = addSpaceBetween("BATCH  : " + batchNumber, "TRACE NO : " + stan, false);
         printCommandsSmall(sameLine + "\n");
 //        if (false) {
         if (!svrRef.equals("000000000000")) {
             sameLine = addSpaceBetween("REF NO : " + svrRef, "APPR : " + svrAppr, false);
             printCommandsSmall(sameLine + "\n");
         }
-        for(PrintSize pz : data){
+        for (PrintSize pz : data) {
 //            Log.d("zzzz",pz.getMessage());
             if (pz.getMessage().equals("START_FOOTER")) {
                 printCommands(CENTER_ALIGN);
@@ -345,78 +345,93 @@ public class ESCPOSApi {
                 PrintSize cPz = new PrintSize(FontSize.NORMAL, content);
                 printCommands(cPz);
                 printCommands(CENTER_ALIGN);
-                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
+                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content, ""));
                 printCommands(fPz);
-            }
-            else if (pz.getMessage().contains("Transaksi Berhasil")) {
+            } else if (pz.getMessage().contains("Transaksi Berhasil")) {
                 String content = pz.getMessage().substring(0, pz.getMessage().indexOf("Transaksi Berhasil"));
                 PrintSize cPz = new PrintSize(FontSize.NORMAL, content);
                 printCommands(cPz);
                 printCommands(CENTER_ALIGN);
-                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
+                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content, ""));
+                printCommands(fPz);
+            } else if (pz.getMessage().contains("TRANSAKSI BERHASIL")) {
+                String content = pz.getMessage().substring(0, pz.getMessage().indexOf("TRANSAKSI BERHASIL"));
+                PrintSize cPz = new PrintSize(FontSize.NORMAL, content);
+                printCommands(cPz);
+                printCommands(CENTER_ALIGN);
+                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content, ""));
                 printCommands(fPz);
             }
             else if (pz.getMessage().contains("PROSES AWAL PEMBUKAAN REKENING BSA")) {
                 String content = pz.getMessage().substring(0, pz.getMessage().indexOf("PROSES AWAL PEMBUKAAN REKENING BSA"));
                 printBold_2Commands(content);
                 printCommands(LEFT_ALIGN);
-                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
+                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content, ""));
                 printCommands(fPz);
-            }
-            else if (pz.getMessage().contains("Pembayaran PKB/SWDKLLJ/BBNKB/PNBP")) {
+            } else if (pz.getMessage().contains("Pembayaran PKB/SWDKLLJ/BBNKB/PNBP")) {
                 String content = pz.getMessage().substring(0, pz.getMessage().indexOf("Pembayaran PKB/SWDKLLJ/BBNKB/PNBP"));
                 printBold_2Commands(content);
                 printCommands(LEFT_ALIGN);
-                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content,""));
+                PrintSize fPz = new PrintSize(FontSize.NORMAL, pz.getMessage().replace(content, ""));
                 printCommands(fPz);
             }
-            else if (formId.equals("MA0023F") || formId.equals("MA0002F")){
-                Boolean isFlag;
-                if (pz.getMessage().contains("Biaya Admin") || pz.getMessage().contains("Val1")) {
-                    if (pcopy == 0) {
-                        //skip
-                    } else {
-                        if (pz.getMessage().contains("Val1")) {
-                            printCommands(LEFT_ALIGN);
-                            PrintSize fPz = new PrintSize(FontSize.NORMAL, val1+"\n");
-                            printCommands(fPz);
+            //set mini banking cust copy wihtout fee
+            else if (screenLoader.equals("MA0023F") || screenLoader.equals("MA0002F")
+                    || screenLoader.equals("MA0041F") || screenLoader.equals("MA0043F")
+                    || screenLoader.equals("MA0010F") || screenLoader.equals("MA0012F")
+                    || screenLoader.equals("MA0031F") || screenLoader.equals("MA0033F")
+                    || screenLoader.equals("POC002R") || screenLoader.equals("MA0050F")
+                    || screenLoader.equals("MA0051F")
+            ) {
+                if (prosel.contains("182") || prosel.contains("181")) {
+                    Boolean isFlag;
+                    if (pz.getMessage().contains("Biaya Admin") || pz.getMessage().contains("Val1")) {
+                        if (pcopy == 0) {
+                            //skip
                         } else {
-                            printCommands(pz);
+                            if (pz.getMessage().contains("Val1")) {
+                                printCommands(LEFT_ALIGN);
+                                PrintSize fPz = new PrintSize(FontSize.NORMAL, val1 + "\n");
+                                printCommands(fPz);
+                            } else {
+                                printCommands(pz);
+                            }
                         }
-                    }
-                } else if (pz.getMessage().contains("Total") || pz.getMessage().contains("Val2")) {
-                    if (pcopy == 0) {
-                        //skip
-                    } else {
-                        if (pz.getMessage().contains("Val2")) {
-                            printCommands(LEFT_ALIGN);
-                            PrintSize fPz = new PrintSize(FontSize.NORMAL, val2+"\n");
-                            printCommands(fPz);
+                    } else if (pz.getMessage().contains("Total") || pz.getMessage().contains("Val2")) {
+                        if (pcopy == 0) {
+                            //skip
                         } else {
-                            printCommands(pz);
+                            if (pz.getMessage().contains("Val2")) {
+                                printCommands(LEFT_ALIGN);
+                                PrintSize fPz = new PrintSize(FontSize.NORMAL, val2 + "\n");
+                                printCommands(fPz);
+                            } else {
+                                printCommands(pz);
+                            }
                         }
+                    } else {
+                        printCommands(pz);
                     }
                 } else {
                     printCommands(pz);
                 }
-            }
-            else {
+            } else {
                 printCommands(pz);
             }
         }
         printCommands("\n");
         printCommands(CENTER_ALIGN);
         String copyTypeText = "--DUPLICATE COPY--\n";
-        if (pcopy==0) {
+        if (pcopy == 0) {
             copyTypeText = "--CUSTOMER COPY--\n";
-            if (screenLoader.equals("71000FF")||screenLoader.equals("721000F")||screenLoader.equals("731000F")) {
+            if (screenLoader.equals("71000FF") || screenLoader.equals("721000F") || screenLoader.equals("731000F")) {
                 copyTypeText = "--AGENT COPY--\n";
             }
-        } else if (pcopy==1) {
+        } else if (pcopy == 1) {
             copyTypeText = "--BANK COPY--\n";
-        } else if (pcopy==2) {
+        } else if (pcopy == 2) {
             copyTypeText = "--MERCHANT COPY--\n";
-            if (screenLoader.equals("71000FF")||screenLoader.equals("721000F")||screenLoader.equals("731000F")) {
+            if (screenLoader.equals("71000FF") || screenLoader.equals("721000F") || screenLoader.equals("731000F")) {
                 copyTypeText = "--CUSTOMER COPY--\n";
             }
         } else {
@@ -432,7 +447,7 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    public static void printSettlement(Bitmap image,List<PrintSize>data,List<String> mdata,
+    public static void printSettlement(Bitmap image, List<PrintSize> data, List<String> mdata,
                                        String tid, String mid, String stan, String svrDate, String svrTime) {
         BitSet imageBits = getBitsImageData(image);
 
@@ -485,7 +500,7 @@ public class ESCPOSApi {
         printCommands(LINE_SPACING_30DOTS);
         printCommands("\n");
         for (String md : mdata) {
-            printCommandsSmall(md+"\n");
+            printCommandsSmall(md + "\n");
         }
         printCommands("\n");
         printCommands(LEFT_ALIGN);
@@ -495,16 +510,16 @@ public class ESCPOSApi {
         Date d = new Date();
         String strDate = printDate(d);
         String strTime = printTime(d);
-        if (svrDate.length()==4) {
+        if (svrDate.length() == 4) {
             strDate = grabDate(d, svrDate);
         }
-        if (svrTime.length()==6) {
+        if (svrTime.length() == 6) {
             strTime = grabTime(d, svrTime);
         }
         printCommandsSmall("DATE/TIME    : " + strDate + " " + strTime + "\n");
         printCommands("\n");
-        for(PrintSize pz : data){
-            Log.d("zzzz",pz.getMessage());
+        for (PrintSize pz : data) {
+            Log.d("zzzz", pz.getMessage());
             if (pz.getMessage().equals("START_FOOTER")) {
                 printCommands(CENTER_ALIGN);
             } else if (pz.getMessage().equals("START FOOTER")) {
@@ -530,7 +545,7 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    public static void printReport(Bitmap image,List<PrintSize>data,List<String> mdata, String tid, String mid, String stan, String storeName) {
+    public static void printReport(Bitmap image, List<PrintSize> data, List<String> mdata, String tid, String mid, String stan, String storeName) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -583,12 +598,12 @@ public class ESCPOSApi {
         printCommands("\n");
 
         //ADD STORE NAME HEADER
-        if (!storeName.equals("AGEN")){
-            printCommandsSmall(storeName+"\n");
+        if (!storeName.equals("AGEN")) {
+            printCommandsSmall(storeName + "\n");
         }
 
         for (String md : mdata) {
-            printCommandsSmall(md+"\n");
+            printCommandsSmall(md + "\n");
         }
         printCommands("\n");
         printCommands(LEFT_ALIGN);
@@ -601,8 +616,8 @@ public class ESCPOSApi {
             printCommandsSmall("REPORT DATE     : " + stan + "\n");
         }
         printCommands("\n");
-        for(PrintSize pz : data){
-            Log.d("zzzz",pz.getMessage());
+        for (PrintSize pz : data) {
+            Log.d("zzzz", pz.getMessage());
             if (pz.getMessage().equals("START_FOOTER")) {
                 printCommands(CENTER_ALIGN);
             } else if (pz.getMessage().equals("START FOOTER")) {
@@ -611,9 +626,9 @@ public class ESCPOSApi {
                 printCommands(LEFT_ALIGN);
             } else if (pz.getMessage().equals("STOP FOOTER")) {
                 printCommands(LEFT_ALIGN);
-            } else if(pz.getMessage().contains(":")) {
+            } else if (pz.getMessage().contains(":")) {
                 printCommandsSmall(setHalfSide(pz.getMessage(), false, false));
-            } else if(pz.getMessage().contains("Rp")) {
+            } else if (pz.getMessage().contains("Rp")) {
                 printCommandsSmall(setHalfSide(pz.getMessage(), false, true));
             } else {
                 printCommands(pz);
@@ -629,7 +644,7 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    public static void printDetailReport(Bitmap image,List<PrintSize>data,List<String> mdata, String tid, String mid, String stan, String storeName) {
+    public static void printDetailReport(Bitmap image, List<PrintSize> data, List<String> mdata, String tid, String mid, String stan, String storeName) {
         BitSet imageBits = getBitsImageData(image);
 
         byte widthLSB = (byte) (image.getWidth() & 0xFF);
@@ -682,12 +697,12 @@ public class ESCPOSApi {
         printCommands("\n");
 
         //ADD STORE NAME HEADER
-        if (!storeName.equals("AGEN")){
-            printCommandsSmall(storeName+"\n");
+        if (!storeName.equals("AGEN")) {
+            printCommandsSmall(storeName + "\n");
         }
 
         for (String md : mdata) {
-            printCommandsSmall(md+"\n");
+            printCommandsSmall(md + "\n");
         }
         printCommands("\n");
         printCommands(LEFT_ALIGN);
@@ -699,8 +714,8 @@ public class ESCPOSApi {
             printCommandsSmall("REPORT DATE     : " + stan + "\n");
         }
         printCommands("\n");
-        for(PrintSize pz : data){
-            Log.d("zzzz",pz.getMessage());
+        for (PrintSize pz : data) {
+            Log.d("zzzz", pz.getMessage());
             if (pz.getMessage().equals("START_FOOTER")) {
                 printCommands(CENTER_ALIGN);
             } else if (pz.getMessage().equals("START FOOTER")) {
@@ -709,9 +724,9 @@ public class ESCPOSApi {
                 printCommands(LEFT_ALIGN);
             } else if (pz.getMessage().equals("STOP FOOTER")) {
                 printCommands(LEFT_ALIGN);
-            } else if(pz.getMessage().contains("|:")) {
+            } else if (pz.getMessage().contains("|:")) {
                 printCommandsSmall(setHalfDetailSide(pz.getMessage(), false, false));
-            } else if(pz.getMessage().contains(":|")) {
+            } else if (pz.getMessage().contains(":|")) {
                 printCommandsSmall(setHalfDetailSide(pz.getMessage(), false, true));
             } else {
                 printCommands(pz);
@@ -727,12 +742,12 @@ public class ESCPOSApi {
         PrinterInterface.PrinterClose();
     }
 
-    private static String printDate(Date d){
+    private static String printDate(Date d) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         return sdf.format(d);
     }
 
-    private static String printTime(Date d){
+    private static String printTime(Date d) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         return sdf.format(d);
     }
@@ -775,49 +790,49 @@ public class ESCPOSApi {
         return sdf.format(sv);
     }
 
-    private static String printFullDate(Date d){
+    private static String printFullDate(Date d) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
         return sdf.format(d);
     }
 
-    private static String addSpaceBetween(String txt1,String txt2, boolean normal){
+    private static String addSpaceBetween(String txt1, String txt2, boolean normal) {
         String space = " ";
 //        int lineSize = 32;
 //        if(!normal){
 //            lineSize = 42;
 //        }
         int lineSize = 30;
-        if(!normal){
+        if (!normal) {
             lineSize = 40;
         }
-        int totalLen = txt1.length()+txt2.length();
-        for(int i = 0;i<lineSize;i++){
-            totalLen = txt1.length()+txt2.length()+space.length();
-            if(totalLen == lineSize)
+        int totalLen = txt1.length() + txt2.length();
+        for (int i = 0; i < lineSize; i++) {
+            totalLen = txt1.length() + txt2.length() + space.length();
+            if (totalLen == lineSize)
                 break;
             space += " ";
         }
-        return txt1+space+txt2;
+        return txt1 + space + txt2;
     }
 
     private static String setHalfSide(String txt, boolean normal, boolean right) {
         String space = " ";
         int lineSize = 30;
-        if(!normal) {
+        if (!normal) {
             lineSize = 40;
         }
-        int totalLen = lineSize/2;
+        int totalLen = lineSize / 2;
         String cnt = "";
         if (right) {
             totalLen = 10;
             txt = txt.substring(3);
         } else {
             totalLen = 23;
-            cnt = "   " + txt.substring(txt.indexOf(":")+1);
-            cnt = cnt.substring(cnt.length()-3);
+            cnt = "   " + txt.substring(txt.indexOf(":") + 1);
+            cnt = cnt.substring(cnt.length() - 3);
             txt = txt.substring(0, txt.indexOf(":") - 1);
         }
-        for (int i = 0;i < totalLen; i++) {
+        for (int i = 0; i < totalLen; i++) {
             if (right) {
                 txt = space + txt;
             } else {
@@ -825,7 +840,7 @@ public class ESCPOSApi {
             }
         }
         if (right) {
-            txt = txt.substring(txt.length()-totalLen);
+            txt = txt.substring(txt.length() - totalLen);
         } else {
             txt = txt.substring(0, totalLen) + cnt + "  Rp";
         }
@@ -835,16 +850,16 @@ public class ESCPOSApi {
     private static String setHalfDetailSide(String txt, boolean normal, boolean right) {
         String space = " ";
         int lineSize = 30;
-        if(!normal) {
+        if (!normal) {
             lineSize = 40;
         }
-        int totalLen = lineSize/2;
+        int totalLen = lineSize / 2;
         if (right) {
             txt = txt.substring(2);
         } else {
             txt = txt.substring(0, txt.indexOf("|:"));
         }
-        for (int i = 0;i < totalLen; i++) {
+        for (int i = 0; i < totalLen; i++) {
             if (right) {
                 txt = space + txt;
             } else {
@@ -852,18 +867,18 @@ public class ESCPOSApi {
             }
         }
         if (right) {
-            txt = txt.substring(txt.length()-totalLen);
+            txt = txt.substring(txt.length() - totalLen);
         } else {
             txt = txt.substring(0, totalLen);
         }
         return txt;
     }
 
-    private static void printCommands(byte[] data){
-        PrinterInterface.PrinterWrite(data,data.length);
+    private static void printCommands(byte[] data) {
+        PrinterInterface.PrinterWrite(data, data.length);
     }
 
-    private static void printCommands(String data){
+    private static void printCommands(String data) {
         byte[] cmds = new byte[]{0x1B, 0x21, 0x00};
         printCommands(cmds);
         data = "  " + data;
@@ -878,12 +893,12 @@ public class ESCPOSApi {
         printCommands(new PrintSize(FontSize.BOLD, data));
     }
 
-    private static void printCommands(PrintSize pz){
+    private static void printCommands(PrintSize pz) {
         printCommands(pz.getFontSize().getByte());
         printCommands(pz.getMessage().getBytes());
     }
 
-    private static void printCommandsSmall(String data){
+    private static void printCommandsSmall(String data) {
         byte[] cmds = new byte[]{0x1B, 0x21, 0x01};
         printCommands(cmds);
         data = " " + data;

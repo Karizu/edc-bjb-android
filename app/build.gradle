@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation (name: 'cloudpossdkV1.5.3.005_Standard', ext: 'aar')
 }
