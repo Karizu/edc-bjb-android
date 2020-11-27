@@ -39,11 +39,11 @@ public class CommonConfig {
 
     public static final String HTTP_SSL_PROTOCOL = "https";
     public static final String HTTP_NON_SSL_PROTOCOL = "http";
-    public static final String HTTP_PROTOCOL = HTTP_NON_SSL_PROTOCOL;
+    public static final String HTTP_PROTOCOL = HTTP_SSL_PROTOCOL;
 
     public static final String WS_SSL_PROTOCOL = "wss";
     private static final String WS_NON_SSL_PROTOCOL = "ws";
-    public static final String WS_PROTOCOL = WS_NON_SSL_PROTOCOL;
+    public static final String WS_PROTOCOL = WS_SSL_PROTOCOL;
 
     public static final int WS_SSL_PORT = 443;
     private static final int WS_NORMAL_PORT = 80;
@@ -65,8 +65,8 @@ public class CommonConfig {
     public static final String chKey_3 = "H4sIAAAAAAAAADMytbA0MwYAwc5YuQYAAAA=";
     public static final String chKey_4 = "H4sIAAAAAAAAADMzs7QEAPHkY4UEAAAA";
 
-//    public static final String PROSELIP = getVal(intProBjKey);
-    public static final String PROSELIP = getVal(intProSelKey);
+    public static final String PROSELIP = getVal(intProBjKey);
+//    public static final String PROSELIP = getVal(intProSelKey);
 //    public static final String PROSELIP = getVal(intDeSelKey);
 
     public static final String[] FORM_MENU_KEY = {"type", "title", "id", "print", "print_text", "ver", "comps"};
