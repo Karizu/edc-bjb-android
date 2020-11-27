@@ -23,6 +23,7 @@ android {
     }
 }
 dependencies {
+//    implementation files('../app/libs/cloudpossdkV1.5.3.005_Standard.aar')
 //    implementation project(path: ':libhalapi')
 }
 

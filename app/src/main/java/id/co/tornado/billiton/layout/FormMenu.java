@@ -51,7 +51,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonParser;
 import com.rey.material.app.ThemeManager;
-import com.wizarpos.apidemo.printer.ESCPOSApi;
+//import id.co.tornado.billiton.util.ESCPOSApi;
 import com.wizarpos.apidemo.printer.FontSize;
 import com.wizarpos.apidemo.printer.PrintSize;
 import com.wizarpos.jni.PinPadInterface;
@@ -114,6 +114,7 @@ import id.co.tornado.billiton.module.TextView;
 import id.co.tornado.billiton.module.listener.GPSLocation;
 import id.co.tornado.billiton.module.listener.InputListener;
 import id.co.tornado.billiton.module.listener.SwipeListener;
+import id.co.tornado.billiton.util.ESCPOSApi;
 
 
 /**
@@ -4801,11 +4802,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                 stan = reprintTrace;
             }
             if (isStl) {
-                ESCPOSApi.printSettlement(bitmap, data, mdata, tid, mid, stan, svrDate, svrTime);
+                ESCPOSApi.printSettlement(bitmap, data, mdata, tid, mid, stan, svrDate, svrTime, context);
             } else if (isReport) {
-                ESCPOSApi.printReport(bitmap, data, mdata, tid, mid, reportDate, storeName);
+                ESCPOSApi.printReport(bitmap, data, mdata, tid, mid, reportDate, storeName, context);
             } else if (isDetail) {
-                ESCPOSApi.printDetailReport(bitmap, data, mdata, tid, mid, reportDate, storeName);
+                ESCPOSApi.printDetailReport(bitmap, data, mdata, tid, mid, reportDate, storeName, context);
             } else {
                 if (tid != null) {
 //                    Log.d(TAG, "Count Print : " + String.valueOf(countPrint));
@@ -4821,7 +4822,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         data = addTrfSamsatFooter(data);
                     }
                     ESCPOSApi.printStruk(bitmap, data, mdata, tid, mid, stan, countPrint,
-                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName, val1, val2, CommonConfig.PROSELIP);
+                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName, val1, val2, CommonConfig.PROSELIP, context);
                 } else {
                     ESCPOSApi.printStruk(bitmap, data);
                 }
