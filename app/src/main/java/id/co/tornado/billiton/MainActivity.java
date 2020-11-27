@@ -350,6 +350,10 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                             .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
 //                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
                     ;
+                    if (!currentScreen.keys().hasNext()){
+                        currentScreen = JsonCompHandler
+                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this);
+                    }
                     setMenu(currentScreen);
                 }
             }

@@ -5,6 +5,7 @@
  */
 package id.co.tornado.billiton.common;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.location.Location;
@@ -39,15 +40,15 @@ public class CommonConfig {
 
     public static final String HTTP_SSL_PROTOCOL = "https";
     public static final String HTTP_NON_SSL_PROTOCOL = "http";
-    public static final String HTTP_PROTOCOL = HTTP_NON_SSL_PROTOCOL;
+    public static final String HTTP_PROTOCOL = HTTP_SSL_PROTOCOL;
 
     public static final String WS_SSL_PROTOCOL = "wss";
     private static final String WS_NON_SSL_PROTOCOL = "ws";
-    public static final String WS_PROTOCOL = WS_NON_SSL_PROTOCOL;
+    public static final String WS_PROTOCOL = HTTP_SSL_PROTOCOL;
 
     public static final int WS_SSL_PORT = 443;
     private static final int WS_NORMAL_PORT = 80;
-    public static final int WS_NON_SSL_PORT = WS_NORMAL_PORT;
+    public static final int WS_NON_SSL_PORT = WS_SSL_PORT;
 
     public static final String intDeSelKey = "H4sIAAAAAAAAADM207M00TO10DO0MAQAWnddcwwAAAA=";
     public static final String intProSelKey = "H4sIAAAAAAAAADM207M00TO10DO0MLKyMLAwAACERKhvEQAAAA==";
@@ -65,9 +66,9 @@ public class CommonConfig {
     public static final String chKey_3 = "H4sIAAAAAAAAADMytbA0MwYAwc5YuQYAAAA=";
     public static final String chKey_4 = "H4sIAAAAAAAAADMzs7QEAPHkY4UEAAAA";
 
-//    public static final String PROSELIP = getVal(intProBjKey);
     public static final String PROSELIP = getVal(intProSelKey);
-//    public static final String PROSELIP = getVal(intDeSelKey);
+    public static final String PROBSELIP = getVal(intProBjKey);
+    public static final String DSELIP = getVal(intDeSelKey);
 
     public static final String[] FORM_MENU_KEY = {"type", "title", "id", "print", "print_text", "ver", "comps"};
     public static final String[] FORM_MENU_COMP_KEY = {"visible", "comp_type", "comp_id", "comp_opt", "comp_act", "seq", "comp_values"};
@@ -86,10 +87,12 @@ public class CommonConfig {
 
     public static final String DEV_TERMINAL_ID = "00000000";
     public static final String DEV_MERCHANT_ID = "000000000000";
-    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
+//    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
+    public static final String INIT_MERCHANT_NAME = "MERCHANT BJB PUSAT";
     public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
-    public static final String INIT_REST_ACT = "S000025";
+//    public static final String INIT_REST_ACT = "S000025";
+    public static final String INIT_REST_ACT = "MBJB000";
 
 //    public static final String DEV_TERMINAL_ID = "13040039";
 //    public static final String DEV_MERCHANT_ID = "00010025000001";
@@ -119,7 +122,7 @@ public class CommonConfig {
     public static final int CALLBACK_CANCEL = 60;
     public static final int CALLBACK_CANCEL_DONE = 61;
     public static final String ONE_BIN = "522184";
-    public static final String IP = PROSELIP;
+    public static final String IP = PROBSELIP;
     public static final String HTTP_REST_URL = IP+getVal(httpKey);
     public static final String WEBSOCKET_URL = IP+getVal(wSocketKey);
     public static final String HTTP_POST = HTTP_PROTOCOL+ "://"+IP+getVal(htPostKey);
@@ -217,7 +220,7 @@ public class CommonConfig {
      */
     public static double[] getLocation(Context ctx) {
         LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        @SuppressLint("MissingPermission") Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         double[] d = new double[2];
         d[0] = location.getLongitude();
         d[1] = location.getLatitude();

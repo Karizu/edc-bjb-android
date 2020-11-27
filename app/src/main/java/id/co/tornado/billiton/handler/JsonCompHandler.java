@@ -177,6 +177,7 @@ public class JsonCompHandler {
                     json = decResponse(json);
                 }
             }
+            saveJson(ctx, json);
             dialog.dismiss();
             return (JSONObject) json.get("screen");
 
