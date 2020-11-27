@@ -87,12 +87,12 @@ public class CommonConfig {
 
     public static final String DEV_TERMINAL_ID = "00000000";
     public static final String DEV_MERCHANT_ID = "000000000000";
-//    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
-    public static final String INIT_MERCHANT_NAME = "MERCHANT BJB PUSAT";
+    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
+//    public static final String INIT_MERCHANT_NAME = "MERCHANT BJB PUSAT";
     public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
-//    public static final String INIT_REST_ACT = "S000025";
-    public static final String INIT_REST_ACT = "MBJB000";
+    public static final String INIT_REST_ACT = "S000025";
+//    public static final String INIT_REST_ACT = "MBJB000";
 
 //    public static final String DEV_TERMINAL_ID = "13040039";
 //    public static final String DEV_MERCHANT_ID = "00010025000001";
@@ -122,7 +122,7 @@ public class CommonConfig {
     public static final int CALLBACK_CANCEL = 60;
     public static final int CALLBACK_CANCEL_DONE = 61;
     public static final String ONE_BIN = "522184";
-    public static final String IP = PROBSELIP;
+    public static final String IP = PROSELIP;
     public static final String HTTP_REST_URL = IP+getVal(httpKey);
     public static final String WEBSOCKET_URL = IP+getVal(wSocketKey);
     public static final String HTTP_POST = HTTP_PROTOCOL+ "://"+IP+getVal(htPostKey);
