@@ -94,6 +94,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 import id.co.tornado.billiton.ActivityList;
+import id.co.tornado.billiton.AdminActivity;
 import id.co.tornado.billiton.MainActivity;
 import id.co.tornado.billiton.R;
 import id.co.tornado.billiton.common.CommonConfig;
@@ -249,6 +250,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private boolean isSettle;
     private String val2 = "";
     private String val1 = "";
+    private SharedPreferences preferences;
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -594,7 +596,13 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                                     || formId.equals("EP00411") || formId.equals("EP00511")
                                                     || formId.equals("EP00611") || formId.equals("EP00711")
                                                     || formId.equals("EP00811") || formId.equals("EP00821")
-                                                    || formId.equals("EP00911")
+                                                    || formId.equals("EP00911") || formId.equals("EP00001")
+                                                    || formId.equals("EP00005") || formId.equals("EP00009")
+                                                    || formId.equals("EP00013") || formId.equals("EP00017")
+                                                    || formId.equals("EP00019") || formId.equals("EP00033")
+                                                    || formId.equals("EP00035") || formId.equals("EP00061")
+                                                    || formId.equals("EP00077") || formId.equals("EP00091")
+
                                             ) {
                                                 amt = "000000000000" + amt + "00";
                                             } else {
@@ -1538,6 +1546,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             dataOutput = TextUtils.join("|", data);
         }
 
+        if (actionUrl.equals("SET000")) {
+            Log.d("Masuk ", "SET000");
+            Intent intent = new Intent(context, AdminActivity.class);
+            intent.putExtra(CommonConfig.IS_SETTING, true);
+            context.startActivity(intent);
+            return;
+        }
+
+        preferences  = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
+        String hsnm = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+
         // reprint samsat
         if (actionUrl.equals("R0000A")) {
             String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
@@ -1545,13 +1564,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "reprint");
-            try {
-                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "reprint");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "reprint");
             }
-            processResponse(rps, "reprint");
             return;
         }
 
@@ -1562,13 +1584,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "reprint");
-            try {
-                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "reprint");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "reprint");
             }
-            processResponse(rps, "reprint");
+
             return;
         }
 
@@ -1592,13 +1619,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "reprint");
-            try {
-                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "reprint");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "reprint");
             }
-            processResponse(rps, "reprint");
             return;
         }
 
@@ -1609,13 +1639,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "reprint");
-            try {
-                rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reprintFromArrest(pid, tid, stan, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "reprint");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "reprint");
             }
-            processResponse(rps, "reprint");
             return;
         }
 
@@ -1626,13 +1660,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "summary");
-            try {
-                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "summary");
             }
-            processResponse(rps, "");
             return;
         }
 
@@ -1643,13 +1680,17 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "summary");
-            try {
-                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "summary");
             }
-            processResponse(rps, "");
+
             return;
         }
 
@@ -1660,13 +1701,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "detail");
-            try {
-                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "detail");
             }
-            processResponse(rps, "");
+
             return;
         }
 
@@ -1677,13 +1723,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "detail");
-            try {
-                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "detail");
             }
-            processResponse(rps, "");
+
             return;
         }
 
@@ -1694,13 +1745,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "detail");
-            try {
-                rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reportDetailFromArrest(pid, tid, date, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "detail");
             }
-            processResponse(rps, "");
+
             return;
         }
 
@@ -1710,13 +1766,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             String pid = MINI_BANKING_PROFILES;
             JSONObject rps = null;
             String simNumber = preferences.getString("sim_number", CommonConfig.INIT_SIM_NUMBER);
-//            requestReprintReport(date, tid, pid, simNumber, "summary");
-            try {
-                rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (hsnm.startsWith("36")) {
+                try {
+                    rps = JsonCompHandler.reportFromArrest(pid, tid, date, getContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                processResponse(rps, "");
+            } else {
+                requestReprintReport(date, tid, pid, simNumber, "summary");
             }
-            processResponse(rps, "");
+
             return;
         }
 
@@ -1783,15 +1844,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 //                    AlertDialog diaLog = builder.create();
 //                    diaLog.show();
 
-            msg.put("msg_dt", dataOutput);
 
-            //enc
-//                    try {
-//                        msg.put("encrypted", "t");
-//                        msg.put("msg_dt", compress(dataOutput));
-//                    } catch (Exception e) {
-//                        msg.put("msg_dt", dataOutput);
-//                    }
+            if (hsnm.startsWith("36")) {
+                msg.put("msg_dt", dataOutput);
+            } else {
+                //enc
+                try {
+                    msg.put("encrypted", "t");
+                    msg.put("msg_dt", compress(dataOutput));
+                } catch (Exception e) {
+                    msg.put("msg_dt", dataOutput);
+                }
+            }
 
             final JSONObject msgRoot = new JSONObject();
             msgRoot.put("msg", msg);
@@ -1806,6 +1870,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
 
                 saveEdcLog(actionUrl, msgId);
             }
+
             if (panHolder != null) {
                 updEdcLogPan(msgId, panHolder, tcaid);
             }
@@ -2317,7 +2382,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("EPG0510") || formId.equals("EPG0610")
                     || formId.equals("EPG0710") || formId.equals("EPG0810")
                     || formId.equals("EPG0820") || formId.equals("EPG0910")
-//                    || formId.equals(MENU_PUCHASE)
+                    || formId.equals("EPG0000")
             ) {
                 //Skip icc
                 insertICC.removeCardFirst = true;
@@ -2799,7 +2864,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             }
 //        Thread thread = new Thread(new PrintData(data));
             if (iccPrint) {
-                String tc = parent.cardData.getTc()!=null?parent.cardData.getTc():" ";
+                String tc = parent.cardData.getTc() != null ? parent.cardData.getTc() : " ";
                 data.add(new PrintSize(FontSize.EMPTY, "\n"));
                 data.add(new PrintSize(FontSize.NORMAL, "TC - " + tc + "\n"));
                 data.add(new PrintSize(FontSize.NORMAL, "AID - " + parent.cardData.getAid() + "\n"));
@@ -3162,6 +3227,76 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         prepareFallback("EPG822");
                     } else if (formId.equals("EPG0910")) {
                         prepareFallback("EPG912");
+                    } else if (formId.equals("EPG0000")) {
+                        prepareFallback("EPG002");
+                    } else if (formId.equals("EPG0004")) {
+                        prepareFallback("EPG006");
+                    } else if (formId.equals("EPG0008")) {
+                        prepareFallback("EPG010");
+                    } else if (formId.equals("EPG0012")) {
+                        prepareFallback("EPG014");
+                    } else if (formId.equals("EPG0016")) {
+                        prepareFallback("EPG018");
+                    } else if (formId.equals("EPG0020")) {
+                        prepareFallback("EPG021");
+                    } else if (formId.equals("EPG0022")) {
+                        prepareFallback("EPG023");
+                    } else if (formId.equals("EPG0024")) {
+                        prepareFallback("EPG025");
+                    } else if (formId.equals("EPG0026")) {
+                        prepareFallback("EPG027");
+                    } else if (formId.equals("EPG0028")) {
+                        prepareFallback("EPG029");
+                    } else if (formId.equals("EPG0030")) {
+                        prepareFallback("EPG031");
+                    } else if (formId.equals("EPG0032")) {
+                        prepareFallback("EPG034");
+                    } else if (formId.equals("EPG0036")) {
+                        prepareFallback("EPG037");
+                    } else if (formId.equals("EPG0038")) {
+                        prepareFallback("EPG039");
+                    } else if (formId.equals("EPG0040")) {
+                        prepareFallback("EPG041");
+                    } else if (formId.equals("EPG0042")) {
+                        prepareFallback("EPG043");
+                    } else if (formId.equals("EPG0043")) {
+                        prepareFallback("EPG044");
+                    } else if (formId.equals("EPG0045")) {
+                        prepareFallback("EPG046");
+                    } else if (formId.equals("EPG0060")) {
+                        prepareFallback("EPG062");
+                    } else if (formId.equals("EPG0064")) {
+                        prepareFallback("EPG065");
+                    } else if (formId.equals("EPG0066")) {
+                        prepareFallback("EPG067");
+                    } else if (formId.equals("EPG0068")) {
+                        prepareFallback("EPG069");
+                    } else if (formId.equals("EPG0070")) {
+                        prepareFallback("EPG071");
+                    } else if (formId.equals("EPG0072")) {
+                        prepareFallback("EPG073");
+                    } else if (formId.equals("EPG0074")) {
+                        prepareFallback("EPG075");
+                    } else if (formId.equals("EPG0076")) {
+                        prepareFallback("EPG078");
+                    } else if (formId.equals("EPG0080")) {
+                        prepareFallback("EPG081");
+                    } else if (formId.equals("EPG0082")) {
+                        prepareFallback("EPG083");
+                    } else if (formId.equals("EPG0084")) {
+                        prepareFallback("EPG085");
+                    } else if (formId.equals("EPG0086")) {
+                        prepareFallback("EPG086");
+                    } else if (formId.equals("EPG0088")) {
+                        prepareFallback("EPG089");
+                    } else if (formId.equals("EPG0090")) {
+                        prepareFallback("EPG092");
+                    } else if (formId.equals("EPG0094")) {
+                        prepareFallback("EPG095");
+                    } else if (formId.equals("EPG0096")) {
+                        prepareFallback("EPG097");
+                    } else if (formId.equals("EPG0098")) {
+                        prepareFallback("EPG099");
                     }
                     return;
                 } else if (additional.startsWith("blocked")) {
@@ -4349,7 +4484,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     "{\"visible\":true,\"comp_lbl\":\"PIN\",\"comp_type\":\"3\",\"comp_id\":\"I0001\",\"comp_opt\":\"102006006\",\"seq\":1}," +
 
                     "{\"visible\":true,\"comp_lbl\":\"Proses\",\"comp_type\":\"7\",\"comp_id\":\"G0001\",\"seq\":2}]}," +
-                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Edupay Fallback\"}}");
+                    "\"static_menu\":[\"\"],\"print_text\":\"IPOP\",\"id\":\"SR10004\",\"type\":\"1\",\"title\":\"Screen Fallback\"}}");
 //            processResponse(fallbackScreen, "001");
             comp = fallbackScreen.getJSONObject("screen");
             pinpadTextList = new ArrayList();

@@ -84,22 +84,26 @@ public class CommonConfig {
     public static final String DEFAULT_DISCOUNT_TYPE = "Rupiah";
     public static final String EXPD = "2111";
 
-    public static final String DEV_TERMINAL_ID = "00000000";
-    public static final String DEV_MERCHANT_ID = "000000000000";
-    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
+    public static final String IS_SETTING = "isSetting";
+
+//    public static final String DEV_TERMINAL_ID = "00000000";
+//    public static final String DEV_MERCHANT_ID = "000000000000";
+//    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
+//    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
+//    public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
+//    public static final String INIT_REST_ACT = "S000025";
+
+    public static final String DEV_TERMINAL_ID = "14130001";
+    public static final String DEV_MERCHANT_ID = "00010025000001";
+    public static final String INIT_MERCHANT_NAME = "EDC DEV TNT";
     public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
-    public static final String INIT_REST_ACT = "S000025";
-
-//    public static final String DEV_TERMINAL_ID = "13040039";
-//    public static final String DEV_MERCHANT_ID = "00010025000001";
-//    public static final String INIT_MERCHANT_NAME = "SAMSAT BANDUNG 3";
-//    public static final String INIT_MERCHANT_ADDRESS1 = "SOEKARNO HATTA";
-//    public static final String INIT_MERCHANT_ADDRESS2 = "KCU BANDUNG";
-//    public static final String INIT_REST_ACT = "S000SMT";
+    public static final String INIT_REST_ACT = "S000000";
 
     public static final String INIT_SIM_NUMBER = "000000";
     public static final String STORE_NAME = "AGEN";
+
+    public static final String CODE_HOLDER_WIFI = "000000";
 
     public static final String CVA = "12600000";
     public static final String DEFAULT_SETTLEMENT_PASS = "1234";

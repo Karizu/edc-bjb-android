@@ -105,6 +105,13 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         txFcopy = (TextView ) findViewById(R.id.textViewCopy);
         TextView txFsn = (TextView ) findViewById(R.id.textViewSN);
         TextView txFsv = (TextView ) findViewById(R.id.textViewSV);
+        LinearLayout btnSetting = (LinearLayout) findViewById(R.id.btnSetting);
+        btnSetting.setVisibility(View.GONE);
+        btnSetting.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+            intent.putExtra(CommonConfig.IS_SETTING, true);
+            startActivity(intent);
+        });
 
         if (txTid == null){
             Log.d("ERROR", "LAYOUT NOT INFLATED");
@@ -129,14 +136,14 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 String version = pInfo.versionName;
 
-                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "141020");
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "161020");
             } catch (Exception e) {
                 e.printStackTrace();
-                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "141020");
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "161020");
             }
         }
         else{
-            txFcopy.setText("\u00a9 BANK BJB, v" + "0.1"+ ", " + "141020");
+            txFcopy.setText("\u00a9 BANK BJB, v" + "0.1"+ ", " + "161020");
         }
 
         String serialNum = Build.SERIAL;
