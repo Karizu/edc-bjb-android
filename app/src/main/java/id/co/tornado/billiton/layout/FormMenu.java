@@ -4822,7 +4822,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         data = addTrfSamsatFooter(data);
                     }
                     ESCPOSApi.printStruk(bitmap, data, mdata, tid, mid, stan, countPrint,
-                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName, val1, val2, CommonConfig.PROSELIP, context);
+                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName, val1, val2, CommonConfig.PROBIP, context);
                 } else {
                     ESCPOSApi.printStruk(bitmap, data);
                 }
