@@ -252,6 +252,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
     private String val2 = "";
     private String val1 = "";
     private SharedPreferences preferences;
+    private String[] amts = {"000000000000", "000000000000", ""};
 //    PEMKAB KARAWANG
 //    PEMKAB CIAMIS
 //    PEMKOT TASIKMALAYA
@@ -603,6 +604,18 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                                     || formId.equals("EP00019") || formId.equals("EP00033")
                                                     || formId.equals("EP00035") || formId.equals("EP00061")
                                                     || formId.equals("EP00077") || formId.equals("EP00091")
+                                                    || formId.equals("EP00111") || formId.equals("EP00115")
+                                                    || formId.equals("EP00119") || formId.equals("EP00123")
+                                                    || formId.equals("EP00127") || formId.equals("EP00193")
+                                                    || formId.equals("EP00197") || formId.equals("EP00201")
+                                                    || formId.equals("EP00161") || formId.equals("EP00165")
+                                                    || formId.equals("EP00169") || formId.equals("EP00173")
+                                                    || formId.equals("EP00177") || formId.equals("EP00181")
+                                                    || formId.equals("EP00205") || formId.equals("EP00189")
+                                                    || formId.equals("EP00131") || formId.equals("EP00135")
+                                                    || formId.equals("EP00139") || formId.equals("EP00143")
+                                                    || formId.equals("EP00147") || formId.equals("EP00151")
+                                                    || formId.equals("EP00185") || formId.equals("EP00217")
 
                                             ) {
                                                 amt = "000000000000" + amt + "00";
@@ -657,7 +670,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             if (parent.modulStage == CommonConfig.ICC_PROCESS_STAGE_TX) {
                 parent.cardData = new NsiccsData();
                 // get amount here
-                String[] amts = getAmountFromScreen();
+//                if (!formId.equals("EP00127")) {
+//                    amts = getAmountFromScreen();
+//                }
+                amts = getAmountFromScreen();
                 SimpleDateFormat simpledf = new SimpleDateFormat("yyMMdd");
 
                 parent.cardData.setTxdate(simpledf.format(new Date()));
@@ -1216,6 +1232,21 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                 }
                             }
 
+                            if (actionUrl.equals("EP0127")) {
+                                // amount, addamount, de55
+                                String amt = null;
+                                String aamt = null;
+                                String iccDe = null;
+                                try {
+                                    amt = editText.getText().toString();
+                                    amt = "000000000000" + amt + "00";
+                                    amt = amt.substring(amt.length() - 12);
+                                    amts[0] = amt;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
                             Log.d("EDIT READ", editText.getText().toString());
                             data.add(editText.getText().toString());
                         }
@@ -1555,7 +1586,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
             return;
         }
 
-        preferences  = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hsnm = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 
         // reprint samsat
@@ -2383,7 +2414,16 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("EPG0510") || formId.equals("EPG0610")
                     || formId.equals("EPG0710") || formId.equals("EPG0810")
                     || formId.equals("EPG0820") || formId.equals("EPG0910")
-                    || formId.equals("EPG0000")
+                    || formId.equals("EPG0000") || formId.equals("EPG0192")
+                    || formId.equals("EPG0160") || formId.equals("EPG0164")
+                    || formId.equals("EPG0168") || formId.equals("EPG0200")
+                    || formId.equals("EPG0172") || formId.equals("EPG0176")
+                    || formId.equals("EPG0180") || formId.equals("EPG0196")
+                    || formId.equals("EPG0204") || formId.equals("EPG0130")
+                    || formId.equals("EPG0134") || formId.equals("EPG0138")
+                    || formId.equals("EPG0142") || formId.equals("EPG0146")
+                    || formId.equals("EPG0150") || formId.equals("EPG0184")
+                    || formId.equals("EPG0216") || formId.equals("EPG0188")
             ) {
                 //Skip icc
                 insertICC.removeCardFirst = true;
@@ -3298,6 +3338,55 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         prepareFallback("EPG097");
                     } else if (formId.equals("EPG0098")) {
                         prepareFallback("EPG099");
+                    } else if (formId.equals("EPG0110")) {
+                        prepareFallback("EPG112");
+                    } else if (formId.equals("EPG0114")) {
+                        prepareFallback("EPG116");
+                    } else if (formId.equals("EPG0118")) {
+                        prepareFallback("EPG120");
+                    } else if (formId.equals("EPG0122")) {
+                        prepareFallback("EPG124");
+                    } else if (formId.equals("EPG0126")) {
+                        prepareFallback("EPG128");
+                    } else if (formId.equals("EPG0192")) {
+                        prepareFallback("EPG194");
+                    } else if (formId.equals("EPG0196")) {
+                        prepareFallback("EPG198");
+                    } else if (formId.equals("EPG0200")) {
+                        prepareFallback("EPG202");
+                    } else if (formId.equals("EPG0160")) {
+                        prepareFallback("EPG162");
+                    } else if (formId.equals("EPG0164")) {
+                        prepareFallback("EPG166");
+                    } else if (formId.equals("EPG0168")) {
+                        prepareFallback("EPG170");
+                    } else if (formId.equals("EPG0172")) {
+                        prepareFallback("EPG174");
+                    } else if (formId.equals("EPG0176")) {
+                        prepareFallback("EPG178");
+                    } else if (formId.equals("EPG0180")) {
+                        prepareFallback("EPG182");
+                    } else if (formId.equals("EPG0204")) {
+                        prepareFallback("EPG206");
+                    }
+                    else if (formId.equals("EPG0130")) {
+                        prepareFallback("EPG132");
+                    } else if (formId.equals("EPG0134")) {
+                        prepareFallback("EPG136");
+                    } else if (formId.equals("EPG0138")) {
+                        prepareFallback("EPG140");
+                    } else if (formId.equals("EPG0142")) {
+                        prepareFallback("EPG144");
+                    } else if (formId.equals("EPG0146")) {
+                        prepareFallback("EPG148");
+                    }  else if (formId.equals("EPG0150")) {
+                        prepareFallback("EPG152");
+                    } else if (formId.equals("EPG0184")) {
+                        prepareFallback("EPG186");
+                    } else if (formId.equals("EPG0216")) {
+                        prepareFallback("EPG218");
+                    } else if (formId.equals("EPG0188")) {
+                        prepareFallback("EPG190");
                     }
                     return;
                 } else if (additional.startsWith("blocked")) {
@@ -3597,7 +3686,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
     }
 
-    public void requestReprintReport(String date, final String tid, String pid, String iccid, String type) {
+    public void requestReprintReport(String date, final String tid, String pid, String
+            iccid, String type) {
         dettachPrint();
         dialog = ProgressDialog.show(context, "Loading", "Sedang Mengirim Permintaan", true);
         final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -5560,7 +5650,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         }
     }
 
-    private void sendRequestSettleBatch(String pan, String amount, String messageId, String mstan, int counter, int pos) {
+    private void sendRequestSettleBatch(String pan, String amount, String messageId, String
+            mstan, int counter, int pos) {
 
         try {
 
@@ -6481,7 +6572,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
         return amts;
     }
 
-    private WindowManager.LayoutParams refreshICCProcessDialog(String messsage, boolean showAfterCreated) {
+    private WindowManager.LayoutParams refreshICCProcessDialog(String messsage,
+                                                               boolean showAfterCreated) {
         if (alert != null) {
             if (alert.isShowing()) {
                 alert.dismiss();

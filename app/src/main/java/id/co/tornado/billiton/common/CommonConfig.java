@@ -86,19 +86,19 @@ public class CommonConfig {
 
     public static final String IS_SETTING = "isSetting";
 
-//    public static final String DEV_TERMINAL_ID = "00000000";
-//    public static final String DEV_MERCHANT_ID = "000000000000";
-//    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
-//    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
-//    public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
-//    public static final String INIT_REST_ACT = "S000025";
-
-    public static final String DEV_TERMINAL_ID = "14130001";
-    public static final String DEV_MERCHANT_ID = "00010025000001";
-    public static final String INIT_MERCHANT_NAME = "EDC DEV TNT";
+    public static final String DEV_TERMINAL_ID = "00000000";
+    public static final String DEV_MERCHANT_ID = "000000000000";
+    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
     public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
     public static final String INIT_REST_ACT = "S000000";
+
+//    public static final String DEV_TERMINAL_ID = "13050201";
+//    public static final String DEV_MERCHANT_ID = "00010025000001";
+//    public static final String INIT_MERCHANT_NAME = "EDC DEV TNT";
+//    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
+//    public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
+//    public static final String INIT_REST_ACT = "S000000";
 
     public static final String INIT_SIM_NUMBER = "000000";
     public static final String STORE_NAME = "AGEN";
