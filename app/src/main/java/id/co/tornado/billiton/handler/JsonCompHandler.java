@@ -161,8 +161,8 @@ public class JsonCompHandler {
         String tid = preferences.getString("terminal_id", CommonConfig.DEV_TERMINAL_ID);
 //        Log.d("LOAD URL", hostname + "/screen?id=" + id + "&simNumber=" + simNumber + "&tid=" + tid);
 //        URL url = new URL(hostname + "/device/" + serialNum + "/loadMenu/" + id);
-        URL url = new URL(hostname + "/screen?id=" + id);
-//        URL url = new URL(hostname + "/screen?id=" + id + "&simNumber=" + simNumber + "&tid=" + tid);
+//        URL url = new URL(hostname + "/screen?id=" + id);
+        URL url = new URL(hostname + "/screen?id=" + id + "&simNumber=" + simNumber + "&tid=" + tid);
         InputStream is = null;
 
         try {
@@ -177,6 +177,7 @@ public class JsonCompHandler {
                     json = decResponse(json);
                 }
             }
+            saveJson(ctx, json);
             dialog.dismiss();
             return (JSONObject) json.get("screen");
 

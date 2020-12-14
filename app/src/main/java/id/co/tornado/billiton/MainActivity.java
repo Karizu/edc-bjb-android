@@ -357,6 +357,10 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                             .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
 //                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
                     ;
+                    if (!currentScreen.keys().hasNext()){
+                        currentScreen = JsonCompHandler
+                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this);
+                    }
                     setMenu(currentScreen);
                 }
             }
@@ -420,49 +424,61 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         String message = "";
 //        Log.d("JSON_MENU", obj.toString());
 
-        try {
-            type = obj.getInt("type");
-            id = obj.get("id").toString();
+        if (showSetting){
+            id += "opt:ms=on";
+            ListMenu lm = new ListMenu(this, id);
+//                    LinearLayout vp = lm.getPager();
+//                    child = vp;
+            child = lm;
 
-            //FORCE INTENT TO FORM MENU FROM SELADA
-            if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI)
-                    || formId.equals(MENU_INFO_SALDO) || formId.equals(PURCHASE_SELADA)
-                    || formId.equals(PURCHASE_BJB)|| formId.equals("REVERSALEFROMSELADA")) {
-                Intent intent = new Intent(MainActivity.this, ActivityList.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("comp_act", id);
-                bundle.putString("serviceId", serviceId);
-                bundle.putString("mid", mid);
-                bundle.putString("mobileNumber", mobileNumber);
-                bundle.putString("nominal", nominal);
-                bundle.putString("amount", amount);
-                bundle.putString("margin", margin);
-                if (stan!=null){
-                    bundle.putString("stan", stan);
-                }
-                if (json!=null){
-                    bundle.putString("json", json);
-                }
-                if (is_from_selada!=null && !is_from_selada.equals("")){
-                    bundle.putString("is_from_selada", is_from_selada);
+
+            linearLayout.removeAllViews();
+            linearLayout.addView(child);
+        }
+        else{
+            try {
+                type = obj.getInt("type");
+                id = obj.get("id").toString();
+
+                //FORCE INTENT TO FORM MENU FROM SELADA
+                if (formId.equals(MENU_TARIK_TUNAI) || formId.equals(MENU_SETOR_TUNAI)
+                        || formId.equals(MENU_INFO_SALDO) || formId.equals(PURCHASE_SELADA)
+                        || formId.equals(PURCHASE_BJB)|| formId.equals("REVERSALEFROMSELADA")) {
+                    Intent intent = new Intent(MainActivity.this, ActivityList.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("comp_act", id);
+                    bundle.putString("serviceId", serviceId);
+                    bundle.putString("mid", mid);
+                    bundle.putString("mobileNumber", mobileNumber);
+                    bundle.putString("nominal", nominal);
+                    bundle.putString("amount", amount);
+                    bundle.putString("margin", margin);
+                    if (stan!=null){
+                        bundle.putString("stan", stan);
+                    }
+                    if (json!=null){
+                        bundle.putString("json", json);
+                    }
+                    if (is_from_selada!=null && !is_from_selada.equals("")){
+                        bundle.putString("is_from_selada", is_from_selada);
+                    }
+
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    return;
                 }
 
-                intent.putExtras(bundle);
-                startActivity(intent);
-                return;
-            }
-
-        } catch (Exception e) {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Informasi");
-            alertDialog.setMessage("EDC tidak terkoneksi dengan server\nGagal mengambil data\nSilahkan coba beberapa saat lagi\n");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
+            } catch (Exception e) {
+                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Informasi");
+                alertDialog.setMessage("EDC tidak terkoneksi dengan server\nGagal mengambil data\nSilahkan coba beberapa saat lagi\n");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
 //            if (id.equals("")) {
 //                id = "XXXXXXX";
 //            }
@@ -476,88 +492,90 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 //                    id += "opt:ls=on";
 //                }
 //            }
-            ListMenu lm = new ListMenu(this, id);
+                ListMenu lm = new ListMenu(this, id);
 //                    LinearLayout vp = lm.getPager();
 //                    child = vp;
-            child = lm;
-            linearLayout.removeAllViews();
-            linearLayout.addView(child);
-            e.printStackTrace();
-            return;
-        }
-        if (type != -1 && !id.equals("")) {
-            switch (type) {
-                case CommonConfig.MenuType.Form:
-                    child = new FormMenu(this, id, "", "", "", "","", "", json);
+                child = lm;
+                linearLayout.removeAllViews();
+                linearLayout.addView(child);
+                e.printStackTrace();
+                return;
+            }
+            if (type != -1 && !id.equals("")) {
+                switch (type) {
+                    case CommonConfig.MenuType.Form:
+                        child = new FormMenu(this, id, "", "", "", "","", "", json);
 
-                    break;
-                case CommonConfig.MenuType.ListMenu:
-                    if (showSetting) {
-                        id += "opt:ms=on";
-                    }
-                    if (showViewer) {
-                        if (id.contains("opt")) {
-                            id += ",ls=on";
-                        } else {
-                            id += "opt:ls=on";
+                        break;
+                    case CommonConfig.MenuType.ListMenu:
+                        if (showSetting) {
+                            id += "opt:ms=on";
                         }
-                    }
-                    ListMenu lm = new ListMenu(this, id);
+                        if (showViewer) {
+                            if (id.contains("opt")) {
+                                id += ",ls=on";
+                            } else {
+                                id += "opt:ls=on";
+                            }
+                        }
+                        ListMenu lm = new ListMenu(this, id);
 //                    LinearLayout vp = lm.getPager();
 //                    child = vp;
-                    child = lm;
-                    break;
-                case CommonConfig.MenuType.PopupBerhasil:
-                    break;
-                case CommonConfig.MenuType.PopupGagal:
-                    message = "SIM Card atau Terminal tidak terdaftar";
-                    if (obj.has("comps")) {
-                        JSONObject comps = null;
-                        try {
-                            comps = obj.getJSONObject("comps");
+                        child = lm;
+                        break;
+                    case CommonConfig.MenuType.PopupBerhasil:
+                        break;
+                    case CommonConfig.MenuType.PopupGagal:
+                        message = "SIM Card atau Terminal tidak terdaftar";
+                        if (obj.has("comps")) {
+                            JSONObject comps = null;
+                            try {
+                                comps = obj.getJSONObject("comps");
 
-                            if (comps.has("comp")) {
-                                JSONArray comp_array = comps.getJSONArray("comp");
-                                if (comp_array.length() == 1) {
-                                    JSONObject comp = comp_array.getJSONObject(0);
-                                    if (comp != null && comp.has("comp_values")) {
-                                        JSONArray comp_values_array = comp.getJSONArray("comp_values");
-                                        if (comp_values_array.length() == 1) {
-                                            JSONObject comp_value = comp_values_array.getJSONObject(0);
-                                            if (comp_value != null && comp_value.has("print")) {
+                                if (comps.has("comp")) {
+                                    JSONArray comp_array = comps.getJSONArray("comp");
+                                    if (comp_array.length() == 1) {
+                                        JSONObject comp = comp_array.getJSONObject(0);
+                                        if (comp != null && comp.has("comp_values")) {
+                                            JSONArray comp_values_array = comp.getJSONArray("comp_values");
+                                            if (comp_values_array.length() == 1) {
+                                                JSONObject comp_value = comp_values_array.getJSONObject(0);
+                                                if (comp_value != null && comp_value.has("print")) {
 
-                                                message = comp_value.getString("print");
+                                                    message = comp_value.getString("print");
 
+                                                }
                                             }
                                         }
                                     }
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                    alertDialog.setTitle("Informasi");
-                    alertDialog.setMessage(message);
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
-                    return;
-                case CommonConfig.MenuType.PopupLogout:
-                    break;
-                case CommonConfig.MenuType.SecuredForm:
-                    child = new FormMenu(this, id, "", "", "", "","","",json);
-                    break;
+                        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                        alertDialog.setTitle("Informasi");
+                        alertDialog.setMessage(message);
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                        return;
+                    case CommonConfig.MenuType.PopupLogout:
+                        break;
+                    case CommonConfig.MenuType.SecuredForm:
+                        child = new FormMenu(this, id, "", "", "", "","","",json);
+                        break;
+                }
+                linearLayout.removeAllViews();
+                linearLayout.addView(child);
             }
-            linearLayout.removeAllViews();
-            linearLayout.addView(child);
         }
+
 
     }
 

@@ -15,7 +15,7 @@
 
 
     <!-- android.permission.WRITE_SETTINGS -->
-<!--    <uses-permission android:name="android.permission.CLOUDPOS_DEFAULT_LAUNCHER" />-->
+    <uses-permission android:name="android.permission.CLOUDPOS_DEFAULT_LAUNCHER" />
 
 
 

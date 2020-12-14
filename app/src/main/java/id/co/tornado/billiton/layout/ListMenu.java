@@ -118,6 +118,9 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
                             .readJsonFromCacheIfAvailable(context, id)
 //                    .readJsonFromUrl(id, context)
                             ;
+                    if (!obj.keys().hasNext()){
+                        obj = JsonCompHandler.readJsonFromUrl(id, context);
+                    }
                     JSONArray comps = obj.getJSONObject("comps").getJSONArray("comp");
                     for (int i = 0; i < comps.length(); i++) {
                         String visb = ((JSONObject) comps.get(i)).getString("visible");
