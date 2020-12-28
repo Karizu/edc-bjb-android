@@ -69,7 +69,7 @@ public class ComboBox extends com.rey.material.widget.Spinner {
                 if (comp.getString("comp_id").equals("MA015") || comp.getString("comp_id").equals("MA021")
                         || comp.getString("comp_id").equals("EP010") || comp.getString("comp_id").equals("EP025")
                         || comp.getString("comp_id").equals("EP060") || comp.getString("comp_id").equals("EP075")
-                        || comp.getString("comp_id").equals("EP130")
+                        || comp.getString("comp_id").equals("EP130") || comp.getString("comp_id").equals("EP346")
                         ){
                     compId = comp.getString("comp_id");
                     JSONArray jsonArray = comp.getJSONObject("comp_values").getJSONArray("comp_value");

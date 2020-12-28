@@ -615,7 +615,11 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                                     || formId.equals("EP00131") || formId.equals("EP00135")
                                                     || formId.equals("EP00139") || formId.equals("EP00143")
                                                     || formId.equals("EP00147") || formId.equals("EP00151")
+                                                    || formId.equals("EP00155")
                                                     || formId.equals("EP00185") || formId.equals("EP00217")
+                                                    || formId.equals("EP00209") || formId.equals("EP00221")
+                                                    || formId.equals("EP00225") || formId.equals("EP00233")
+                                                    || formId.equals("EP00229")
 
                                             ) {
                                                 amt = "000000000000" + amt + "00";
@@ -1296,6 +1300,10 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                                             //HANDLING ESAMSAT SAMOLNAS SWIPE TO OTHER SERVICE
                                             newActionUrl = "EP0322";
                                         }
+                                    }
+
+                                    if (comboBox.compId.equals("EP346")) {
+                                        cdata = cdata.substring(0, 1);
                                     }
                                 }
 
@@ -2411,7 +2419,8 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("MA00085") || formId.equals("MA00025")
                     || formId.equals("MA00015") || formId.equals("EPG0300")
                     || formId.equals("EPG0310") || formId.equals("EPG0410")
-                    || formId.equals("EPG0510") || formId.equals("EPG0610")
+                    || formId.equals("EPG0510") || formId.equals("EPG0154")
+                    || formId.equals("EPG0610")
                     || formId.equals("EPG0710") || formId.equals("EPG0810")
                     || formId.equals("EPG0820") || formId.equals("EPG0910")
                     || formId.equals("EPG0000") || formId.equals("EPG0192")
@@ -2424,6 +2433,9 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                     || formId.equals("EPG0142") || formId.equals("EPG0146")
                     || formId.equals("EPG0150") || formId.equals("EPG0184")
                     || formId.equals("EPG0216") || formId.equals("EPG0188")
+                    || formId.equals("EPG0208") || formId.equals("EPG0212")
+                    || formId.equals("EPG0220") || formId.equals("EPG0224")
+                    || formId.equals("EPG0232") || formId.equals("EPG0228")
             ) {
                 //Skip icc
                 insertICC.removeCardFirst = true;
@@ -3300,10 +3312,22 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         prepareFallback("EPG041");
                     } else if (formId.equals("EPG0042")) {
                         prepareFallback("EPG043");
-                    } else if (formId.equals("EPG0043")) {
-                        prepareFallback("EPG044");
-                    } else if (formId.equals("EPG0045")) {
-                        prepareFallback("EPG046");
+                    } else if (formId.equals("EPG0044")) {
+                        prepareFallback("EPG045");
+                    } else if (formId.equals("EPG0046")) {
+                        prepareFallback("EPG047");
+                    } else if (formId.equals("EPG0048")) {
+                        prepareFallback("EPG049");
+                    } else if (formId.equals("EPG0050")) {
+                        prepareFallback("EPG051");
+                    } else if (formId.equals("EPG0052")) {
+                        prepareFallback("EPG053");
+                    } else if (formId.equals("EPG0054")) {
+                        prepareFallback("EPG055");
+                    } else if (formId.equals("EPG0056")) {
+                        prepareFallback("EPG057");
+                    } else if (formId.equals("EPG0058")) {
+                        prepareFallback("EPG059");
                     } else if (formId.equals("EPG0060")) {
                         prepareFallback("EPG062");
                     } else if (formId.equals("EPG0064")) {
@@ -3381,12 +3405,26 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         prepareFallback("EPG148");
                     }  else if (formId.equals("EPG0150")) {
                         prepareFallback("EPG152");
+                    } else if (formId.equals("EPG0154")) {
+                        prepareFallback("EPG156");
                     } else if (formId.equals("EPG0184")) {
                         prepareFallback("EPG186");
                     } else if (formId.equals("EPG0216")) {
                         prepareFallback("EPG218");
                     } else if (formId.equals("EPG0188")) {
                         prepareFallback("EPG190");
+                    } else if (formId.equals("EPG0208")) {
+                        prepareFallback("EPG210");
+                    } else if (formId.equals("EPG0212")) {
+                        prepareFallback("EPG214");
+                    } else if (formId.equals("EPG0220")) {
+                        prepareFallback("EPG222");
+                    } else if (formId.equals("EPG0224")) {
+                        prepareFallback("EPG226");
+                    } else if (formId.equals("EPG0232")) {
+                        prepareFallback("EPG234");
+                    } else if (formId.equals("EPG0228")) {
+                        prepareFallback("EPG230");
                     }
                     return;
                 } else if (additional.startsWith("blocked")) {
@@ -5047,7 +5085,7 @@ public class FormMenu extends ScrollView implements View.OnClickListener, SwipeL
                         data = addTrfSamsatFooter(data);
                     }
                     ESCPOSApi.printStruk(bitmap, data, mdata, tid, mid, stan, countPrint,
-                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName, val1, val2, CommonConfig.PROBIP, context);
+                            svrRef, svrDate, svrTime, cardType, nomorKartu, formId, batchNumber, svrAppr, storeName, val1, val2, CommonConfig.PROSELIP, context);
                 } else {
                     ESCPOSApi.printStruk(bitmap, data);
                 }
