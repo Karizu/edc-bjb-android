@@ -1,10 +1,13 @@
 package id.co.tornado.billiton.handler;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.FileNotFoundException;
@@ -23,7 +26,7 @@ public class GPSService implements Runnable {
     private Location location;
     private String longitude;
     private String latitude;
-    private boolean running=false;
+    private boolean running = false;
     private int counter;
     private SocketService context;
 
@@ -38,14 +41,24 @@ public class GPSService implements Runnable {
 //            Log.d("GPS", "Provider GPS Ready");
         }
         listener = new GPSListener();
+        running = true;
+        counter = 1;
+        this.context = context;
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 10, listener);
         longitude = "0";
         latitude = "0";
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         updateLocation(location);
-        running = true;
-        counter = 1;
-        this.context = context;
     }
 
     @Override

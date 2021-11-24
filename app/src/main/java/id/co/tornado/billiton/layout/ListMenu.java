@@ -2,6 +2,7 @@ package id.co.tornado.billiton.layout;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,7 @@ import java.util.List;
 import id.co.tornado.billiton.ActivityList;
 import id.co.tornado.billiton.AdminActivity;
 import id.co.tornado.billiton.LogViewer;
+import id.co.tornado.billiton.MainActivity;
 import id.co.tornado.billiton.R;
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.customview.HelveticaTextView;
@@ -62,10 +65,12 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
     private SharedPreferences preferences;
     private boolean isBusy;
     private Handler doubleClickHandler;
+    private ProgressDialog globaldialog;
 
     public ListMenu(Activity context, String id) {
         super(context);
         this.context = context;
+        Log.d("onConstruct", "ListMenu");
         preferences  = context.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String opt = "";
         if (id.length()>7) {
@@ -167,22 +172,22 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
     public void onItemClick(AdapterView<?> parent, View view, int position, long ids) {
         if (!isBusy) {
             isBusy = true;
-            if (context instanceof ActivityList) {
-                if (!((ActivityList) context).isWSConnected()) {
-//                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-//                    alertDialog.setTitle("Informasi");
-//                    alertDialog.setMessage("EDC tidak terkoneksi dengan server\nSilahkan coba beberapa saat lagi\nEC: WSNC");
-//                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    isBusy = false;
-//                                    dialog.dismiss();
-//                                }
-//                            });
-//                    alertDialog.show();
-//                    return;
-                }
-            }
+//            if (context instanceof ActivityList) {
+//                if (!((ActivityList) context).isWSConnected()) {
+////                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+////                    alertDialog.setTitle("Informasi");
+////                    alertDialog.setMessage("EDC tidak terkoneksi dengan server\nSilahkan coba beberapa saat lagi\nEC: WSNC");
+////                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+////                            new DialogInterface.OnClickListener() {
+////                                public void onClick(DialogInterface dialog, int which) {
+////                                    isBusy = false;
+////                                    dialog.dismiss();
+////                                }
+////                            });
+////                    alertDialog.show();
+////                    return;
+//                }
+//            }
             JSONObject obj = (JSONObject) parent.getItemAtPosition(position);
 
             String act = null;
@@ -382,6 +387,14 @@ public class ListMenu extends LinearLayout implements ListView.OnItemClickListen
 //                            context.startActivity(i);
 
                         } else {
+                            if (context instanceof MainActivity){
+                                Log.d("List Menu", "on showDialog");
+                                ((MainActivity)context).showDialog();
+                            }
+                            if (context instanceof ActivityList){
+                                Log.d("List Menu", "on showDialog");
+                                ((ActivityList)context).showDialog();
+                            }
                             Intent intent = new Intent(context, ActivityList.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("comp_act", act);

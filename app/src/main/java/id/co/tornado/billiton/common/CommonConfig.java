@@ -6,24 +6,38 @@
 package id.co.tornado.billiton.common;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -46,6 +60,7 @@ public class CommonConfig {
     public static final String WS_PROTOCOL = WS_NON_SSL_PROTOCOL;
 
     public static final int WS_SSL_PORT = 443;
+//    public static final int WS_SSL_PORT = 80;
     private static final int WS_NORMAL_PORT = 80;
     public static final int WS_NON_SSL_PORT = WS_NORMAL_PORT;
 
@@ -86,17 +101,19 @@ public class CommonConfig {
 
     public static final String IS_SETTING = "isSetting";
 
-//    public static final String DEV_TERMINAL_ID = "00000000";
+    //profile selada
+//    public static final String DEV_TERMINAL_ID = "14130002";
 //    public static final String DEV_MERCHANT_ID = "000000000000";
 //    public static final String INIT_MERCHANT_NAME = "AGEN BJB BISA";
 //    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
 //    public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
-//    public static final String INIT_REST_ACT = "S000000";
+//    public static final String INIT_REST_ACT = "S000025";
 
-    public static final String DEV_TERMINAL_ID = "13050203";
+    //profile tnt
+    public static final String DEV_TERMINAL_ID = "13030087";
     public static final String DEV_MERCHANT_ID = "00010025000001";
-    public static final String INIT_MERCHANT_NAME = "EDC DEV TNT";
-    public static final String INIT_MERCHANT_ADDRESS1 = "KANTOR PUSAT";
+    public static final String INIT_MERCHANT_NAME = "Samsat Sumber";
+    public static final String INIT_MERCHANT_ADDRESS1 = "Samsat";
     public static final String INIT_MERCHANT_ADDRESS2 = "BANDUNG";
     public static final String INIT_REST_ACT = "S000000";
 
@@ -187,6 +204,162 @@ public class CommonConfig {
         icons.put("Settlement", R.drawable.settelment);
         return icons;
     }
+
+    public static final String CER = "\n" +
+            ".954  AC: CN=COMODO ECC Certification Authority,O=COMODO CA Limited,L=Salford,ST=Greater Manchester,C=GB\n" +
+            ".964  AC: CN=QuoVadis Root CA 2,O=QuoVadis Limited,C=BM\n" +
+            ".964  AC: CN=D-TRUST Root Class 3 CA 2 2009,O=D-Trust GmbH,C=DE\n" +
+            ".974  AC: OU=ApplicationCA,O=Japanese Government,C=JP\n" +
+            ".974  AC: CN=SwissSign Platinum CA - G2,O=SwissSign AG,C=CH\n" +
+            ".984  AC: CN=Swisscom Root CA 1,OU=Digital Certificate Services,O=Swisscom,C=ch\n" +
+            ".984  AC: CN=Global Chambersign Root,OU=http://www.chambersign.org,O=AC Camerfirma SA CIF A82743287,C=EU\n" +
+            ".994  AC: CN=Buypass Class 2 Root CA,O=Buypass AS-983163327,C=NO\n" +
+            ".994  AC: CN=DigiCert High Assurance EV Root CA,OU=www.digicert.com,O=DigiCert Inc,C=US\n" +
+            ".004  AC: CN=AffirmTrust Premium ECC,O=AffirmTrust,C=US\n" +
+            ".004  AC: CN=AffirmTrust Premium,O=AffirmTrust,C=US\n" +
+            ".014  AC: CN=KISA RootCA 1,OU=Korea Certification Authority Central,O=KISA,C=KR\n" +
+            ".014  AC: CN=Microsec e-Szigno Root CA,OU=e-Szigno CA,O=Microsec Ltd.,L=Budapest,C=HU\n" +
+            ".024  AC: CN=StartCom Certification Authority,OU=Secure Digital Certificate Signing,O=StartCom Ltd.,C=IL\n" +
+            ".024  AC: CN=GeoTrust Primary Certification Authority,O=GeoTrust Inc.,C=US\n" +
+            ".034  AC: C=ES,O=ACCV,OU=PKIACCV,CN=ACCVRAIZ1\n" +
+            ".044  AC: CN=T-TeleSec GlobalRoot Class 3,OU=T-Systems Trust Center,O=T-Systems Enterprise Services GmbH,C=DE\n" +
+            ".044  AC: CN=GlobalSign,O=GlobalSign,OU=GlobalSign Root CA - R3\n" +
+            ".054  AC: CN=e-Guven Kok Elektronik Sertifika Hizmet Saglayicisi,O=Elektronik Bilgi Guvenligi A.S.,C=TR\n" +
+            ".054  AC: 1.2.840.113549.1.9.1=#16176361406669726d6170726f666573696f6e616c2e636f6d,CN=Autoridad de Certificacion Firmaprofesional CIF A62634068,L=C/ Muntaner 244 Barcelona,C=ES\n" +
+            ".064  AC: OU=DSTCA E1,O=Digital Signature Trust Co.,C=US\n" +
+            ".064  AC: OU=Security Communication EV RootCA1,O=SECOM Trust Systems CO.\\,LTD.,C=JP\n" +
+            ".074  AC: CN=OISTE WISeKey Global Root GA CA,OU=OISTE Foundation Endorsed,OU=Copyright (c) 2005,O=WISeKey,C=CH\n" +
+            ".074  UC: CN=UTN-USERFirst-Hardware,OU=http://www.usertrust.com,O=The USERTRUST Network,L=Salt Lake City,ST=UT,C=US\n" +
+            ".074  AC: CN=UTN-USERFirst-Hardware,OU=http://www.usertrust.com,O=The USERTRUST Network,L=Salt Lake City,ST=UT,C=US\n" +
+            ".084  AC: CN=Class 2 Primary CA,O=Certplus,C=FR\n" +
+            ".094  AC: CN=VeriSign Class 3 Public Primary Certification Authority - G3,OU=(c) 1999 VeriSign\\, Inc. - For authorized use only,OU=VeriSign Trust Network,O=VeriSign\\, Inc.,C=US\n" +
+            ".104  AC: CN=NetLock Arany (Class Gold) Főtanúsítvány,OU=Tanúsítványkiadók (Certification Services),O=NetLock Kft.,L=Budapest,C=HU\n" +
+            ".114  AC: 1.2.840.113549.1.9.1=#16177365727665722d6365727473407468617774652e636f6d,CN=Thawte Server CA,OU=Certification Services Division,O=Thawte Consulting cc,L=Cape Town,ST=Western Cape,C=ZA\n" +
+            ".114  AC: CN=Deutsche Telekom Root CA 2,OU=T-TeleSec Trust Center,O=Deutsche Telekom AG,C=DE\n" +
+            ".124  AC: CN=GeoTrust Primary Certification Authority - G2,OU=(c) 2007 GeoTrust Inc. - For authorized use only,O=GeoTrust Inc.,C=US\n" +
+            ".134  AC: CN=AC Raíz Certicámara S.A.,O=Sociedad Cameral de Certificación Digital - Certicámara S.A.,C=CO\n" +
+            ".134  AC: CN=SecureSign RootCA1,O=Japan Certification Services\\, Inc.,C=JP\n" +
+            ".144  AC: CN=thawte Primary Root CA - G2,OU=(c) 2007 thawte\\, Inc. - For authorized use only,O=thawte\\, Inc.,C=US\n" +
+            ".144  AC: CN=GlobalSign,O=GlobalSign,OU=GlobalSign Root CA - R2\n" +
+            ".154  AC: CN=GeoTrust Primary Certification Authority - G3,OU=(c) 2008 GeoTrust Inc. - For authorized use only,O=GeoTrust Inc.,C=US\n" +
+            ".154  AC: 1.2.840.113549.1.9.1=#1611696e666f4076616c69636572742e636f6d,CN=http://www.valicert.com/,OU=ValiCert Class 3 Policy Validation Authority,O=ValiCert\\, Inc.,L=ValiCert Validation Network\n" +
+            ".164  AC: CN=DST Root CA X3,O=Digital Signature Trust Co.\n" +
+            ".164  AC: CN=GeoTrust Global CA 2,O=GeoTrust Inc.,C=US\n" +
+            ".174  AC: CN=AAA Certificate Services,O=Comodo CA Limited,L=Salford,ST=Greater Manchester,C=GB\n" +
+            ".184  AC: O=(c) 2005 TÜRKTRUST Bilgi İletişim ve Bilişim Güvenliği Hizmetleri A.Ş.,L=ANKARA,C=TR,CN=TÜRKTRUST Elektronik Sertifika Hizmet Sağlayıcısı\n" +
+            ".214  AC: CN=NetLock Expressz (Class C) Tanusitvanykiado,OU=Tanusitvanykiadok,O=NetLock Halozatbiztonsagi Kft.,L=Budapest,C=HU\n" +
+            ".214  AC: OU=Equifax Secure Certificate Authority,O=Equifax,C=US\n" +
+            ".214  AC: OU=DSTCA E2,O=Digital Signature Trust Co.,C=US\n" +
+            ".224  AC: CN=VeriSign Class 3 Public Primary Certification Authority - G4,OU=(c) 2007 VeriSign\\, Inc. - For authorized use only,OU=VeriSign Trust Network,O=VeriSign\\, Inc.,C=US\n" +
+            ".234  AC: CN=Microsoft Root Authority,OU=Microsoft Corporation,OU=Copyright (c) 1997 Microsoft Corp.\n" +
+            ".234  AC: CN=Entrust.net Secure Server Certification Authority,OU=(c) 1999 Entrust.net Limited,OU=www.entrust.net/CPS incorp. by ref. (limits liab.),O=Entrust.net,C=US\n" +
+            ".244  AC: CN=D-TRUST Root Class 3 CA 2 EV 2009,O=D-Trust GmbH,C=DE\n" +
+            ".244  AC: CN=Hellenic Academic and Research Institutions RootCA 2011,O=Hellenic Academic and Research Institutions Cert. Authority,C=GR\n" +
+            ".254  AC: CN=Chambers of Commerce Root - 2008,O=AC Camerfirma S.A.,2.5.4.5=#1309413832373433323837,L=Madrid (see current address at www.camerfirma.com/address),C=EU\n" +
+            ".254  AC: C=ES,O=EDICOM,OU=PKI,CN=ACEDICOM Root\n" +
+            ".264  AC: CN=VeriSign Class 3 Public Primary Certification Authority - G5,OU=(c) 2006 VeriSign\\, Inc. - For authorized use only,OU=VeriSign Trust Network,O=VeriSign\\, Inc.,C=US\n" +
+            ".264  AC: CN=Certum Trusted Network CA,OU=Certum Certification Authority,O=Unizeto Technologies S.A.,C=PL\n" +
+            ".274  AC: CN=Swisscom Root CA 2,OU=Digital Certificate Services,O=Swisscom,C=ch\n" +
+            ".274  AC: CN=Buypass Class 3 CA 1,O=Buypass AS-983163327,C=NO\n" +
+            ".284  AC: CN=TWCA Root Certification Authority,OU=Root CA,O=TAIWAN-CA,C=TW\n" +
+            ".294  AC: 1.2.840.113549.1.9.1=#1612676c6f62616c30314069707363612e636f6d,CN=ipsCA Global CA Root,OU=ipsCA,O=IPS Certification Authority s.l. ipsCA,L=Madrid,ST=Madrid,C=ES\n" +
+            ".294  AC: CN=SwissSign Gold CA - G2,O=SwissSign AG,C=CH\n" +
+            ".304  AC: OU=Go Daddy Class 2 Certification Authority,O=The Go Daddy Group\\, Inc.,C=US\n" +
+            ".314  AC: CN=VeriSign Universal Root Certification Authority,OU=(c) 2008 VeriSign\\, Inc. - For authorized use only,OU=VeriSign Trust Network,O=VeriSign\\, Inc.,C=US\n" +
+            ".324  AC: CN=America Online Root Certification Authority 2,O=America Online Inc.,C=US\n" +
+            ".324  AC: OU=TDC Internet Root CA,O=TDC Internet,C=DK\n" +
+            ".334  AC: CN=DST ACES CA X6,OU=DST ACES,O=Digital Signature Trust,C=US\n" +
+            ".334  AC: 1.2.840.113549.1.9.1=#1611696e666f4076616c69636572742e636f6d,CN=http://www.valicert.com/,OU=ValiCert Class 2 Policy Validation Authority,O=ValiCert\\, Inc.,L=ValiCert Validation Network\n" +
+            ".344  AC: OU=Security Communication RootCA1,O=SECOM Trust.net,C=JP\n" +
+            ".344  AC: CN=Equifax Secure eBusiness CA-1,O=Equifax Secure Inc.,C=US\n" +
+            ".354  AC: CN=Entrust Root Certification Authority,OU=(c) 2006 Entrust\\, Inc.,OU=www.entrust.net/CPS is incorporated by reference,O=Entrust\\, Inc.,C=US\n" +
+            ".354  AC: CN=Juur-SK,O=AS Sertifitseerimiskeskus,C=EE,1.2.840.113549.1.9.1=#1609706b6940736b2e6565\n" +
+            ".364  AC: CN=GeoTrust Universal CA,O=GeoTrust Inc.,C=US\n" +
+            ".364  AC: CN=SecureTrust CA,O=SecureTrust Corporation,C=US\n" +
+            ".364  AC: CN=Hongkong Post Root CA 1,O=Hongkong Post,C=HK\n" +
+            ".374  AC: CN=TÜBİTAK UEKAE Kök Sertifika Hizmet Sağlayıcısı - Sürüm 3,OU=Kamu Sertifikasyon Merkezi,OU=Ulusal Elektronik ve Kriptoloji Araştırma Enstitüsü - UEKAE,O=Türkiye Bilimsel ve Teknolojik Araştırma Kurumu - TÜBİTAK,L=Gebze - Kocaeli,C=TR\n" +
+            ".374  AC: CN=StartCom Certification Authority G2,O=StartCom Ltd.,C=IL\n" +
+            ".384  AC: CN=COMODO Certification Authority,O=COMODO CA Limited,L=Salford,ST=Greater Manchester,C=GB\n" +
+            ".384  AC: OU=Equifax Secure eBusiness CA-2,O=Equifax Secure,C=US\n" +
+            ".394  AC: CN=Wells Fargo Root Certificate Authority,OU=Wells Fargo Certification Authority,O=Wells Fargo,C=US\n" +
+            ".394  AC: CN=Entrust Root Certification Authority - EC1,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US\n" +
+            ".404  AC: OU=VeriSign Trust Network,OU=(c) 1998 VeriSign\\, Inc. - For authorized use only,OU=Class 3 Public Primary Certification Authority - G2,O=VeriSign\\, Inc.,C=US\n" +
+            ".414  AC: 1.2.840.113549.1.9.1=#16197072656d69756d2d736572766572407468617774652e636f6d,CN=Thawte Premium Server CA,OU=Certification Services Division,O=Thawte Consulting cc,L=Cape Town,ST=Western Cape,C=ZA\n" +
+            ".414  AC: CN=TC TrustCenter Class 3 CA II,OU=TC TrustCenter Class 3 CA,O=TC TrustCenter GmbH,C=DE\n" +
+            ".424  AC: CN=QuoVadis Root Certification Authority,OU=Root Certification Authority,O=QuoVadis Limited,C=BM\n" +
+            ".424  AC: CN=AddTrust External CA Root,OU=AddTrust External TTP Network,O=AddTrust AB,C=SE\n" +
+            ".434  AC: CN=Certinomis - Autorité Racine,OU=0002 433998903,O=Certinomis,C=FR\n" +
+            ".434  AC: OU=FNMT Clase 2 CA,O=FNMT,C=ES\n" +
+            ".434  AC: CN=GlobalSign Root CA,OU=Root CA,O=GlobalSign nv-sa,C=BE\n" +
+            ".444  AC: CN=TC TrustCenter Universal CA I,OU=TC TrustCenter Universal CA,O=TC TrustCenter GmbH,C=DE\n" +
+            ".444  AC: CN=GeoTrust Universal CA 2,O=GeoTrust Inc.,C=US\n" +
+            ".454  AC: CN=TC TrustCenter Class 2 CA II,OU=TC TrustCenter Class 2 CA,O=TC TrustCenter GmbH,C=DE\n" +
+            ".454  AC: OU=RSA Security 2048 V3,O=RSA Security Inc\n" +
+            ".454  AC: CN=Equifax Secure Global eBusiness CA-1,O=Equifax Secure Inc.,C=US\n" +
+            ".464  AC: CN=Sonera Class2 CA,O=Sonera,C=FI\n" +
+            ".464  AC: CN=Buypass Class 3 Root CA,O=Buypass AS-983163327,C=NO\n" +
+            ".464  AC: 1.2.840.113549.1.9.1=#1610696e666f40652d737a69676e6f2e6875,CN=Microsec e-Szigno Root CA 2009,O=Microsec Ltd.,L=Budapest,C=HU\n" +
+            ".474  AC: CN=Root CA Generalitat Valenciana,OU=PKIGVA,O=Generalitat Valenciana,C=ES\n" +
+            ".474  AC: CN=thawte Primary Root CA,OU=(c) 2006 thawte\\, Inc. - For authorized use only,OU=Certification Services Division,O=thawte\\, Inc.,C=US\n" +
+            ".484  AC: CN=Entrust.net Certification Authority (2048),OU=(c) 1999 Entrust.net Limited,OU=www.entrust.net/CPS_2048 incorp. by ref. (limits liab.),O=Entrust.net\n" +
+            ".514  AC: OU=Starfield Class 2 Certification Authority,O=Starfield Technologies\\, Inc.,C=US\n" +
+            ".514  AC: CN=WellsSecure Public Root Certificate Authority,OU=Wells Fargo Bank NA,O=Wells Fargo WellsSecure,C=US\n" +
+            ".524  AC: CN=QuoVadis Root CA 3,O=QuoVadis Limited,C=BM\n" +
+            ".524  AC: CN=TDC OCES CA,O=TDC,C=DK\n" +
+            ".534  AC: OU=Class 3 Public Primary Certification Authority,O=VeriSign\\, Inc.,C=US\n" +
+            ".534  AC: CN=thawte Primary Root CA - G3,OU=(c) 2008 thawte\\, Inc. - For authorized use only,OU=Certification Services Division,O=thawte\\, Inc.,C=US\n" +
+            ".544  AC: CN=America Online Root Certification Authority 1,O=America Online Inc.,C=US\n" +
+            ".544  AC: CN=GTE CyberTrust Global Root,OU=GTE CyberTrust Solutions\\, Inc.,O=GTE Corporation,C=US\n" +
+            ".554  AC: CN=DigiCert Assured ID Root CA,OU=www.digicert.com,O=DigiCert Inc,C=US\n" +
+            ".554  AC: CN=Buypass Class 2 CA 1,O=Buypass AS-983163327,C=NO\n" +
+            ".554  AC: CN=Starfield Root Certificate Authority - G2,O=Starfield Technologies\\, Inc.,L=Scottsdale,ST=Arizona,C=US\n" +
+            ".564  AC: CN=SwissSign Silver CA - G2,O=SwissSign AG,C=CH\n" +
+            ".564  AC: CN=CNNIC ROOT,O=CNNIC,C=CN\n" +
+            ".574  AC: 1.2.840.113549.1.9.1=#161469676361407367646e2e706d2e676f75762e6672,CN=IGC/A,OU=DCSSI,O=PM/SGDN,L=Paris,ST=France,C=FR\n" +
+            ".574  AC: CN=Autoridad de Certificacion Firmaprofesional CIF A62634068,C=ES\n" +
+            ".574  AC: CN=AffirmTrust Networking,O=AffirmTrust,C=US\n" +
+            ".584  AC: O=Government Root Certification Authority,C=TW\n" +
+            ".584  AC: OU=Security Communication RootCA2,O=SECOM Trust Systems CO.\\,LTD.,C=JP\n" +
+            ".594  AC: CN=Staat der Nederlanden Root CA,O=Staat der Nederlanden,C=NL\n" +
+            ".604  AC: CN=EC-ACC,OU=Jerarquia Entitats de Certificacio Catalanes,OU=Vegeu https://www.catcert.net/verarrel (c)03,OU=Serveis Publics de Certificacio,O=Agencia Catalana de Certificacio (NIF Q-0801176-I),C=ES\n" +
+            ".614  AC: CN=Global Chambersign Root - 2008,O=AC Camerfirma S.A.,2.5.4.5=#1309413832373433323837,L=Madrid (see current address at www.camerfirma.com/address),C=EU\n" +
+            ".624  AC: CN=KISA RootCA 3,OU=Korea Certification Authority Central,O=KISA,C=KR\n" +
+            ".624  AC: CN=GeoTrust Global CA,O=GeoTrust Inc.,C=US\n" +
+            ".634  AC: CN=VeriSign Class 4 Public Primary Certification Authority - G3,OU=(c) 1999 VeriSign\\, Inc. - For authorized use only,OU=VeriSign Trust Network,O=VeriSign\\, Inc.,C=US\n" +
+            ".634  AC: CN=XRamp Global Certification Authority,O=XRamp Security Services Inc,OU=www.xrampsecurity.com,C=US\n" +
+            ".644  UC: CN=UTN - DATACorp SGC,OU=http://www.usertrust.com,O=The USERTRUST Network,L=Salt Lake City,ST=UT,C=US\n" +
+            ".644  AC: CN=UTN - DATACorp SGC,OU=http://www.usertrust.com,O=The USERTRUST Network,L=Salt Lake City,ST=UT,C=US\n" +
+            ".644  AC: CN=Certigna,O=Dhimyotis,C=FR\n" +
+            ".654  AC: CN=Starfield Services Root Certificate Authority - G2,O=Starfield Technologies\\, Inc.,L=Scottsdale,ST=Arizona,C=US\n" +
+            ".654  AC: CN=Secure Global CA,O=SecureTrust Corporation,C=US\n" +
+            ".654  AC: CN=TC TrustCenter Universal CA III,OU=TC TrustCenter Universal CA,O=TC TrustCenter GmbH,C=DE\n" +
+            ".664  AC: CN=AffirmTrust Commercial,O=AffirmTrust,C=US\n" +
+            ".664  AC: CN=Izenpe.com,O=IZENPE S.A.,C=ES\n" +
+            ".674  AC: CN=SecureSign RootCA11,O=Japan Certification Services\\, Inc.,C=JP\n" +
+            ".674  AC: C=TR,O=EBG Bilişim Teknolojileri ve Hizmetleri A.Ş.,CN=EBG Elektronik Sertifika Hizmet Sağlayıcısı\n" +
+            ".674  AC: CN=Visa eCommerce Root,OU=Visa International Service Association,O=VISA,C=US\n" +
+            ".684  AC: 1.2.840.113549.1.9.1=#1611696e666f4076616c69636572742e636f6d,CN=http://www.valicert.com/,OU=ValiCert Class 1 Policy Validation Authority,O=ValiCert\\, Inc.,L=ValiCert Validation Network\n" +
+            ".684  AC: CN=Chambers of Commerce Root,OU=http://www.chambersign.org,O=AC Camerfirma SA CIF A82743287,C=EU\n" +
+            ".694  AC: CN=NetLock Uzleti (Class B) Tanusitvanykiado,OU=Tanusitvanykiadok,O=NetLock Halozatbiztonsagi Kft.,L=Budapest,C=HU\n" +
+            ".694  AC: OU=ePKI Root Certification Authority,O=Chunghwa Telecom Co.\\, Ltd.,C=TW\n" +
+            ".704  AC: CN=Network Solutions Certificate Authority,O=Network Solutions L.L.C.,C=US\n" +
+            ".704  AC: OU=VeriSign Trust Network,OU=(c) 1998 VeriSign\\, Inc. - For authorized use only,OU=Class 4 Public Primary Certification Authority - G2,O=VeriSign\\, Inc.,C=US\n" +
+            ".714  UC: CN=UTN-USERFirst-Network Applications,OU=http://www.usertrust.com,O=The USERTRUST Network,L=Salt Lake City,ST=UT,C=US\n" +
+            ".714  AC: CN=UTN-USERFirst-Network Applications,OU=http://www.usertrust.com,O=The USERTRUST Network,L=Salt Lake City,ST=UT,C=US\n" +
+            ".714  AC: CN=Baltimore CyberTrust Root,OU=CyberTrust,O=Baltimore,C=IE\n" +
+            ".724  AC: CN=NetLock Kozjegyzoi (Class A) Tanusitvanykiado,OU=Tanusitvanykiadok,O=NetLock Halozatbiztonsagi Kft.,L=Budapest,ST=Hungary,C=HU\n" +
+            ".724  AC: CN=Certum CA,O=Unizeto Sp. z o.o.,C=PL\n" +
+            ".724  AC: CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US\n" +
+            ".734  AC: CN=CA Disig,O=Disig a.s.,L=Bratislava,C=SK\n" +
+            ".734  AC: O=TÜRKTRUST Bilgi İletişim ve Bilişim Güvenliği Hizmetleri A.Ş. (c) Kasım 2005,L=Ankara,C=TR,CN=TÜRKTRUST Elektronik Sertifika Hizmet Sağlayıcısı\n" +
+            ".744  AC: CN=Go Daddy Root Certificate Authority - G2,O=GoDaddy.com\\, Inc.,L=Scottsdale,ST=Arizona,C=US\n" +
+            ".744  AC: CN=DigiCert Global Root CA,OU=www.digicert.com,O=DigiCert Inc,C=US\n" +
+            ".744  AC: C=IL,O=ComSign,CN=ComSign Secured CA\n" +
+            ".754  AC: CN=Cybertrust Global Root,O=Cybertrust\\, Inc\n" +
+            ".754  AC: OU=certSIGN ROOT CA,O=certSIGN,C=RO\n" +
+            ".754  SC: CN=A-Trust-nQual-03,OU=A-Trust-nQual-03,O=A-Trust Ges. f. Sicherheitssysteme im elektr. Datenverkehr GmbH,C=AT\n" +
+            ".754  AC: CN=A-Trust-nQual-03,OU=A-Trust-nQual-03,O=A-Trust Ges. f. Sicherheitssysteme im elektr. Datenverkehr GmbH,C=AT\n" +
+            ".764  AC: CN=Staat der Nederlanden Root CA - G2,O=Staat der Nederlanden,C=NL";
 
     public static int getIcon(String name) {
         return ICONS().containsKey(name) ? ICONS().get(name) : -1;
@@ -428,6 +601,128 @@ public class CommonConfig {
         gis.close();
         is.close();
         return string.toString();
+    }
+
+    public static int checkInstalledCertificates() {
+        int value = 0;
+        try {
+            KeyStore ks = KeyStore.getInstance("AndroidCAStore");
+            if (ks != null) {
+                ks.load(null, null);
+                Enumeration<String> aliases = ks.aliases();
+                List<String> list = Collections.list(aliases);
+                for (String alias: list) {
+                    java.security.cert.X509Certificate cert = null;
+                    try {
+                        cert = (java.security.cert.X509Certificate) ks.getCertificate(alias);
+                    } catch (KeyStoreException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(Objects.requireNonNull(cert).getIssuerDN().getName().contains("system")){}
+
+                    System.out.println("Subject DN: " + cert.getSubjectDN());
+
+                    if (CER.contains(cert.getIssuerDN().getName())){
+                        Log.d("VERIFICATION CER", "TRUE");
+                    } else {
+                        Log.d("VERIFICATION CER", "FALSE");
+                        System.out.println("AC: " + cert.getIssuerDN().getName());
+                        return 1;
+                    }
+                }
+
+//                for (int i = 0; i < list.size(); i++) {
+//                    String alias = list.get(i);
+//                    java.security.cert.X509Certificate cert = null;
+//                    try {
+//                        cert = (java.security.cert.X509Certificate) ks.getCertificate(alias);
+//                    } catch (KeyStoreException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    if(Objects.requireNonNull(cert).getIssuerDN().getName().contains("system")){}
+//
+//                    System.out.println("Subject DN: " + cert.getSubjectDN());
+//
+//                    if (CER.contains(cert.getIssuerDN().getName())){
+//                        Log.d("VERIFICATION CER", "TRUE");
+//                    } else {
+//                        Log.d("VERIFICATION CER", "FALSE");
+//                        System.out.println("AC: " + cert.getIssuerDN().getName());
+//                        return 1;
+//                    }
+//                }
+
+//                for (int i = size; i > size-1; i--) {
+//                    String alias = list.get(i);
+//                    java.security.cert.X509Certificate cert = null;
+//                    try {
+//                        cert = (java.security.cert.X509Certificate) ks.getCertificate(alias);
+//                    } catch (KeyStoreException e) {
+//                        e.printStackTrace();
+//                    }
+//                    //To print System Certs only
+//                    if(Objects.requireNonNull(cert).getIssuerDN().getName().contains("system")){
+////                        System.out.println("SC: " + cert.getIssuerDN().getName());
+//                    }
+//                    //To print User Certs only
+//                    if(cert.getIssuerDN().getName().contains("user")){
+////                        System.out.println("UC: " + cert.getIssuerDN().getName());
+//                    }
+//
+//                    System.out.println("Subject DN: " + cert.getSubjectDN());
+//
+//                    if (CER.contains(cert.getIssuerDN().getName())){
+//                        Log.d("VERIFICATION CER", "TRUE");
+//                    } else {
+//                        Log.d("VERIFICATION CER", "FALSE");
+//                        System.out.println("AC: " + cert.getIssuerDN().getName());
+//                        return 1;
+//                    }
+//                }
+
+//                while (aliases.hasMoreElements()) {
+//                    String alias = (String) aliases.nextElement();
+//                    java.security.cert.X509Certificate cert = null;
+//                    try {
+//                        cert = (java.security.cert.X509Certificate) ks.getCertificate(alias);
+//                    } catch (KeyStoreException e) {
+//                        e.printStackTrace();
+//                    }
+//                    //To print System Certs only
+//                    if(Objects.requireNonNull(cert).getIssuerDN().getName().contains("system")){
+////                        System.out.println("SC: " + cert.getIssuerDN().getName());
+//                    }
+//                    //To print User Certs only
+//                    if(cert.getIssuerDN().getName().contains("user")){
+////                        System.out.println("UC: " + cert.getIssuerDN().getName());
+//                    }
+//
+////                    System.out.println("AC: " + cert.getIssuerDN().getName());
+//                    System.out.println("Subject DN: " + cert.getSubjectDN());
+////                    System.out.println("Issuer DN: " + cert.getIssuerDN());
+////                    System.out.println("Serial Number: " + cert.getSerialNumber());
+//
+//                    if (CER.contains(cert.getIssuerDN().getName())){
+//                        Log.d("VERIFICATION CER", "TRUE");
+//                    } else {
+//                        Log.d("VERIFICATION CER", "FALSE");
+//                        System.out.println("AC: " + cert.getIssuerDN().getName());
+//                        return 1;
+//                    }
+//                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (java.security.cert.CertificateException e) {
+            e.printStackTrace();
+        }
+        return value;
     }
 
 }

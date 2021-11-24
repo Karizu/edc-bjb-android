@@ -12,8 +12,11 @@ android {
         applicationId "id.co.tornado.billiton"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 37
-        versionName "1.6"
+        versionCode 39
+        //version selada
+//        versionName "1.7.1"
+        //version tnt
+        versionName "1.5.1"
     }
     useLibrary 'org.apache.http.legacy'
     buildTypes {

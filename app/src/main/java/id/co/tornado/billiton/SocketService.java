@@ -1,5 +1,6 @@
 package id.co.tornado.billiton;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -19,6 +20,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -57,8 +59,9 @@ public class SocketService extends Service implements WebSocketClient.Listener {
     private String serialNum = Build.SERIAL;
     private boolean DEBUG_MODE = CommonConfig.DEBUG_MODE;
     private boolean warnotActive = false;
+
     public enum MessageMethod {
-        LOGIN, LOGOUT, UPDATE_SOFTWARE, UPDATE_MENU,UPDATE_SETTINGS, MESSAGE, HEARTBEAT, PENDING_MESSAGE;
+        LOGIN, LOGOUT, UPDATE_SOFTWARE, UPDATE_MENU, UPDATE_SETTINGS, MESSAGE, HEARTBEAT, PENDING_MESSAGE;
     }
 
     public enum MessageType {
@@ -74,7 +77,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
         public void run() {
             if (!isConnect) {
                 SharedPreferences preferences = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-                client = new WebSocketClient(URI.create(CommonConfig.WS_PROTOCOL+"://" + preferences.getString("sockethost", CommonConfig.WEBSOCKET_URL) + "/devlog"), SocketService.this, extraHeaders);
+                client = new WebSocketClient(URI.create(CommonConfig.WS_PROTOCOL + "://" + preferences.getString("sockethost", CommonConfig.WEBSOCKET_URL) + "/devlog"), SocketService.this, extraHeaders);
                 client.connect();
                 recoHandler.postDelayed(this, recoInterval);
                 recoJob = true;
@@ -87,7 +90,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
 
     private void reConnect() {
         if (!recoJob) {
-            recoHandler.postDelayed(recoRun,0);
+            recoHandler.postDelayed(recoRun, 0);
         } else {
             recoHandler.removeCallbacks(recoRun);
             recoHandler.postDelayed(recoRun, 3000 * recoTries * recoTries);
@@ -98,7 +101,7 @@ public class SocketService extends Service implements WebSocketClient.Listener {
 
     public void forceReConnect() {
         if (!recoJob) {
-            recoHandler.postDelayed(recoRun,0);
+            recoHandler.postDelayed(recoRun, 0);
         } else {
             recoHandler.removeCallbacks(recoRun);
             recoHandler.postDelayed(recoRun, 3000);
@@ -111,9 +114,9 @@ public class SocketService extends Service implements WebSocketClient.Listener {
         super.onCreate();
         mBinder = new LocalBinder();
         SharedPreferences preferences = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-        DEBUG_MODE = preferences.getBoolean("debug_mode",DEBUG_MODE);
-        if(!DEBUG_MODE){
-            client = new WebSocketClient(URI.create(CommonConfig.WS_PROTOCOL+"://" + preferences.getString("sockethost",CommonConfig.WEBSOCKET_URL) + "/devlog"), this, extraHeaders);
+        DEBUG_MODE = preferences.getBoolean("debug_mode", DEBUG_MODE);
+        if (!DEBUG_MODE) {
+            client = new WebSocketClient(URI.create(CommonConfig.WS_PROTOCOL + "://" + preferences.getString("sockethost", CommonConfig.WEBSOCKET_URL) + "/devlog"), this, extraHeaders);
             if (Looper.myLooper() == null) {
                 Looper.prepare();
             }
@@ -130,8 +133,8 @@ public class SocketService extends Service implements WebSocketClient.Listener {
     @Override
     public IBinder onBind(Intent intent) {
         SharedPreferences preferences = getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
-        DEBUG_MODE = preferences.getBoolean("debug_mode",DEBUG_MODE);
-        if(!DEBUG_MODE) {
+        DEBUG_MODE = preferences.getBoolean("debug_mode", DEBUG_MODE);
+        if (!DEBUG_MODE) {
             if (!isConnect) {
                 client.connect();
             }
@@ -166,13 +169,23 @@ public class SocketService extends Service implements WebSocketClient.Listener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.i("RESP","EDC Belum Disetting");
+            Log.i("RESP", "EDC Belum Disetting");
             return;
         }
 
         if (!isLogin) {
             JSONObject object = new JSONObject();
             final TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             String tim = telephonyManager.getDeviceId();
             PackageInfo pInfo = null;
             try {

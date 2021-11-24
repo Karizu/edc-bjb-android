@@ -1,6 +1,10 @@
 package id.co.tornado.billiton.module;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +42,7 @@ import java.util.Map;
 import java.util.Random;
 
 //import id.co.tornado.billiton.MainApp;
+import id.co.tornado.billiton.MainActivity;
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.common.FileControlInfo;
 import id.co.tornado.billiton.common.NsiccsData;
@@ -289,6 +294,22 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
             setKeyListener(null);
             if (!openDriver()) {
                 writeLog("Open Driver failed!");
+                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                alertDialog.setTitle("Pemberitahuan");
+                alertDialog.setMessage("Terjadi kesalahan saat menyiapkan data");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                context.startActivity(new Intent(context, MainActivity.class));
+                            }
+                        });
+                alertDialog.show();
+//                for (int i = 0; i<5; i++){
+//                    if (!openDriver()){
+//                        writeLog("Open Driver failed!");
+//                    }
+//                }
 
             } else {
 //            writeLog("ICC DRIVER", "Open Driver succeed!");
@@ -661,6 +682,7 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
                 data.put("RC", "07");
                 data.put("msg", "Fallback");
             }
+
             if (val>0 && fci.isValid()) {
                 writeFromBackground("Select AID : OK");
                 val = getProcessingOptions();
@@ -830,10 +852,12 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
         try {
             if (dataHolder==null) {
                 nsiccsData = new NsiccsData();
+                nsiccsData.setTxtype("00");
+                Log.i("On Data Holder", "NULL");
             }
             nsiccsData.setTvr("8000040000");
             nsiccsData.setCurrency("0360");
-            nsiccsData.setTxtype("00");
+            nsiccsData.setTxtype(dataHolder!=null?dataHolder.getTxtype()!=null?dataHolder.getTxtype():"00":"00");
             nsiccsData.setCountry("0360");
             nsiccsData.setTxst(CommonConfig.ICC_VALIDATION_INVALIDATED);
             nsiccsData.setTdol("9F02065F2A029A039C0195059F3704");
@@ -863,6 +887,12 @@ public class InsertICC extends com.rey.material.widget.EditText implements IFunt
             Log.d("TAG 9C", data);
             recordValues.put("5F2A", nsiccsData.getCurrency());
             recordValues.put("82", aip);
+//            try {
+//                recordValues.get("84");
+//                recordValues.put("84", nsiccsData.getAid());
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
             Iterator fcIter = fci.getFciValue().keySet().iterator();
             while (fcIter.hasNext()) {
                 String key = (String) fcIter.next();

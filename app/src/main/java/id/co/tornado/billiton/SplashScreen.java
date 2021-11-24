@@ -1,5 +1,6 @@
 package id.co.tornado.billiton;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -20,6 +21,7 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -74,7 +76,7 @@ public class SplashScreen extends Activity {
         }
 
         //GET INTENT FROM SELADA APPSSSSSSSSSSSSS
-        if (intent.getStringExtra("menu") != null){
+        if (intent.getStringExtra("menu") != null) {
             formId = intent.getStringExtra("menu");
             try {
                 serviceId = intent.getStringExtra("serviceId");
@@ -83,13 +85,13 @@ public class SplashScreen extends Activity {
                 nominal = intent.getStringExtra("nominal");
                 amount = intent.getStringExtra("amount");
                 margin = intent.getStringExtra("margin");
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
             try {
                 is_from_selada = intent.getStringExtra("is_from_selada");
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -100,26 +102,32 @@ public class SplashScreen extends Activity {
                 ma = intent.getStringExtra("ma");
                 ct = intent.getStringExtra("ct");
                 sid = intent.getStringExtra("sid");
-            } catch (Exception e){e.printStackTrace();}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             try {
                 stan = intent.getStringExtra("stan");
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
             try {
                 storeName = intent.getStringExtra("storeName");
-            } catch (Exception e){e.printStackTrace();}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             try {
                 json = intent.getStringExtra("json");
-            } catch (Exception e){e.printStackTrace();}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         SharedPreferences preferences = SplashScreen.this.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
 //        Log.d("DEVICE", CommonConfig.getDeviceName());
-        DEBUG_MODE = preferences.getBoolean("debug_mode",DEBUG_MODE);
+        DEBUG_MODE = preferences.getBoolean("debug_mode", DEBUG_MODE);
         Log.i("OP", "Billiton EDC");
         PackageInfo pInfo = null;
         try {
@@ -128,15 +136,7 @@ public class SplashScreen extends Activity {
             e.printStackTrace();
         }
 
-        TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        @SuppressLint("HardwareIds") String getSimNumber = telemamanger.getSimSerialNumber();
-        if (getSimNumber != null && !getSimNumber.isEmpty()){
-            getSimNumber = getSimNumber.substring(2, 18);
-        }
-        preferences.edit().putString("sim_number", getSimNumber).apply();
-
         String version = pInfo.versionName;
-
 
         Log.i("OP", "Version : " + version);
         Log.i("OP", "");
@@ -173,6 +173,23 @@ public class SplashScreen extends Activity {
         }
         startService(new Intent(this,SocketService.class));
         recheck();
+
+        TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        @SuppressLint("HardwareIds") String getSimNumber = telemamanger.getSimSerialNumber();
+        if (getSimNumber != null && !getSimNumber.isEmpty()){
+            getSimNumber = getSimNumber.substring(2, 18);
+        }
+        preferences.edit().putString("sim_number", getSimNumber).apply();
     }
 
     private static boolean copyAssetFolder(AssetManager assetManager,

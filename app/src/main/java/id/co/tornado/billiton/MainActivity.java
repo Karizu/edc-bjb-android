@@ -1,20 +1,26 @@
 package id.co.tornado.billiton;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,8 +31,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.handler.JsonCompHandler;
@@ -72,6 +80,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     private String stan;
     private String json = "";
     private boolean isKill = false;
+    private Dialog globaldialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +88,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
         ThemeManager.init(this, 1, 0, null);
         setContentView(R.layout.activity_main);
-
+        Log.d("onCreate", "MainActivity");
         //Disable bluetooth
 //        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //        if (mBluetoothAdapter.isEnabled()) {
@@ -93,11 +102,67 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
 
 //        Thread thread = new Thread(new VersionChecker(version));
 //        thread.start();
+
+        String hsnm = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+        if (hsnm.startsWith("36") || hsnm.startsWith("192")) {
+            //skip
+
+            //sementara
+//            int val = CommonConfig.checkInstalledCertificates();
+//            if (val == 1){
+//                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//                alertDialog.setTitle("Pelanggaran Keamanan");
+//                alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//                alertDialog.setCancelable(false);
+//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                        (dialog, which) -> {
+//                            dialog.dismiss();
+//                            onBackPressed();
+//                            finish();
+//                        });
+//                alertDialog.show();
+//            }
+        } else {
+//            int val = CommonConfig.checkInstalledCertificates();
+//            if (val == 1){
+//                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//                alertDialog.setTitle("Pelanggaran Keamanan");
+//                alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//                alertDialog.setCancelable(false);
+//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                        (dialog, which) -> {
+//                            dialog.dismiss();
+//                            onBackPressed();
+//                            finish();
+//                        });
+//                alertDialog.show();
+//            }
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        if (globaldialog!=null){
+            Log.d("Main Activity", "on dismissDialog");
+            dismissDialog();
+        }
+
+//        int val = CommonConfig.checkInstalledCertificates();
+//        if (val == 1){
+//            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//            alertDialog.setTitle("Pelanggaran Keamanan");
+//            alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//            alertDialog.setCancelable(false);
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    (dialog, which) -> {
+//                        dialog.dismiss();
+//                        onBackPressed();
+//                        finish();
+//                    });
+//            alertDialog.show();
+//        }
+
         TextView txTid = (TextView) findViewById(R.id.textViewTID);
         TextView txMid = (TextView ) findViewById(R.id.textViewMID);
         TextView txMName = (TextView ) findViewById(R.id.textViewMName);
@@ -135,15 +200,17 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
             try {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 String version = pInfo.versionName;
-
-                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "161020");
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "280921");
+//                txFcopy.setText("\u00a9 BANK BJB " + year + ", v" + version+ ", " + "P140121");
             } catch (Exception e) {
                 e.printStackTrace();
-                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "161020");
+                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "280921");
+//                txFcopy.setText("\u00a9 BANK BJB " + year + ", " + "P140121");
             }
         }
         else{
-            txFcopy.setText("\u00a9 BANK BJB, v" + "0.1"+ ", " + "161020");
+            txFcopy.setText("\u00a9 BANK BJB, v" + "0.1"+ ", " + "280921");
+//            txFcopy.setText("\u00a9 BANK BJB, v" + "0.1"+ ", " + "P140121");
         }
 
         String serialNum = Build.SERIAL;
@@ -349,8 +416,7 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 }
                 else if (formId.equals("ONCLICK")) {
                     // SKIP
-                }
-                else {
+                } else {
                     Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
 //              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
                     currentScreen = JsonCompHandler
@@ -368,8 +434,8 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
                 Log.i("Set Menu", preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
 //              currentScreen = JsonCompHandler.readJson(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT));
                 currentScreen = JsonCompHandler
-                        .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
-//                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
+//                        .readJsonFromCacheIfAvailable(this, preferences.getString("init_screen", CommonConfig.INIT_REST_ACT))
+                      .readJsonFromUrl(preferences.getString("init_screen", CommonConfig.INIT_REST_ACT), this)
                 ;
                 setMenu(currentScreen);
             }
@@ -383,6 +449,22 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
     @Override
     protected void onResume() {
         super.onResume();
+
+//        int val = CommonConfig.checkInstalledCertificates();
+//        if (val == 1){
+//            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//            alertDialog.setTitle("Pelanggaran Keamanan");
+//            alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//            alertDialog.setCancelable(false);
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    (dialog, which) -> {
+//                        dialog.dismiss();
+//                        onBackPressed();
+//                        finish();
+//                    });
+//            alertDialog.show();
+//        }
+
         showSetting = false;
         showViewer = false;
         preferences = this.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
@@ -504,6 +586,8 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
             if (type != -1 && !id.equals("")) {
                 switch (type) {
                     case CommonConfig.MenuType.Form:
+                        Log.d("MainActivity", "onDialogForm");
+                        globaldialog = ProgressDialog.show(this, "Loading", "Sedang Mengirim Permintaan");
                         child = new FormMenu(this, id, "", "", "", "","", "", json);
 
                         break;
@@ -577,6 +661,38 @@ public class MainActivity extends Activity implements KeyEvent.Callback {
         }
 
 
+    }
+
+    public void showDialog(){
+        globaldialog = new Dialog(MainActivity.this);
+        //set content
+        globaldialog.setContentView(R.layout.layout_dialog);
+        globaldialog.setCanceledOnTouchOutside(true);
+        globaldialog.setCancelable(true);
+        globaldialog.setTitle("Loading");
+        Objects.requireNonNull(globaldialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(Objects.requireNonNull(globaldialog.getWindow()).getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        globaldialog.show();
+        globaldialog.getWindow().setAttributes(lp);
+
+//        globaldialog = new ProgressDialog(MainActivity.this);
+//        globaldialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        globaldialog.setTitle("Loading");
+//        globaldialog.setMessage("Sedang Mengirim Permintaan");
+//        globaldialog.setIndeterminate(false);
+//        globaldialog.setProgressNumberFormat(null);
+//        globaldialog.setProgressPercentFormat(null);
+//        globaldialog.setIndeterminateDrawable(null);
+//        globaldialog.show();
+
+//        globaldialog = ProgressDialog.show(MainActivity.this, "Loading", "Sedang Mengirim Permintaan", true);
+    }
+
+    public void dismissDialog(){
+        globaldialog.dismiss();
     }
 
     @Override

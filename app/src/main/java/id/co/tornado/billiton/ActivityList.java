@@ -1,12 +1,16 @@
 package id.co.tornado.billiton;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -16,7 +20,9 @@ import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Objects;
 
 import id.co.tornado.billiton.common.CommonConfig;
 import id.co.tornado.billiton.common.NsiccsData;
@@ -59,6 +65,8 @@ public class ActivityList extends Activity {
     private String json;
     private boolean isLauchedFromSelada = false;
 
+    private Dialog globaldialog;
+
     private View child = null;
 
     public boolean lauchFromSelada = false;
@@ -69,10 +77,26 @@ public class ActivityList extends Activity {
     public ServiceConnection myConnection = new ServiceConnection() {
 
         public void onServiceConnected(ComponentName className, IBinder binder) {
-            myServiceBinder = ((SocketService.LocalBinder) binder).getServerInstance();
+            try {
+                myServiceBinder = ((SocketService.LocalBinder) binder).getServerInstance();
 //            Log.d("ServiceConnection","connected");
 //            showServiceData();
-            doSetMenu();
+                doSetMenu();
+            } catch (Exception e){
+                e.printStackTrace();
+
+                AlertDialog alertDialog = new AlertDialog.Builder(ActivityList.this).create();
+                alertDialog.setTitle("Terjadi Kesalahan");
+                alertDialog.setMessage("SIM Card tidak terdaftar, \n silahkan hubungi call center.");
+                alertDialog.setCancelable(false);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            onBackPressed();
+                            finish();
+                        });
+                alertDialog.show();
+            }
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -115,11 +139,42 @@ public class ActivityList extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+
+
+        if (globaldialog!=null){
+            Log.d("Activity List", "on dismissDialog");
+            dismissDialog();
+        }
+
+//        if (globaldialog == null) {
+//            globaldialog = ProgressDialog.show(this, "Loading", "Sedang Mengirim Permintaan");
+//            Log.d("onStart", "dialog 1");
+//        }
+//        else {
+//            globaldialog.show();
+//            Log.d("onStart", "dialog 2");
+//        }
+//        int val = CommonConfig.checkInstalledCertificates();
+//        if (val == 1){
+//            AlertDialog alertDialog = new AlertDialog.Builder(ActivityList.this).create();
+//            alertDialog.setTitle("Pelanggaran Keamanan");
+//            alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//            alertDialog.setCancelable(false);
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    (dialog, which) -> {
+//                        dialog.dismiss();
+//                        onBackPressed();
+//                        finish();
+//                    });
+//            alertDialog.show();
+//        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("onCreate", "ActivityList");
+        showDialog();
         bindService(new Intent(this, SocketService.class), myConnection, Context.BIND_AUTO_CREATE);
         serviceIntent = new Intent(this, InputPinService.class);
         startService(serviceIntent);
@@ -170,12 +225,60 @@ public class ActivityList extends Activity {
         try {
             json = getIntent().getExtras().getString("json");
         } catch (Exception e){}
+
+        String hsnm = preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
+        if (hsnm.startsWith("36") || hsnm.startsWith("192")) {
+            //skip
+//            int val = CommonConfig.checkInstalledCertificates();
+//            if (val == 1){
+//                AlertDialog alertDialog = new AlertDialog.Builder(ActivityList.this).create();
+//                alertDialog.setTitle("Pelanggaran Keamanan");
+//                alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//                alertDialog.setCancelable(false);
+//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                        (dialog, which) -> {
+//                            dialog.dismiss();
+//                            onBackPressed();
+//                            finish();
+//                        });
+//                alertDialog.show();
+//            }
+        } else {
+//            int val = CommonConfig.checkInstalledCertificates();
+//            if (val == 1){
+//                AlertDialog alertDialog = new AlertDialog.Builder(ActivityList.this).create();
+//                alertDialog.setTitle("Pelanggaran Keamanan");
+//                alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//                alertDialog.setCancelable(false);
+//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                        (dialog, which) -> {
+//                            dialog.dismiss();
+//                            onBackPressed();
+//                            finish();
+//                        });
+//                alertDialog.show();
+//            }
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         preferences = this.getSharedPreferences(CommonConfig.SETTINGS_FILE, this.getApplicationContext().MODE_PRIVATE);
+//        int val = CommonConfig.checkInstalledCertificates();
+//        if (val == 1){
+//            AlertDialog alertDialog = new AlertDialog.Builder(ActivityList.this).create();
+//            alertDialog.setTitle("Pelanggaran Keamanan");
+//            alertDialog.setMessage("Tidak bisa mengakses aplikasi, \n terdeteksi sertifikat yang tidak diizinkan.");
+//            alertDialog.setCancelable(false);
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    (dialog, which) -> {
+//                        dialog.dismiss();
+//                        onBackPressed();
+//                        finish();
+//                    });
+//            alertDialog.show();
+//        }
     }
 
     public void setMenu(JSONObject obj) {
@@ -200,7 +303,7 @@ public class ActivityList extends Activity {
             e.printStackTrace();
             return;
         }
-        tellService(false);
+//        tellService(false);
 
         //SET STAN FOR SEND REVERSAL FROM SELADA APP
         if (stan!=null){
@@ -285,6 +388,39 @@ public class ActivityList extends Activity {
         super.onStop();
     }
 
+    public void showDialog(){
+        globaldialog = new Dialog(ActivityList.this);
+        //set content
+        globaldialog.setContentView(R.layout.layout_dialog);
+        globaldialog.setCanceledOnTouchOutside(true);
+        globaldialog.setTitle("Loading");
+        Objects.requireNonNull(globaldialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(Objects.requireNonNull(globaldialog.getWindow()).getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        globaldialog.show();
+        globaldialog.getWindow().setAttributes(lp);
+
+
+//        globaldialog = new Dialog(ActivityList.this, );
+//        globaldialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        globaldialog.setTitle("Loading");
+//        globaldialog.setMessage("Sedang Mengirim Permintaan");
+//        globaldialog.setIndeterminate(false);
+//        globaldialog.setProgressNumberFormat(null);
+//        globaldialog.setProgressPercentFormat(null);
+//        globaldialog.setIndeterminateDrawable(null);
+//        globaldialog.show();
+
+//        globaldialog = ProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL).
+//                show(ActivityList.this, "Loading", "Sedang Mengirim Permintaan", true);
+    }
+
+    public void dismissDialog(){
+        globaldialog.dismiss();
+    }
+
     @Override
     public void onBackPressed() {
 //       Log.d("BACK", "PRESSED");
@@ -339,9 +475,16 @@ public class ActivityList extends Activity {
         if (myServiceBinder!=null) {
             if (flag) {
                 myServiceBinder.setIfForm();
+
+
+
 //                Log.d("CHKIF", "Set to TRUE");
             } else {
                 myServiceBinder.setIfNotForm();
+
+
+
+
 //                Log.d("CHKIF", "Set to FALSE");
             }
         } else {
@@ -350,24 +493,25 @@ public class ActivityList extends Activity {
     }
 
     private void doSetMenu() {
-        try {
-            if (compAct.equals("0A0D0S")) {
-                //prepare settlement
-                JSONObject screen = prepareSettlement();
-                setMenu(screen);
-            }else{
+        if (compAct.equals("0A0D0S")) {
+            //prepare settlement
+            JSONObject screen = prepareSettlement();
+            setMenu(screen);
+        }else{
 //                setMenu(JsonCompHandler.readJson(this, compAct));
-                setMenu(JsonCompHandler
+            try {
+                JSONObject obj = JsonCompHandler
 //                        .readJsonFromCacheIfAvailable(this, compAct)
-                        .readJsonFromUrl(compAct, this)
-                );
+                        .readJsonFromUrl(compAct, this);
+                setMenu(obj);
+                if (globaldialog!=null){
+                    globaldialog.cancel();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            //} catch (Exception e) {
-            //    e.printStackTrace();
         }
     }
 

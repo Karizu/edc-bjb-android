@@ -49,7 +49,9 @@ import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import id.co.tornado.billiton.common.CommonConfig;
 
@@ -146,8 +148,8 @@ public class JsonCompHandler {
     }
 
     public static JSONObject readJsonFromUrl(String id, Context ctx) throws IOException, JSONException {
-        Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
-        dialog.show();
+//        Dialog dialog = ProgressDialog.show(ctx, "Loading", "Sedang Mengirim Permintaan", true);
+//        dialog.show();
         SharedPreferences preferences = ctx.getSharedPreferences(CommonConfig.SETTINGS_FILE, Context.MODE_PRIVATE);
         String hostname = CommonConfig.HTTP_PROTOCOL+"://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
 //        String hostname = "http://" + preferences.getString("hostname", CommonConfig.HTTP_REST_URL);
@@ -178,13 +180,13 @@ public class JsonCompHandler {
                 }
             }
             saveJson(ctx, json);
-            dialog.dismiss();
+//            dialog.dismiss();
             return (JSONObject) json.get("screen");
 
         }
         catch (Exception e){
             e.printStackTrace();
-            dialog.dismiss();
+//            dialog.dismiss();
             return new JSONObject();
         }
         finally {
@@ -628,6 +630,7 @@ public class JsonCompHandler {
 
         return logDirectory;
     }
+
     public static void saveJsonMessage(Context context, String mid, String mtype, JSONObject jmsg) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -647,17 +650,33 @@ public class JsonCompHandler {
     public static JSONObject loadJsonMessage(Context context, String mid, String mtype, String mdate) {
         JSONObject resp = new JSONObject();
         try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+            boolean isVoid = false;
+            String endDate = sdf.format(new Date());
+            Date startDateValue = sdf.parse(mdate);
+            Date endDateValue = sdf.parse(endDate);
+
+            long diff = endDateValue.getTime() - startDateValue.getTime();
+            System.out.println ("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+
+            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) <= 1) {
+                isVoid = true;
+            }
+
             String logDir = mdate;
             String filename = mtype + mid;
             if (mdate.equals("")) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
                 logDir = sdf.format(new Date());
             }
-            File loadDir = makeAndGetLogDirectory(context, logDir);
-            File msgFile = new File(loadDir, filename + ".json");
-            FileInputStream fis = new FileInputStream(msgFile);
-            BufferedReader rd = new BufferedReader(new InputStreamReader(fis));
-            resp = new JSONObject(readAll(rd));
+
+            if (isVoid){
+                File loadDir = makeAndGetLogDirectory(context, logDir);
+                File msgFile = new File(loadDir, filename + ".json");
+                FileInputStream fis = new FileInputStream(msgFile);
+                BufferedReader rd = new BufferedReader(new InputStreamReader(fis));
+                resp = new JSONObject(readAll(rd));
+            }
         } catch (Exception e) {
 
         }
